@@ -1,91 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IITM SOLUTIONS - Study Tracker</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family: 'Segoe UI', sans-serif}
-body{background:#0a0f1e;color:white;min-height:100vh}
-.header{background:rgba(30,41,59,0.8);backdrop-filter:blur(10px);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;position:sticky;top:0}
-.logo{font-weight:900;font-size:20px;letter-spacing:1px} .logo span{color:#38bdf8}
-.main{max-width:1000px;margin:20px auto;padding:0 15px;display:grid;grid-template-columns:1fr 350px;gap:20px}
-@media(max-width:768px){.main{grid-template-columns:1fr}}
-.card{background:#151d32;border:1px solid #1e293b;border-radius:16px;padding:25px}
-.timer-display{font-size:72px;font-weight:800;text-align:center;margin:20px 0;color:#38bdf8;letter-spacing:2px}
-@media(max-width:500px){.timer-display{font-size:50px}}
-.btns{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
-button{padding:12px 22px;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:0.2s}
-.start{background:#22c55e;color:white} .stop{background:#ef4444;color:white} .reset{background:#334155;color:white}
-button:active{transform:scale(0.95)}
-input{width:100%;padding:12px;background:#0a0f1e;border:1px solid #334155;border-radius:10px;color:white;margin:10px 0;outline:none}
-.input-group{margin:15px 0}
-.leader-title{font-size:18px;font-weight:800;margin-bottom:15px;display:flex;justify-content:space-between}
-.leader-item{display:flex;justify-content:space-between;padding:12px;background:#0f172a;border-radius:10px;margin-bottom:8px;border-left:3px solid #38bdf8}
-.rank{font-weight:800;color:#facc15;margin-right:8px}
-.live-dot{width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block;animation:blink 1s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-.save-btn{background:#38bdf8;color:#0a0f1e;width:100%;margin-top:10px}
-</style>
-</head>
-<body>
-<div class="header"><div class="logo">IITM <span>SOLUTIONS</span></div><div style="font-size:12px">🔴 <span class="live-dot"></span> LIVE</div></div>
-<div class="main">
-<div class="card">
-<div class="input-group"><label style="font-size:13px;color:#94a3b8">Student Name</label><input id="nameInput" placeholder="Apna naam likho..."></div>
-<div class="timer-display" id="time">00:00:00</div>
-<div class="btns">
-<button class="start" onclick="start()">Start</button>
-<button class="stop" onclick="stop()">Stop</button>
-<button class="reset" onclick="reset()">Reset</button>
-</div>
-<button class="save-btn" onclick="saveTime()">💾 Save Today's Study</button>
-<p style="text-align:center;margin-top:15px;font-size:12px;color:#64748b">Study karte hi Start dabao, break pe Stop</p>
-</div>
-<div class="card">
-<div class="leader-title"><span>🏆 Today's Leaderboard</span><span style="font-size:12px;color:#22c55e">LIVE</span></div>
-<div id="leaderboard"><p style="text-align:center;color:#64748b;font-size:13px;padding:20px">Abhi koi data nahi hai<br>Save karo to yaha dikhega</p></div>
-<div style="margin-top:20px;padding-top:15px;border-top:1px solid #1e293b">
-<h4 style="font-size:14px;margin-bottom:10px">📚 IITM BS Quick Links</h4>
-<div style="display:grid;gap:8px">
-<a href="#" style="background:#1e293b;padding:10px;border-radius:8px;font-size:13px;color:#38bdf8;text-decoration:none">📝 Notes - Foundation</a>
-<a href="#" style="background:#1e293b;padding:10px;border-radius:8px;font-size:13px;color:#38bdf8;text-decoration:none">💬 Doubt Group - Join</a>
-</div>
-</div>
-</div>
-</div>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IITM SOLUTIONS - LIVE</title>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<style>*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}body{background:#0a0f1e;color:white}
+.header{background:#151d32;padding:14px 20px;display:flex;justify-content:space-between;border-bottom:1px solid #1e293b;position:sticky;top:0}
+.logo{font-weight:900;font-size:20px}.logo span{color:#38bdf8}
+.tabs{display:flex;gap:10px;padding:15px;justify-content:center}.tab{padding:10px 20px;background:#1e293b;border-radius:20px;cursor:pointer;font-weight:700;font-size:13px}.tab.active{background:#38bdf8;color:#0a0f1e}
+.main{max-width:1200px;margin:0 auto;padding:15px;display:grid;grid-template-columns:1fr 380px;gap:15px}@media(max-width:900px){.main{grid-template-columns:1fr}}
+.card{background:#151d32;border:1px solid #1e293b;border-radius:16px;padding:20px}.timer{font-size:64px;font-weight:900;text-align:center;color:#38bdf8;margin:10px 0}
+button{padding:10px 18px;border:none;border-radius:10px;font-weight:800;cursor:pointer}.start{background:#22c55e;color:white}.stop{background:#ef4444;color:white}.reset{background:#334155;color:white}
+input{width:100%;padding:12px;background:#0a0f1e;border:1px solid #334155;border-radius:10px;color:white;margin:6px 0;outline:none}
+#chatBox{height:360px;overflow-y:auto;background:#0a0f1e;border-radius:10px;padding:10px;margin:10px 0;display:flex;flex-direction:column;gap:8px;border:1px solid #1e293b}
+.msg{background:#1e293b;padding:8px 12px;border-radius:12px;max-width:85%;font-size:13px}.msg.me{align-self:flex-end;background:#38bdf8;color:#0a0f1e}
+.msg b{font-size:11px;display:block;opacity:.8}.msg small{font-size:9px;opacity:.6}
+.leader-item{display:flex;justify-content:space-between;padding:10px;background:#0f172a;border-radius:8px;margin-bottom:6px;font-size:13px;border-left:3px solid #38bdf8}
+</style></head><body>
+<div class="header"><div class="logo">IITM <span>SOLUTIONS</span></div><div style="font-size:11px;background:#22c55e33;color:#22c55e;padding:4px 10px;border-radius:20px">🟢 LIVE</div></div>
+<div class="tabs"><div class="tab active" id="t1" onclick="show('s')">⏱️ Study</div><div class="tab" id="t2" onclick="show('c')">💬 Chat</div></div>
+<div class="main"><div>
+<div class="card" id="sTab"><input id="name" placeholder="Apna naam likho..."><div class="timer" id="time">00:00:00</div>
+<div style="display:flex;gap:10px;justify-content:center"><button class="start" onclick="st()">Start</button><button class="stop" onclick="sp()">Stop</button><button class="reset" onclick="rs()">Reset</button></div>
+<button onclick="save()" style="width:100%;background:#38bdf8;color:#0a0f1e;margin-top:15px;padding:13px">💾 Save Time</button></div>
+<div class="card" id="cTab" style="display:none"><h3>💬 Live Chat</h3><div id="chatBox"><div style="text-align:center;opacity:.4;font-size:12px">Loading chat...</div></div>
+<div style="display:flex;gap:6px"><input id="chat" placeholder="Message..." style="flex:1;margin:0"><button onclick="send()" style="background:#38bdf8;color:#0a0f1e">Send</button></div></div>
+</div><div class="card"><h3>🏆 Leaderboard</h3><div id="board" style="margin-top:10px"></div></div></div>
 <script>
-let sec=0,interval=null;
-let nameEl=document.getElementById('nameInput');
-let savedName=localStorage.getItem('iitm_name');
-if(savedName) nameEl.value=savedName;
-nameEl.addEventListener('input',()=>localStorage.setItem('iitm_name',nameEl.value));
-function update(){let h=String(Math.floor(sec/3600)).padStart(2,'0');let m=String(Math.floor(sec%3600/60)).padStart(2,'0');let s=String(sec%60).padStart(2,'0');document.getElementById('time').innerText=`${h}:${m}:${s}`;}
-function start(){if(interval)return;interval=setInterval(()=>{sec++;update();},1000);}
-function stop(){clearInterval(interval);interval=null;}
-function reset(){stop();sec=0;update();}
-function saveTime(){
-let name=nameEl.value.trim();
-if(!name){alert('Pehle naam likho bhai!');return;}
-if(sec<10){alert('Kam se kam 10 sec padh to le!');return;}
-let data=JSON.parse(localStorage.getItem('leader')||'[]');
-data.push({name:name,time:sec,date:new Date().toLocaleDateString()});
-data.sort((a,b)=>b.time-a.time);
-localStorage.setItem('leader',JSON.stringify(data));
-loadLeader();reset();alert('Saved! Leaderboard me dekh 🔥');
-}
-function loadLeader(){
-let data=JSON.parse(localStorage.getItem('leader')||'[]');
-let board=document.getElementById('leaderboard');
-if(data.length==0) return;
-board.innerHTML='';
-data.slice(0,10).forEach((d,i)=>{
-let h=Math.floor(d.time/3600),m=Math.floor((d.time%3600)/60);
-let timeStr=`${h}h ${m}m`;
-board.innerHTML+=`<div class="leader-item"><span><span class="rank">#${i+1}</span> ${d.name}</span><span style="color:#38bdf8;font-weight:700">${timeStr}</span></div>`;
-});
-}
-loadLeader();update();
-</script>
-</body>
-</html>
+const firebaseConfig={apiKey:"AIzaSyBtugz-3SDbpoH5zOQvQI0AoAb6kbqb0dc",authDomain:"iitm-solutions.firebaseapp.com",databaseURL:"https://iitm-solutions-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"iitm-solutions",storageBucket:"iitm-solutions.firebasestorage.app",messagingSenderId:"411649171402",appId:"1:411649171402:web:e527b8a01a518080b6b933"};
+firebase.initializeApp(firebaseConfig);const db=firebase.database();
+let sec=parseInt(localStorage.getItem('sec')||0),iv=null;const nEl=document.getElementById('name');nEl.value=localStorage.getItem('nm')||'';nEl.oninput=()=>localStorage.setItem('nm',nEl.value);
+function upd(){let h=String(Math.floor(sec/3600)).padStart(2,'0'),m=String(Math.floor(sec%3600/60)).padStart(2,'0'),s=String(sec%60).padStart(2,'0');document.getElementById('time').innerText=h+':'+m+':'+s;localStorage.setItem('sec',sec);}
+function st(){if(iv)return;iv=setInterval(()=>{sec++;upd();},1000);}function sp(){clearInterval(iv);iv=null;}function rs(){sp();sec=0;upd();}
+function save(){let name=nEl.value.trim();if(!name||sec<10){alert('Naam likho aur 10sec padho');return;}db.ref('leaderboard').push({name:name,time:sec,t:Date.now()});rs();alert('Saved!');}
+function show(v){document.getElementById('sTab').style.display=v=='s'?'block':'none';document.getElementById('cTab').style.display=v=='c'?'block':'none';document.getElementById('t1').classList.toggle('active',v=='s');document.getElementById('t2').classList.toggle('active',v=='c');}
+function send(){let name=nEl.value.trim()||'Student';let t=document.getElementById('chat').value.trim();if(!t)return;db.ref('chats').push({name:name,text:t,time:Date.now()});document.getElementById('chat').value='';}
+db.ref('chats').limitToLast(50).on('child_added',s=>{let d=s.val();let b=document.getElementById('chatBox');if(b.innerHTML.includes('Loading'))b.innerHTML='';let me=d.name==(localStorage.getItem('nm')||'');b.innerHTML+=`<div class="msg ${me?'me':''}"><b>${d.name}</b>${d.text}<small>${new Date(d.time).toLocaleTimeString()}</small></div>`;b.scrollTop=b.scrollHeight;});
+db.ref('leaderboard').on('value',s=>{let a=[];s.forEach(c=>a.push(c.val()));a.sort((x,y)=>y.time-x.time);a=a.slice(0,15);let bo=document.getElementById('board');bo.innerHTML='';a.forEach((d,i)=>{let h=Math.floor(d.time/3600),m=Math.floor(d.time%3600/60);bo.innerHTML+=`<div class="leader-item"><span>#${i+1} ${d.name}</span><span>${h>0?h+'h ':''}${m}m</span></div>`})});
+document.getElementById('chat').addEventListener('keypress',e=>{if(e.key==='Enter')send()});upd();
+</script></body></html>
