@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IITM SOLUTIONS</title>
+<title>IITM SOLUTIONS V3.8.2</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -33,35 +33,33 @@ input,select,textarea{width:100%;padding:13px 16px;background:#080d1d;border:1px
 .pyq-card{background:linear-gradient(135deg,#111b33 0%,#0f172a 100%);border:1px solid rgba(255,255,255,.06);border-left:4px solid var(--p2);padding:16px;border-radius:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .hidden{display:none!important}
 .creator-badge{background:linear-gradient(135deg,var(--p),var(--p2));color:white;padding:6px 14px;border-radius:100px;font-size:10px;font-weight:800}
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(10,16,35,.98);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.08);padding:8px 0 16px;z-index:99;justify-content:space-around}
+.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:rgba(10,16,35,.98);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.08);padding:8px 0 16px;z-index:99;justify-content:space-around}
 .bottom-nav.b-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:14px;cursor:pointer;font-size:10px;font-weight:700;opacity:.6}
 .bottom-nav.b-item.active{opacity:1;color:var(--p);background:rgba(56,189,248,.12)}
 .bottom-nav.b-item i{font-size:20px}
-@media(max-width:900px){.bottom-nav{display:flex}.tabs{display:none}}
+@media(min-width:901px){.tabs{display:flex}.bottom-nav.b-item:nth-child(5){display:none}}
 #menuDrawer{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none}
 #menuDrawer.open{display:block}
 .drawer-content{position:absolute;bottom:0;left:0;right:0;background:#0f172a;border-radius:28px 28px 0 0;padding:20px 16px 30px;border-top:1px solid rgba(255,255,255,.1);max-height:75vh;overflow-y:auto}
 .drawer-item{display:flex;align-items:center;gap:14px;padding:16px;background:#151f3a;border-radius:14px;margin-bottom:10px;cursor:pointer;border:1px solid rgba(255,255,255,.05)}
-.drawer-item i{width:36px;height:36px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;border-radius:10px}
 .drawer-handle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:10px;margin:0 auto 16px}
 .admin-stat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
 .stat-box{background:#0f172a;padding:16px;border-radius:16px;text-align:center;border:1px solid rgba(255,255,255,.05)}
 .stat-box h2{font-size:24px}
 </style></head><body>
-<div id="loginScreen" class="login-screen"><div class="login-box"><div style="text-align:center;margin-bottom:20px"><div class="creator-badge">👑 GAURAV GUPTA</div></div><h1 style="text-align:center;font-size:30px">IITM <span style="background:linear-gradient(90deg,#38bdf8,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">SOLUTIONS</span></h1>
+<div id="loginScreen" class="login-screen"><div class="login-box"><div style="text-align:center;margin-bottom:20px"><div class="creator-badge">👑 GAURAV GUPTA - V3.8.2 FIXED</div></div><h1 style="text-align:center;font-size:30px">IITM <span style="background:linear-gradient(90deg,#38bdf8,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">SOLUTIONS</span></h1>
 <div id="loginForm" style="margin-top:20px">
 <button onclick="googleLogin()" id="gBtn" style="width:100%;background:white;color:black;padding:13px;border-radius:14px;border:none;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px"><img src="https://www.svgrepo.com/show/475656/google-color.svg" style="width:20px"> Continue with Google</button>
 <div style="text-align:center;margin:14px 0;opacity:.3;font-size:11px;display:flex;align-items:center;gap:10px"><div style="flex:1;height:1px;background:rgba(255,255,255,.2)"></div>OR<div style="flex:1;height:1px;background:rgba(255,255,255,.2)"></div></div>
 <input id="loginEmail" placeholder="📧 Email"><input id="loginPass" type="password" placeholder="🔒 Password"><button onclick="login()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;padding:15px;border-radius:14px;border:none;font-weight:800;margin-top:12px">Login →</button><p style="margin-top:16px;font-size:12px;text-align:center;opacity:.7">New? <span onclick="toggleAuth()" style="color:#38bdf8;cursor:pointer;font-weight:700">Create Account</span></p></div>
 <div id="signupForm" class="hidden" style="margin-top:20px"><input id="regName" placeholder="👤 Full Name"><input id="regEmail" placeholder="📧 Email"><input id="regPass" type="password" placeholder="🔒 Password"><button onclick="register()" style="width:100%;background:linear-gradient(90deg,#22c55e,#16a34a);color:white;padding:15px;border-radius:14px;border:none;font-weight:800;margin-top:12px">Create Account ✨</button><p style="margin-top:16px;font-size:12px;text-align:center;opacity:.7">Have account? <span onclick="toggleAuth()" style="color:#38bdf8;cursor:pointer;font-weight:700">Login</span></p></div><p id="authStatus" style="font-size:11px;margin-top:14px;text-align:center"></p></div></div>
-
 <div id="mainApp" class="hidden"><div class="header"><div class="logo">IITM <span>SOLUTIONS</span><small>BY GAURAV GUPTA</small></div><div style="display:flex;gap:10px;align-items:center"><div id="streakBox" style="background:linear-gradient(135deg,#f97316,#ef4444);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800">🔥 <span id="streakCount">0</span></div><img id="userPhoto" style="width:32px;height:32px;border-radius:50%;display:none"><span id="adminBadge" class="admin-badge hidden">👑 GAURAV</span><button onclick="logout()" style="background:#1e293b;color:white;padding:8px 14px;border-radius:100px;border:none;font-size:11px"><i class="fa-solid fa-right-from-bracket"></i></button></div></div>
 <div class="tabs"><div class="tab active" onclick="showTab('study')"><i class="fa-solid fa-stopwatch"></i> Timer</div><div class="tab" onclick="showTab('ai')"><i class="fa-solid fa-robot"></i> AI</div><div class="tab" onclick="showTab('pyq')"><i class="fa-solid fa-file-lines"></i> PYQ</div><div class="tab" onclick="showTab('calc')"><i class="fa-solid fa-calculator"></i> Calc</div><div class="tab" onclick="showTab('notes')"><i class="fa-solid fa-graduation-cap"></i> Notes</div><div class="tab" onclick="showTab('confess')"><i class="fa-solid fa-mask"></i> Confess</div><div class="tab" onclick="showTab('chat')"><i class="fa-solid fa-comments"></i> Chat</div><div class="tab" onclick="showTab('sols')"><i class="fa-solid fa-book-open"></i> Sols</div><div class="tab" id="adminTabBtn" onclick="showTab('admin')" style="display:none"><i class="fa-solid fa-crown"></i> Admin</div></div>
 <div class="main"><div>
 <div class="card" id="studyTab"><div class="timer" id="time">00:00:00</div><div style="display:flex;gap:12px;justify-content:center"><button class="btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white" onclick="st()"><i class="fa-solid fa-play"></i> Start</button><button class="btn" style="background:#1e293b;color:#94a3b8" onclick="sp()"><i class="fa-solid fa-pause"></i></button><button class="btn" style="background:#1e293b;color:#94a3b8" onclick="rs()"><i class="fa-solid fa-rotate"></i></button></div><button onclick="save()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;margin-top:20px;padding:16px;border-radius:16px;font-weight:800;border:none">💾 Save Session (+Streak 🔥)</button>
 <div style="margin-top:24px;border-top:1px solid rgba(255,255,255,.06);padding-top:18px"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">👀 Live Studying <span id="liveCount" style="background:#22c55e22;color:#22c55e;padding:3px 10px;border-radius:20px;font-size:11px">0</span></h3><span style="font-size:10px;background:rgba(34,197,94,.15);color:#22c55e;padding:4px 10px;border-radius:20px">● LIVE</span></div><div id="liveGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px"></div></div>
 </div>
-<div class="card" id="aiTab" style="display:none"><h3>🤖 AI</h3><div id="aiBox"><div class="msg ai">Hey!</div></div><div style="display:flex;gap:10px;background:#080b1a;padding:8px;border-radius:16px;border:1px solid #1e293b;margin-top:10px"><input id="aiInput" placeholder="Ask..." style="flex:1;margin:0;background:transparent;border:none"><button onclick="askAI()" style="background:linear-gradient(135deg,#38bdf8,#8b5cf6);color:white;width:46px;height:46px;border-radius:50%;border:none"><i class="fa-solid fa-paper-plane"></i></button></div></div>
+<div class="card" id="aiTab" style="display:none"><h3>🤖 AI</h3><div id="aiBox"><div class="msg ai">Hey! I am your IITM study buddy.</div></div><div style="display:flex;gap:10px;background:#080b1a;padding:8px;border-radius:16px;border:1px solid #1e293b;margin-top:10px"><input id="aiInput" placeholder="Ask..." style="flex:1;margin:0;background:transparent;border:none"><button onclick="askAI()" style="background:linear-gradient(135deg,#38bdf8,#8b5cf6);color:white;width:46px;height:46px;border-radius:50%;border:none"><i class="fa-solid fa-paper-plane"></i></button></div></div>
 <div class="card" id="pyqTab" style="display:none"><div style="display:flex;justify-content:space-between"><h3>📄 PYQ - <span id="pyqCount">0</span></h3><select id="pyqFilter" onchange="filterPYQ()" style="width:auto;padding:8px 10px;font-size:11px;border-radius:100px;margin:0"><option value="All">All</option><option>Foundation</option><option>English 1</option><option>English 2</option><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>CT</option><option>Python</option><option>DBMS</option><option>PDSA</option></select></div><div id="adminPYQBox" class="hidden" style="background:#080b1a;padding:16px;border-radius:16px;border:1px dashed #8b5cf6;margin:14px 0"><select id="pyqSub"><option>Foundation</option><option>English 1</option><option>English 2</option><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>CT</option><option>Python</option><option>DBMS</option><option>PDSA</option></select><select id="pyqType"><option>Quiz 1</option><option>Quiz 2</option><option>GA</option><option>End Term</option></select><input id="pyqTitle" placeholder="Title"><input id="pyqLink" placeholder="Drive Link"><button onclick="addPYQ()" style="width:100%;background:linear-gradient(90deg,#8b5cf6,#a78bfa);color:white;padding:13px;border-radius:12px;border:none;font-weight:800;margin-top:8px">Add PYQ 🚀</button></div><div id="pyqList"></div></div>
 <div class="card" id="calcTab" style="display:none"><h3>🧮 Grade Predictor</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"><input id="quiz1" type="number" placeholder="Quiz 1"><input id="quiz2" type="number" placeholder="Quiz 2"><input id="ga" type="number" placeholder="GA"><input id="end" type="number" placeholder="End"></div><button onclick="calculateGrade()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;padding:15px;border-radius:14px;border:none;font-weight:800;margin-top:14px">Calculate</button><div id="calcResult" style="margin-top:14px;padding:16px;background:#080b1a;border-radius:14px;display:none"></div></div>
 <div class="card" id="notesTab" style="display:none"><h3>📚 Notes - <span id="totalNotesCount">0</span></h3><div id="adminNotesBox" class="hidden" style="background:#080b1a;padding:14px;border-radius:14px;margin-top:12px;border:1px dashed #22c55e44"><input id="notesTitle" placeholder="Title"><select id="notesSub"><option>Foundation</option><option>English 1</option><option>English 2</option><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>CT</option><option>Python</option><option>DBMS</option><option>PDSA</option></select><input id="notesLink" placeholder="Drive Link"><button onclick="addNotes()" style="width:100%;background:linear-gradient(90deg,#22c55e,#16a34a);color:white;padding:12px;border-radius:10px;border:none;font-weight:800;margin-top:6px">Share</button></div><div id="notesList" style="margin-top:16px"></div></div>
@@ -74,97 +72,76 @@ input,select,textarea{width:100%;padding:13px 16px;background:#080d1d;border:1px
 <div id="menuDrawer" onclick="closeMenu()"><div class="drawer-content" onclick="event.stopPropagation()"><div class="drawer-handle"></div><h3>☰ All Options</h3><div class="drawer-item" onclick="showTab('ai');closeMenu()"><i class="fa-solid fa-robot"></i><div><b>AI Assistant</b></div></div><div class="drawer-item" onclick="showTab('calc');closeMenu()"><i class="fa-solid fa-calculator"></i><div><b>Calc</b></div></div><div class="drawer-item" onclick="showTab('notes');closeMenu()"><i class="fa-solid fa-graduation-cap"></i><div><b>Notes</b></div></div><div class="drawer-item" onclick="showTab('confess');closeMenu()"><i class="fa-solid fa-mask"></i><div><b>Confess</b></div></div><div class="drawer-item" id="drawerAdmin" style="display:none" onclick="showTab('admin');closeMenu()"><i class="fa-solid fa-crown"></i><div><b>Admin</b></div></div><div style="text-align:center;margin-top:16px"><button onclick="closeMenu()" style="background:#1e293b;color:white;padding:10px 24px;border-radius:100px;border:none">Close ✕</button></div></div></div>
 </div>
 <script>
-const firebaseConfig={apiKey:"AIzaSyBtugz-3SDbpoH5zO0vQI0AoAb6kbqb0dc",authDomain:"iitm-solutions.firebaseapp.com",databaseURL:"https://iitm-solutions-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"iitm-solutions",storageBucket:"iitm-solutions.firebasestorage.app",messagingSenderId:"411649171402",appId:"1:411649171402:web:e527b8a01a518080b6b933"};
-firebase.initializeApp(firebaseConfig);const db=firebase.database();const auth=firebase.auth();
-let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),iv=null,allSols=[],allPYQ=[];
+// === FINAL CORRECT CONFIG - PASTED BY USER ===
+const firebaseConfig = {
+  apiKey: "AIzaSyBtugz-3SDbpoH5zOOvQI0AoAb6kbqb0dc",
+  authDomain: "iitm-solutions.firebaseapp.com",
+  databaseURL: "https://iitm-solutions-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "iitm-solutions",
+  storageBucket: "iitm-solutions.firebasestorage.app",
+  messagingSenderId: "411649171402",
+  appId: "1:411649171402:web:e5278ba01a518080b0b933",
+  measurementId: "G-WV2LF3SM7V"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+const auth=firebase.auth();
 
+let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),iv=null,allSols=[],allPYQ=[];
 function toggleAuth(){document.getElementById('loginForm').classList.toggle('hidden');document.getElementById('signupForm').classList.toggle('hidden');}
 
-async function register(){let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPass').value;if(!n||!e||p.length<6){document.getElementById('authStatus').innerText='❌ Fill all';return;}let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(s.exists()){document.getElementById('authStatus').innerText='❌ Exists';return;}let u=db.ref('users').push();await u.set({name:n,email:e,pass:btoa(p),created:Date.now(),streak:0});document.getElementById('authStatus').innerText='✅ Created! Login now';toggleAuth();}
+async function register(){let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPass').value;if(!n||!e||p.length<6){document.getElementById('authStatus').innerText='❌ Fill all';return;}let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(s.exists()){document.getElementById('authStatus').innerText='❌ Already exists';return;}let u=db.ref('users').push();await u.set({name:n,email:e,pass:btoa(p),created:Date.now(),streak:0});document.getElementById('authStatus').innerText='✅ Created! Login now';toggleAuth();}
 async function login(){let e=document.getElementById('loginEmail').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;if(e==='admin@iitm.com'&&p==='admin123'){currentUser={name:'Gaurav Gupta',email:e};isAdmin=true;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_admin','true');showApp();return;}let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(!s.exists()){document.getElementById('authStatus').innerText='❌ Not found';return;}let f=null;s.forEach(c=>{let d=c.val();d._key=c.key;if(atob(d.pass)===p)f=d;});if(!f){document.getElementById('authStatus').innerText='❌ Wrong password';return;}currentUser=f;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_userKey',f._key);showApp();}
 
-// === GOOGLE LOGIN FIXED - V3.8.2 ===
+// === GOOGLE LOGIN 100% FIXED ===
 function googleLogin(){
-  const statusEl = document.getElementById('authStatus');
-  const btn = document.getElementById('gBtn');
-  statusEl.innerText = '⏳ Opening Google...';
-  if(btn) btn.disabled = true;
-
-  let provider = new firebase.auth.GoogleAuthProvider();
-  provider.addScope('email');
-  provider.addScope('profile');
-  provider.setCustomParameters({prompt: 'select_account'});
-
-  auth.signInWithPopup(provider).then(async (res)=>{
+  const statusEl=document.getElementById('authStatus');
+  const btn=document.getElementById('gBtn');
+  statusEl.innerText='⏳ Opening Google...';
+  if(btn) btn.disabled=true;
+  let provider=new firebase.auth.GoogleAuthProvider();
+  provider.addScope('email'); provider.addScope('profile');
+  provider.setCustomParameters({prompt:'select_account'});
+  auth.signInWithPopup(provider).then(async res=>{
     await handleGoogleUser(res.user);
-  }).catch(async (e)=>{
-    console.log("Popup error:", e.code, e.message);
-    if(e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request'){
-      statusEl.innerText = '📱 Redirecting to Google...';
-      try { await auth.signInWithRedirect(provider); }
-      catch(err){ statusEl.innerText = '❌ '+err.message; if(btn) btn.disabled=false; }
-    } else if(e.code === 'auth/unauthorized-domain'){
-      statusEl.innerHTML = '❌ Domain not authorized. Firebase > Authentication > Settings > Authorised domains me domain add karo';
-      if(btn) btn.disabled=false;
-    } else if(e.code === 'auth/api-key-not-valid'){
-      statusEl.innerHTML = '❌ API Key invalid. Firebase Project Settings se naya config copy karo';
-      if(btn) btn.disabled=false;
+  }).catch(async e=>{
+    console.log("Popup error:",e.code);
+    if(e.code==='auth/popup-blocked' || e.code==='auth/popup-closed-by-user' || e.code==='auth/cancelled-popup-request'){
+      statusEl.innerText='📱 Redirecting...';
+      try{ await auth.signInWithRedirect(provider); }
+      catch(err){ statusEl.innerText='❌ '+err.message; if(btn) btn.disabled=false; }
     } else {
-      statusEl.innerText = '❌ '+e.message;
+      statusEl.innerText='❌ '+e.message;
       if(btn) btn.disabled=false;
     }
   });
 }
-
 async function handleGoogleUser(u){
-  let email = u.email.toLowerCase();
-  let name = u.displayName || email.split('@')[0];
-  let photo = u.photoURL || '';
-  let statusEl = document.getElementById('authStatus');
-
-  if(email.includes('admin') || email === 'gaurav.gupta.aiml@gmail.com' || email === 'admin@iitm.com'){
-    currentUser={name:'Gaurav Gupta',email:email,photo:photo};
-    isAdmin=true;
+  let email=u.email.toLowerCase();
+  let name=u.displayName||email.split('@')[0];
+  let photo=u.photoURL||'';
+  if(email.includes('admin') || email==='gaurav.gupta.aiml@gmail.com'){
+    currentUser={name:'Gaurav Gupta',email:email,photo:photo}; isAdmin=true;
     localStorage.setItem('iitm_user',JSON.stringify(currentUser));
     localStorage.setItem('iitm_admin','true');
     localStorage.setItem('iitm_userPhoto',photo);
-    statusEl.innerText = '✅ Admin login!';
-    showApp();
-    return;
+    showApp(); return;
   }
-
-  let snap = await db.ref('users').orderByChild('email').equalTo(email).once('value');
-  let key = null;
+  let snap=await db.ref('users').orderByChild('email').equalTo(email).once('value');
+  let key=null;
   if(!snap.exists()){
-    let nu = db.ref('users').push();
+    let nu=db.ref('users').push();
     await nu.set({name:name,email:email,pass:'google',photo:photo,created:Date.now(),streak:0});
-    key = nu.key;
-  } else {
-    snap.forEach(c=>{ key = c.key; db.ref('users/'+c.key).update({photo:photo, name:name}); });
-  }
+    key=nu.key;
+  } else { snap.forEach(c=>{ key=c.key; db.ref('users/'+c.key).update({photo:photo,name:name}); }); }
   currentUser={name:name,email:email,photo:photo};
   localStorage.setItem('iitm_user',JSON.stringify(currentUser));
   localStorage.setItem('iitm_userKey',key);
   localStorage.setItem('iitm_userPhoto',photo);
   showApp();
 }
-
-// Handle redirect result (for mobile)
-auth.getRedirectResult().then(async (res)=>{
-  if(res && res.user){
-    await handleGoogleUser(res.user);
-  }
-}).catch(e=>{
-  console.log("Redirect error", e);
-  if(e && e.message) document.getElementById('authStatus').innerText = '❌ '+e.message;
-});
-
-// Auto login if already signed in Firebase
-auth.onAuthStateChanged(async (user)=>{
-  if(user &&!localStorage.getItem('iitm_user')){
-    await handleGoogleUser(user);
-  }
-});
+auth.getRedirectResult().then(async res=>{ if(res && res.user){ await handleGoogleUser(res.user); } }).catch(e=>{ console.log(e); });
+auth.onAuthStateChanged(async user=>{ if(user &&!localStorage.getItem('iitm_user')){ await handleGoogleUser(user); } });
 
 function showApp(){let u=JSON.parse(localStorage.getItem('iitm_user')||'null');if(u){currentUser=u;isAdmin=localStorage.getItem('iitm_admin')==='true';}if(!currentUser)return;document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');let photo=localStorage.getItem('iitm_userPhoto');if(photo){let img=document.getElementById('userPhoto');if(img){img.src=photo;img.style.display='block';}}loadStreak();if(isAdmin){document.getElementById('adminBadge').classList.remove('hidden');document.getElementById('adminTabBtn').style.display='block';document.getElementById('adminPYQBox').classList.remove('hidden');document.getElementById('adminSolBox').classList.remove('hidden');document.getElementById('adminNotesBox').classList.remove('hidden');document.getElementById('drawerAdmin').style.display='flex';document.querySelectorAll('.admin-only').forEach(el=>el.classList.remove('hidden'));}upd();}
 function logout(){let k=localStorage.getItem('iitm_userKey')||'admin';db.ref('studying/'+k).remove();auth.signOut().then(()=>{localStorage.clear();location.reload();});}
@@ -178,14 +155,7 @@ function loadStreak(){let st=parseInt(localStorage.getItem('streak')||'0');docum
 function save(){if(sec<10){alert('10 sec min');return;}sp();let today=new Date().toDateString();let last=localStorage.getItem('lastStudyDate');let streak=parseInt(localStorage.getItem('streak')||'0');if(last!==today){let y=new Date();y.setDate(y.getDate()-1);if(last===y.toDateString()||!last){streak++;}else{streak=1;}localStorage.setItem('streak',streak);localStorage.setItem('lastStudyDate',today);let key=localStorage.getItem('iitm_userKey');if(key){db.ref('users/'+key).update({streak:streak});}loadStreak();}db.ref('leaderboard').push({name:currentUser.name,time:sec,t:Date.now(),streak:streak});rs();alert(`✅ Saved! 🔥 ${streak}`);}
 function showTab(v){['study','ai','pyq','calc','notes','confess','chat','sols','admin'].forEach(x=>{let el=document.getElementById(x+'Tab');if(el)el.style.display=x==v?'block':'none';});document.querySelectorAll('.b-item').forEach(b=>{if(b.dataset.tab) b.classList.toggle('active',b.dataset.tab===v);});document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t.getAttribute('onclick')?.includes(v));});}
 function openMenu(){document.getElementById('menuDrawer').classList.add('open')}function closeMenu(){document.getElementById('menuDrawer').classList.remove('open')}
-db.ref('studying').on('value',snap=>{
-  let grid=document.getElementById('liveGrid');let countEl=document.getElementById('liveCount');if(!grid)return;grid.innerHTML='';let count=0;
-  snap.forEach(child=>{let d=child.val();count++;let h=String(Math.floor(d.sec/3600)).padStart(2,'0');let m=String(Math.floor(d.sec%3600/60)).padStart(2,'0');let s=String(d.sec%60).padStart(2,'0');let isMe=d.name===currentUser.name;
-  let avatar=d.photo?`<img src="${d.photo}" style="width:32px;height:32px;border-radius:50%;border:2px solid ${isMe?'#22c55e':'#1e293b'}">`:`<div style="font-size:26px">🪑</div>`;
-  grid.innerHTML+=`<div style="background:${isMe?'linear-gradient(135deg,#0f172a,#1e293b)':'#0f172a'};border:${isMe?'1px solid #22c55e':'1px solid rgba(255,255,255,.06)'};border-radius:16px;padding:10px 6px;text-align:center;position:relative">${avatar}<div style="font-size:10px;font-weight:700;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${isMe?'#22c55e':'#e2e8f0'}">${d.name.substring(0,10)}</div><div style="font-size:11px;font-weight:800;margin-top:2px;color:${isMe?'#22c55e':'#94a3b8'}">${h}:${m}:${s}</div></div>`;});
-  if(countEl)countEl.innerText=count;
-  if(count===0){grid.innerHTML=`<div style="grid-column:span 4;text-align:center;padding:22px;opacity:.5;font-size:11px;border:1px dashed #1e293b;border-radius:16px">Koi live nahi 😴 Start dabao!</div>`;}
-});
+db.ref('studying').on('value',snap=>{let grid=document.getElementById('liveGrid');let countEl=document.getElementById('liveCount');if(!grid)return;grid.innerHTML='';let count=0;snap.forEach(child=>{let d=child.val();count++;let h=String(Math.floor(d.sec/3600)).padStart(2,'0');let m=String(Math.floor(d.sec%3600/60)).padStart(2,'0');let s=String(d.sec%60).padStart(2,'0');let isMe=currentUser && d.name===currentUser.name;let avatar=d.photo?`<img src="${d.photo}" style="width:32px;height:32px;border-radius:50%;border:2px solid ${isMe?'#22c55e':'#1e293b'}">`:`<div style="font-size:26px">🪑</div>`;grid.innerHTML+=`<div style="background:${isMe?'linear-gradient(135deg,#0f172a,#1e293b)':'#0f172a'};border:${isMe?'1px solid #22c55e':'1px solid rgba(255,255,255,.06)'};border-radius:16px;padding:10px 6px;text-align:center"><${'div'} style="display:flex;justify-content:center">${avatar}</div><div style="font-size:10px;font-weight:700;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${isMe?'#22c55e':'#e2e8f0'}">${d.name.substring(0,10)}</div><div style="font-size:11px;font-weight:800;margin-top:2px;color:${isMe?'#22c55e':'#94a3b8'}">${h}:${m}:${s}</div></div>`;});if(countEl)countEl.innerText=count;if(count===0){grid.innerHTML=`<div style="grid-column:span 4;text-align:center;padding:22px;opacity:.5;font-size:11px;border:1px dashed #1e293b;border-radius:16px">Koi live nahi 😴 Start dabao!</div>`;}});
 window.addEventListener('beforeunload',()=>{let k=localStorage.getItem('iitm_userKey')||'admin';db.ref('studying/'+k).remove();});
 function clearChats(){if(confirm('Clear chats?'))db.ref('chats').remove();}
 function clearConfessions(){if(confirm('Clear confess?'))db.ref('confessions').remove();}
@@ -194,11 +164,7 @@ db.ref('pyqs').on('value',s=>{allPYQ=[];s.forEach(c=>{let v=c.val();v.id=c.key;a
 function filterPYQ(){let f=document.getElementById('pyqFilter').value;let list=document.getElementById('pyqList');list.innerHTML='';let fil=f==='All'?allPYQ:allPYQ.filter(x=>x.subject===f);fil.forEach(d=>{let del=isAdmin?`<button onclick="db.ref('pyqs/'+'${d.id}').remove()" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:8px 10px;border-radius:10px;margin-left:8px">🗑️</button>`:'';list.innerHTML+=`<div class="pyq-card"><div style="flex:1"><div style="font-weight:700;font-size:13px">${d.title}</div><span style="background:rgba(139,92,246,.15);color:#a78bfa;padding:4px 10px;border-radius:20px;font-size:10px">${d.subject} • ${d.type}</span></div><div style="display:flex"><a href="${d.link}" target="_blank" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);color:white;padding:10px 16px;border-radius:12px;text-decoration:none;font-size:11px;font-weight:800">Open</a>${del}</div></div>`;});}
 function calculateGrade(){let q1=parseFloat(document.getElementById('quiz1').value)||0,q2=parseFloat(document.getElementById('quiz2').value)||0,ga=parseFloat(document.getElementById('ga').value)||0,end=parseFloat(document.getElementById('end').value)||0;let total=(q1/20*20)+(q2/20*20)+(ga/100*30)+(end/100*30);let res=document.getElementById('calcResult');res.style.display='block';res.innerHTML=`<b>${total.toFixed(1)}/100 - ${total>=50?'PASS ✅':'FAIL ❌'}</b>`;}
 function send(){let t=document.getElementById('chat').value.trim();if(!t)return;db.ref('chats').push({name:currentUser.name,text:t,time:Date.now()});document.getElementById('chat').value='';}
-db.ref('chats').on('value',s=>{
-  let b=document.getElementById('chatBox');if(!b)return;b.innerHTML='';let count=0;
-  s.forEach(c=>{count++;let d=c.val();let del=isAdmin?`<button onclick="db.ref('chats/'+'${c.key}').remove()" style="background:rgba(239,68,68,.2);color:#ef4444;border:none;padding:4px 8px;border-radius:6px;font-size:9px;margin-left:8px">🗑️</button>`:'';b.innerHTML+=`<div class="msg" style="background:#151f3a;align-self:stretch;max-width:100%;display:flex;justify-content:space-between"><span><b style="color:#38bdf8">${d.name}:</b> ${d.text}</span>${del}</div>`;});
-  let cc=document.getElementById('chatCount');if(cc)cc.innerText=count;let tc=document.getElementById('totalChats');if(tc)tc.innerText=count;
-});
+db.ref('chats').on('value',s=>{let b=document.getElementById('chatBox');if(!b)return;b.innerHTML='';let count=0;s.forEach(c=>{count++;let d=c.val();let del=isAdmin?`<button onclick="db.ref('chats/'+'${c.key}').remove()" style="background:rgba(239,68,68,.2);color:#ef4444;border:none;padding:4px 8px;border-radius:6px;font-size:9px;margin-left:8px">🗑️</button>`:'';b.innerHTML+=`<div class="msg" style="background:#151f3a;align-self:stretch;max-width:100%;display:flex;justify-content:space-between"><span><b style="color:#38bdf8">${d.name}:</b> ${d.text}</span>${del}</div>`;});let cc=document.getElementById('chatCount');if(cc)cc.innerText=count;let tc=document.getElementById('totalChats');if(tc)tc.innerText=count;});
 db.ref('leaderboard').on('value',s=>{let a=[];s.forEach(c=>a.push(c.val()));a.sort((x,y)=>y.time-x.time);a=a.slice(0,15);let b=document.getElementById('board');if(!b)return;b.innerHTML='';a.forEach((d,i)=>{let rank=i==0?'🥇':i==1?'🥈':i==2?'🥉':`#${i+1}`;b.innerHTML+=`<div class="leader-item"><span>${rank} ${d.name} ${d.streak?'🔥'+d.streak:''}</span><span>${Math.floor(d.time/60)}m</span></div>`})});
 function filterSols(){let f=document.getElementById('subjectFilter')?.value||'All';let l=document.getElementById('solutionsList');l.innerHTML='';let fil=f==='All'?allSols:allSols.filter(x=>x.subject===f);let sc=document.getElementById('solCount');if(sc)sc.innerText=fil.length;let ts=document.getElementById('totalSols');if(ts)ts.innerText=allSols.length;fil.forEach(d=>{let del=isAdmin?`<button onclick="db.ref('solutions/'+'${d.id}').remove()" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:6px 8px;border-radius:8px;margin-left:8px">🗑️</button>`:'';l.innerHTML+=`<div style="background:#111b33;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between"><div><b>${d.title}</b><br><small style="opacity:.6">${d.subject}</small></div><div style="display:flex"><a href="${d.link}" target="_blank" style="background:linear-gradient(135deg,#38bdf8,#8b5cf6);color:white;padding:8px 14px;border-radius:10px;text-decoration:none;font-size:11px;font-weight:800">Open</a>${del}</div></div>`;});}
 db.ref('solutions').on('value',s=>{allSols=[];s.forEach(c=>allSols.push({id:c.key,...c.val()}));allSols.reverse();filterSols();});
