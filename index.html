@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IITM SOLUTIONS V1</title>
+<title>IITM SOLUTIONS V1 - By Gaurav Gupta</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}body{background:#080d1d;color:#e2e8f0}
 .login-screen{position:fixed;inset:0;background:#080d1d;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-box{background:#11182f;border:1px solid #1e293b;border-radius:24px;padding:32px;max-width:400px;width:100%}
+.login-box{background:#11182f;border:1px solid #1e293b;border-radius:24px;padding:32px;max-width:400px;width:100%;position:relative}
 .header{background:#11182f;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;position:sticky;top:0;z-index:99}
-.logo{font-weight:900;font-size:20px}.logo span{color:#38bdf8}
+.logo{font-weight:900;font-size:20px;line-height:1}.logo span{color:#38bdf8}.logo small{font-size:9px;opacity:.6;display:block;font-weight:600;letter-spacing:.5px}
 .admin-badge{background:#facc1522;color:#facc15;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:800}
 .tabs{display:flex;gap:8px;padding:12px;overflow-x:auto;position:sticky;top:58px;background:#080d1d;z-index:98}
 .tab{padding:10px 14px;background:#1a2340;border-radius:24px;cursor:pointer;font-weight:700;font-size:11px;white-space:nowrap;border:1px solid #1e293b}.tab.active{background:#38bdf8;color:#080d1d}
@@ -27,21 +27,33 @@ input,select,textarea{width:100%;padding:12px;background:#080d1d;border:1px soli
 .deadline-card{background:#0f172a;border-left:4px solid #ef4444;padding:12px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
 .hidden{display:none!important}
 .ai-typing{font-size:11px;opacity:.5;font-style:italic}
+.sub-pill{padding:6px 12px;background:#1a2340;border-radius:20px;font-size:10px;cursor:pointer;border:1px solid #1e293b}.sub-pill.active{background:#38bdf8;color:#080d1d;font-weight:800}
+.mic-btn{background:#ef4444;color:white;width:44px;height:44px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer}.mic-btn.listening{animation:pulse 1s infinite;background:#22c55e}@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+.footer{max-width:1300px;margin:20px auto;padding:20px;text-align:center;border-top:1px solid #1e293b;opacity:.6}
+.creator-badge{background:linear-gradient(135deg,#38bdf8,#8b5cf6);color:white;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:900;letter-spacing:.5px}
 </style></head><body>
 
-<div id="loginScreen" class="login-screen"><div class="login-box"><h1 style="text-align:center;font-weight:900;font-size:28px">IITM <span style="color:#38bdf8">SOLUTIONS</span></h1><p style="text-align:center;opacity:.5;font-size:11px;margin-bottom:18px">V1 OFFICIAL - Login Required</p>
+<div id="loginScreen" class="login-screen"><div class="login-box">
+<div style="text-align:center;margin-bottom:16px"><div class="creator-badge" style="display:inline-block">👑 CREATOR: GAURAV GUPTA</div></div>
+<h1 style="text-align:center;font-weight:900;font-size:28px">IITM <span style="color:#38bdf8">SOLUTIONS</span></h1>
+<p style="text-align:center;opacity:.8;font-size:12px;margin:6px 0;font-weight:700">Made with ❤️ by <span style="color:#38bdf8">Gaurav Gupta</span></p>
+<p style="text-align:center;opacity:.4;font-size:10px;margin-bottom:18px">IITM BS Student | V1 OFFICIAL</p>
+
 <div id="loginForm"><input id="loginEmail" placeholder="Email"><input id="loginPass" type="password" placeholder="Password"><button onclick="login()" style="width:100%;background:#38bdf8;color:#080d1d;padding:14px;border-radius:12px;border:none;font-weight:900;margin-top:10px;cursor:pointer">Login</button><p style="margin-top:14px;font-size:12px;text-align:center">New? <span onclick="toggleAuth()" style="color:#38bdf8;cursor:pointer;font-weight:800">Create Account</span></p></div>
 <div id="signupForm" class="hidden"><input id="regName" placeholder="Full Name"><input id="regEmail" placeholder="Email"><input id="regPass" type="password" placeholder="Password"><button onclick="register()" style="width:100%;background:#22c55e;color:white;padding:14px;border-radius:12px;border:none;font-weight:900;margin-top:10px">Create Account</button><p style="margin-top:14px;font-size:12px;text-align:center">Have account? <span onclick="toggleAuth()" style="color:#38bdf8;cursor:pointer">Login</span></p></div>
-<p id="authStatus" style="font-size:11px;margin-top:12px;text-align:center"></p></div></div>
+<p id="authStatus" style="font-size:11px;margin-top:12px;text-align:center"></p>
+<p style="text-align:center;margin-top:16px;font-size:10px;opacity:.4">© 2026 Gaurav Gupta • All Rights Reserved</p>
+</div></div>
 
 <div id="mainApp" class="hidden">
-<div class="header"><div class="logo">IITM <span>SOLUTIONS</span> <span style="font-size:9px;background:#38bdf8;color:#080d1d;padding:3px 8px;border-radius:20px;font-weight:900">V1</span></div><div style="display:flex;gap:8px;align-items:center"><span id="userNameShow" style="font-size:11px;opacity:.7"></span><span id="adminBadge" class="admin-badge hidden">👑 ADMIN</span><button onclick="logout()" style="background:#1e293b;color:white;padding:6px 12px;border-radius:20px;border:none;font-size:11px">Logout</button></div></div>
+<div class="header"><div class="logo">IITM <span>SOLUTIONS</span><small>BY GAURAV GUPTA <span style="color:#facc15">👑</span></small></div><div style="display:flex;gap:8px;align-items:center"><span id="userNameShow" style="font-size:11px;opacity:.7"></span><span id="adminBadge" class="admin-badge hidden">👑 GAURAV</span><button onclick="logout()" style="background:#1e293b;color:white;padding:6px 12px;border-radius:20px;border:none;font-size:11px">Logout</button></div></div>
 
-<div class="tabs"><div class="tab active" onclick="showTab('study')">Timer</div><div class="tab" onclick="showTab('ai')">🤖 AI Doubt</div><div class="tab" onclick="showTab('assign')">Deadlines</div><div class="tab" onclick="showTab('chat')">Chat</div><div class="tab" onclick="showTab('sols')">Solutions</div><div class="tab" id="adminTabBtn" onclick="showTab('admin')" style="display:none">Admin</div></div>
+<div class="tabs"><div class="tab active" onclick="showTab('study')">Timer</div><div class="tab" onclick="showTab('ai')">🤖 AI + Voice</div><div class="tab" onclick="showTab('assign')">Deadlines</div><div class="tab" onclick="showTab('chat')">Chat</div><div class="tab" onclick="showTab('sols')">Solutions</div><div class="tab" id="adminTabBtn" onclick="showTab('admin')" style="display:none">Admin</div></div>
 
 <div class="main"><div>
 
 <div class="card" id="studyTab">
+<div style="background:linear-gradient(135deg,#38bdf822,#8b5cf622);border:1px solid #38bdf833;border-radius:14px;padding:12px;text-align:center;margin-bottom:14px"><small style="opacity:.7">App Creator</small><br><b style="font-size:16px">👨‍💻 Gaurav Gupta</b><br><small style="color:#38bdf8">IITM BS • Full Stack Developer</small></div>
 <div class="streak-box"><div style="font-size:22px">🔥 <span id="streakCount">0</span> Days Streak</div><small id="streakMsg" style="opacity:.7">Roz login kar streak badha!</small></div>
 <div style="text-align:center"><small style="opacity:.5">Logged as</small><br><b id="displayName">Student</b></div>
 <div class="timer" id="time">00:00:00</div>
@@ -50,41 +62,48 @@ input,select,textarea{width:100%;padding:12px;background:#080d1d;border:1px soli
 </div>
 
 <div class="card" id="aiTab" style="display:none">
-<div style="display:flex;justify-content:space-between;align-items:center"><h3>🤖 AI Doubt Solver</h3><span style="font-size:9px;background:#22c55e22;color:#22c55e;padding:4px 10px;border-radius:20px">V1 SMART</span></div>
-<p style="font-size:11px;opacity:.5;margin-top:6px">Maths, Stats, Python, CT - kuch bhi pucho!</p>
-<div id="aiBox"><div class="msg ai"><b>AI:</b> Hi! Mai IITM ka AI hu. 10+2222 = 2232 😉 Ab koi bhi doubt pucho!</div></div>
-<div style="display:flex;gap:8px"><input id="aiInput" placeholder="e.g. 10+2222 or Explain Bayes..." style="flex:1;margin:0" onkeypress="if(event.key==='Enter')askAI()"><button onclick="askAI()" style="background:#22c55e;color:white;padding:14px 22px;border-radius:12px;border:none;font-weight:900"><i class="fa-solid fa-paper-plane"></i></button></div>
-<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span onclick="quickAsk(this)" style="font-size:10px;background:#1a2340;padding:6px 10px;border-radius:20px;cursor:pointer">Explain Probability</span><span onclick="quickAsk(this)" style="font-size:10px;background:#1a2340;padding:6px 10px;border-radius:20px;cursor:pointer">Python loop example</span><span onclick="quickAsk(this)" style="font-size:10px;background:#1a2340;padding:6px 10px;border-radius:20px;cursor:pointer">What is p-value?</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center"><h3>🤖 AI + Voice</h3><span style="font-size:9px;background:#22c55e22;color:#22c55e;padding:4px 10px;border-radius:20px">By Gaurav</span></div>
+<div id="aiBox"><div class="msg ai"><b>AI:</b> Hi! Mai Gaurav Gupta ka banaya hua AI hu. Bol ke bhi puch sakta hai! 🎤</div></div>
+<div style="display:flex;gap:8px;align-items:center"><input id="aiInput" placeholder="Type or Speak..." style="flex:1;margin:0" onkeypress="if(event.key==='Enter')askAI()"><button id="micBtn" class="mic-btn" onclick="startVoice()"><i class="fa-solid fa-microphone"></i></button><button onclick="askAI()" style="background:#22c55e;color:white;padding:14px 22px;border-radius:12px;border:none;font-weight:900"><i class="fa-solid fa-paper-plane"></i></button></div>
 </div>
 
 <div class="card" id="assignTab" style="display:none">
-<h3>📅 Assignment Deadlines</h3>
-<div id="adminAssignBox" class="hidden" style="background:#0f172a;padding:14px;border-radius:12px;margin-top:14px;border:1px dashed #facc1533"><b style="font-size:12px;color:#facc15">Add Deadline</b><input id="assignTitle" placeholder="Title"><select id="assignSub"><option>Maths</option><option>Stats</option><option>Python</option><option>English</option><option>CT</option></select><input id="assignDate" type="date"><input id="assignLink" placeholder="Link"><button onclick="addAssignment()" style="width:100%;background:#facc15;color:#080d1d;padding:12px;border-radius:10px;border:none;font-weight:900;margin-top:6px">Add</button></div>
+<h3>📅 Deadlines</h3>
+<div id="adminAssignBox" class="hidden" style="background:#0f172a;padding:14px;border-radius:12px;margin-top:14px;border:1px dashed #facc1533"><b style="font-size:12px;color:#facc15">Add Deadline</b><input id="assignTitle" placeholder="Title"><select id="assignSub"><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>English 1</option><option>CT</option><option>DBMS</option><option>PDSA</option></select><input id="assignDate" type="date"><input id="assignLink" placeholder="Link"><button onclick="addAssignment()" style="width:100%;background:#facc15;color:#080d1d;padding:12px;border-radius:10px;border:none;font-weight:900;margin-top:6px">Add</button></div>
 <div id="assignmentsList" style="margin-top:16px"></div>
 </div>
 
 <div class="card" id="chatTab" style="display:none"><h3>Community Chat</h3><div id="chatBox"></div><div style="display:flex;gap:8px"><input id="chat" placeholder="Type message..." style="flex:1;margin:0"><button onclick="send()" style="background:#38bdf8;color:#080d1d;padding:14px 22px;border-radius:12px;border:none;font-weight:900"><i class="fa-solid fa-paper-plane"></i></button></div></div>
 
 <div class="card" id="solsTab" style="display:none">
-<h3>📚 Solutions</h3>
-<div id="adminUploadBox" class="hidden" style="border:2px dashed #facc1533;border-radius:16px;padding:16px;text-align:center;background:#0f172a;margin-top:12px"><i class="fa-solid fa-crown" style="color:#facc15"></i><h4>Admin Upload</h4><select id="subject"><option>Maths</option><option>Statistics</option><option>Python</option><option>English</option><option>CT</option><option>Other</option></select><input id="title" placeholder="Title"><textarea id="desc" placeholder="Description + Drive Link" rows="2"></textarea><input type="file" id="fileInput" accept="image/*"><input id="imageLink" placeholder="Or image link"><button onclick="uploadFree()" style="width:100%;background:#facc15;color:#080d1d;padding:12px;border-radius:10px;border:none;font-weight:900;margin-top:8px">Publish</button><p id="uploadStatus" style="font-size:11px;margin-top:6px"></p></div>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><h3>📚 Solutions</h3><select id="subjectFilter" onchange="filterSols()" style="width:auto;padding:6px 12px;font-size:11px"><option value="All">All Subjects</option><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>English 1</option><option>CT</option><option>DBMS</option><option>PDSA</option><option>Other</option></select></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px"><div class="sub-pill active" onclick="filterByPill('All',this)">All</div><div class="sub-pill" onclick="filterByPill('Maths 1',this)">Maths 1</div><div class="sub-pill" onclick="filterByPill('Stats 1',this)">Stats 1</div><div class="sub-pill" onclick="filterByPill('Python',this)">Python</div><div class="sub-pill" onclick="filterByPill('CT',this)">CT</div></div>
+<div id="adminUploadBox" class="hidden" style="border:2px dashed #facc1533;border-radius:16px;padding:16px;text-align:center;background:#0f172a;margin-top:12px"><h4>Admin Upload - Gaurav</h4><select id="subject"><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>English 1</option><option>CT</option><option>DBMS</option><option>PDSA</option><option>Other</option></select><input id="title" placeholder="Title"><textarea id="desc" placeholder="Desc + Drive Link" rows="2"></textarea><input type="file" id="fileInput" accept="image/*"><input id="imageLink" placeholder="Or image link"><button onclick="uploadFree()" style="width:100%;background:#facc15;color:#080d1d;padding:12px;border-radius:10px;border:none;font-weight:900;margin-top:8px">Publish</button><p id="uploadStatus" style="font-size:11px;margin-top:6px"></p></div>
 <div id="solutionsList" style="margin-top:16px"></div>
 </div>
 
-<div class="card" id="adminTab" style="display:none"><h3>👑 Admin</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"><div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center"><h2 id="totalUsers">0</h2><small>Users</small></div><div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center"><h2 id="totalChats">0</h2><small>Chats</small></div></div><div style="margin-top:14px"><div id="usersList"></div></div></div>
+<div class="card" id="adminTab" style="display:none"><h3>👑 Admin - Gaurav Gupta</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"><div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center"><h2 id="totalUsers">0</h2><small>Users</small></div><div style="background:#0f172a;padding:14px;border-radius:12px;text-align:center"><h2 id="totalChats">0</h2><small>Chats</small></div></div><div style="margin-top:14px"><div id="usersList"></div></div></div>
 
 </div>
-<div><div class="card"><h3>🏆 Leaderboard</h3><div id="board" style="margin-top:14px"></div></div></div>
+<div><div class="card"><h3>🏆 Leaderboard</h3><div id="board" style="margin-top:14px"></div><div style="margin-top:20px;padding:14px;background:linear-gradient(135deg,#38bdf822,#8b5cf622);border-radius:12px;text-align:center"><b>👨‍💻 Gaurav Gupta</b><br><small style="opacity:.7">Creator of IITM Solutions V1</small><br><small style="color:#38bdf8">IITM BS Data Science</small></div></div></div>
 </div>
+
+<div class="footer">
+<p style="font-weight:900;font-size:14px">IITM SOLUTIONS V1</p>
+<p style="font-size:12px;margin:6px 0">Crafted with <span style="color:#ef4444">❤️</span> by <b style="color:#38bdf8">Gaurav Gupta</b></p>
+<p style="font-size:10px;opacity:.5">IITM BS Student | Full Stack Developer | 2026<br>© All Rights Reserved • Made in India 🇮🇳</p>
+<div style="margin-top:10px"><span class="creator-badge">FOLLOW: @gaurav_iitm</span></div>
+</div>
+
 </div>
 
 <script>
 const firebaseConfig={apiKey:"AIzaSyBtugz-3SDbpoH5zOQvQI0AoAb6kbqb0dc",authDomain:"iitm-solutions.firebaseapp.com",databaseURL:"https://iitm-solutions-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"iitm-solutions",storageBucket:"iitm-solutions.firebasestorage.app",messagingSenderId:"411649171402",appId:"1:411649171402:web:e527b8a01a518080b6b933"};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();
-let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),iv=null;
+let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),iv=null,allSols=[];
 function toggleAuth(){document.getElementById('loginForm').classList.toggle('hidden');document.getElementById('signupForm').classList.toggle('hidden');}
 async function register(){let name=document.getElementById('regName').value.trim(),email=document.getElementById('regEmail').value.trim().toLowerCase(),pass=document.getElementById('regPass').value;if(!name||!email||pass.length<6){document.getElementById('authStatus').innerText='❌ Fill all';return;}let snap=await db.ref('users').orderByChild('email').equalTo(email).once('value');if(snap.exists()){document.getElementById('authStatus').innerText='❌ Exists';return;}let u=db.ref('users').push();await u.set({name:name,email:email,pass:btoa(pass),created:Date.now(),streak:0,lastLogin:0});document.getElementById('authStatus').innerText='✅ Created! Login now';toggleAuth();}
-async function login(){let email=document.getElementById('loginEmail').value.trim().toLowerCase(),pass=document.getElementById('loginPass').value;if(email==='admin@iitm.com'&&pass==='admin123'){currentUser={name:'Admin (Gaurav)',email:email};isAdmin=true;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_admin','true');showApp();return;}let snap=await db.ref('users').orderByChild('email').equalTo(email).once('value');if(!snap.exists()){document.getElementById('authStatus').innerText='❌ Not found';return;}let found=null,key=null;snap.forEach(c=>{let d=c.val();if(atob(d.pass)===pass){found=d;key=c.key;}});if(!found){document.getElementById('authStatus').innerText='❌ Wrong pass';return;}currentUser={...found,dbKey:key};localStorage.setItem('iitm_user',JSON.stringify(currentUser));updateStreak(found,key);showApp();}
+async function login(){let email=document.getElementById('loginEmail').value.trim().toLowerCase(),pass=document.getElementById('loginPass').value;if(email==='admin@iitm.com'&&pass==='admin123'){currentUser={name:'Gaurav Gupta',email:email};isAdmin=true;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_admin','true');showApp();return;}let snap=await db.ref('users').orderByChild('email').equalTo(email).once('value');if(!snap.exists()){document.getElementById('authStatus').innerText='❌ Not found';return;}let found=null,key=null;snap.forEach(c=>{let d=c.val();if(atob(d.pass)===pass){found=d;key=c.key;}});if(!found){document.getElementById('authStatus').innerText='❌ Wrong pass';return;}currentUser={...found,dbKey:key};localStorage.setItem('iitm_user',JSON.stringify(currentUser));updateStreak(found,key);showApp();}
 function showApp(){let saved=JSON.parse(localStorage.getItem('iitm_user')||'null');if(saved){currentUser=saved;isAdmin=localStorage.getItem('iitm_admin')==='true';}if(!currentUser)return;document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');document.getElementById('displayName').innerText=currentUser.name;document.getElementById('userNameShow').innerText=currentUser.name;if(isAdmin){document.getElementById('adminBadge').classList.remove('hidden');document.getElementById('adminTabBtn').style.display='block';document.getElementById('adminUploadBox').classList.remove('hidden');document.getElementById('adminAssignBox').classList.remove('hidden');}if(currentUser.streak!==undefined)document.getElementById('streakCount').innerText=currentUser.streak||0;upd();}
 function logout(){localStorage.removeItem('iitm_user');localStorage.removeItem('iitm_admin');location.reload();}
 window.onload=()=>{let u=localStorage.getItem('iitm_user');if(u){currentUser=JSON.parse(u);isAdmin=localStorage.getItem('iitm_admin')==='true';showApp();}};
@@ -92,100 +111,20 @@ function upd(){let h=String(Math.floor(sec/3600)).padStart(2,'0'),m=String(Math.
 function st(){if(iv)return;iv=setInterval(()=>{sec++;upd();},1000);}function sp(){clearInterval(iv);iv=null;}function rs(){sp();sec=0;upd();}
 function save(){if(sec<10){alert('10 sec min');return;}db.ref('leaderboard').push({name:currentUser.name,time:sec,t:Date.now()});rs();alert('Saved!');}
 function showTab(v){['study','ai','assign','chat','sols','admin'].forEach(x=>{let el=document.getElementById(x+'Tab');if(el)el.style.display=x==v?'block':'none';});document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t.getAttribute('onclick').includes(v));});}
-
-// --- NEW SMART AI SOLVER - OFFLINE + ONLINE ---
-async function askAI(){
- let input=document.getElementById('aiInput');
- let q=input.value.trim();
- if(!q) return;
- let box=document.getElementById('aiBox');
- box.innerHTML+=`<div class="msg me"><b>You:</b> ${q}</div>`;
- input.value='';
- box.innerHTML+=`<div id="typing" class="ai-typing">AI soch raha hai...</div>`;
- box.scrollTop=box.scrollHeight;
-
- // 1. OFFLINE MATH SOLVER - 10+2222 jaise sawal turant solve
- let mathRegex = /^[\d\s\+\-\*\/\%\(\)\.\^\!]+$/;
- if(mathRegex.test(q)){
-   try{
-     let evalQ = q.replace(/\^/g,'**');
-     let result = Function('"use strict";return ('+evalQ+')')();
-     document.getElementById('typing')?.remove();
-     box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${q} = <b>${result}</b> ✅<br><small>Offline calculator se solved</small></div>`;
-     box.scrollTop=box.scrollHeight;
-     return;
-   }catch(e){}
- }
-
- // 2. OFFLINE IITM FAQ
- let lower = q.toLowerCase();
- let offlineAns = null;
- if(lower.includes('probability')) offlineAns = "<b>Probability:</b> Kisi event ke hone ke chances. Formula: P(A)= favourable/total. Eg coin me Head ki prob = 1/2 = 0.5";
- else if(lower.includes('p-value')) offlineAns = "<b>P-value:</b> Agar p < 0.05 to result significant hai. Null hypothesis reject karte hain. IITM Stats me bahut pucha jata hai!";
- else if(lower.includes('loop')) offlineAns = "<b>Python Loop:</b><br>for i in range(5):<br>&nbsp;&nbsp;print(i) # 0 1 2 3 4";
- else if(lower.includes('bayes')) offlineAns = "<b>Bayes Theorem:</b> P(A|B) = P(B|A)*P(A)/P(B). Eg disease test me use hota hai.";
- 
- if(offlineAns){
-   document.getElementById('typing')?.remove();
-   box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${offlineAns} <br><small>📚 IITM Quick Notes</small></div>`;
-   box.scrollTop=box.scrollHeight;
-   // phir bhi online try karega neeche for detail
- }
-
- // 3. ONLINE AI - Try 3 free endpoints
- const endpoints = [
-   {url:'https://api.duckduckgo.com/?q='+encodeURIComponent(q)+'&format=json', type:'duck'},
-   {url:'https://api.allorigins.win/raw?url='+encodeURIComponent('https://text.pollinations.ai/'+encodeURIComponent(q)), type:'pollinations_get'},
-   {url:'https://api.codetabs.com/v1/proxy/?quest='+encodeURIComponent('https://text.pollinations.ai/'+encodeURIComponent(q)), type:'pollinations_get'}
- ];
-
- // Try POST endpoints
- try{
-   let res = await fetch('https://ai.hackclub.com/chat/completions', {
-     method:'POST',
-     headers:{'Content-Type':'application/json'},
-     body: JSON.stringify({model:'llama-3.3-70b-versatile', messages:[{role:'system', content:'You are IITM BS tutor. Answer in Hinglish, short, simple, with example.'},{role:'user', content:q}]})
-   });
-   if(res.ok){
-     let data = await res.json();
-     let ans = data.choices?.[0]?.message?.content;
-     if(ans){
-       document.getElementById('typing')?.remove();
-       if(!offlineAns) box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${ans.replace(/\n/g,'<br>')}</div>`;
-       else box.innerHTML+=`<div class="msg ai" style="margin-top:6px"><b>AI Detail:</b> ${ans.replace(/\n/g,'<br>')}</div>`;
-       box.scrollTop=box.scrollHeight;
-       return;
-     }
-   }
- }catch(e){}
-
- try{
-   let res2 = await fetch('https://text.pollinations.ai/'+encodeURIComponent(q)+'?model=openai');
-   let txt = await res2.text();
-   if(txt && !txt.includes('error') && !txt.includes('Payment') && txt.length>2){
-     document.getElementById('typing')?.remove();
-     if(!offlineAns) box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${txt.replace(/\n/g,'<br>')}</div>`;
-     box.scrollTop=box.scrollHeight;
-     return;
-   }
- }catch(e){}
-
- document.getElementById('typing')?.remove();
- if(!offlineAns){
-   box.innerHTML+=`<div class="msg ai"><b>AI:</b> Bhai abhi AI server slow hai, but tera sawal <b>${q}</b> ka answer:<br><br>${q.includes('+') || q.includes('-') || q.includes('*') || q.includes('/') ? 'Ye maths hai, upar calculator se ho gaya ✅' : 'Ye IITM ka concept hai - thodi der me online answer aa jayega. Tab tak notes se padh le! 📚'}<br><small>Tip: 1-2 min baad phir try kar</small></div>`;
- }
- box.scrollTop=box.scrollHeight;
-}
+let recog=null;function startVoice(){let btn=document.getElementById('micBtn');if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){alert('Chrome use karo');return;}let SR=window.SpeechRecognition||window.webkitSpeechRecognition;recog=new SR();recog.lang='en-IN';recog.onstart=()=>{btn.classList.add('listening');btn.innerHTML='<i class="fa-solid fa-stop"></i>';};recog.onend=()=>{btn.classList.remove('listening');btn.innerHTML='<i class="fa-solid fa-microphone"></i>';};recog.onresult=(e)=>{document.getElementById('aiInput').value=e.results[0][0].transcript;askAI();};recog.start();}
+function speakText(t){if('speechSynthesis' in window){let u=new SpeechSynthesisUtterance(t.replace(/<[^>]*>/g,'').substring(0,200));u.lang='en-IN';speechSynthesis.speak(u);}}
+async function askAI(){let input=document.getElementById('aiInput');let q=input.value.trim();if(!q)return;let box=document.getElementById('aiBox');box.innerHTML+=`<div class="msg me"><b>You:</b> ${q}</div>`;input.value='';box.innerHTML+=`<div id="typing" class="ai-typing">Gaurav's AI soch raha hai...</div>`;box.scrollTop=box.scrollHeight;let mathRegex=/^[\d\s\+\-\*\/\%\(\)\.\^\!]+$/;if(mathRegex.test(q)){try{let r=Function('"use strict";return ('+q.replace(/\^/g,'**')+')')();document.getElementById('typing')?.remove();box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${q} = <b>${r}</b> ✅</div>`;box.scrollTop=box.scrollHeight;return;}catch(e){}}try{let res=await fetch('https://ai.hackclub.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'qwen/qwen3-32b',messages:[{role:'system',content:'You are IITM BS tutor created by Gaurav Gupta. Hinglish short.'},{role:'user',content:q}]})});if(res.ok){let data=await res.json();let ans=data.choices?.[0]?.message?.content;if(ans){document.getElementById('typing')?.remove();box.innerHTML+=`<div class="msg ai"><b>AI by Gaurav:</b> ${ans.replace(/\n/g,'<br>')} <span onclick="speakText('${ans.replace(/'/g,'')}')" style="cursor:pointer">🔊</span></div>`;box.scrollTop=box.scrollHeight;speakText(ans);return;}}}catch(e){}document.getElementById('typing')?.remove();box.innerHTML+=`<div class="msg ai"><b>AI:</b> Try again after 5 sec. Made by Gaurav Gupta</div>`;box.scrollTop=box.scrollHeight;}
 function quickAsk(el){document.getElementById('aiInput').value=el.innerText;askAI();}
-
+function filterByPill(sub,el){document.querySelectorAll('.sub-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('subjectFilter').value=sub;filterSols();}
+function filterSols(){let f=document.getElementById('subjectFilter').value;let list=document.getElementById('solutionsList');list.innerHTML='';let filtered=f==='All'?allSols:allSols.filter(s=>s.subject===f);if(filtered.length===0){list.innerHTML='<p style="opacity:.4;text-align:center;padding:20px">No '+f+' solutions yet</p>';return;}filtered.forEach(d=>{let hasImg=d.url&&d.url.length>10;let driveLink=(d.desc.match(/https:\/\/[^\s]+/g)||[])[0];list.innerHTML+=`<div class="sol-card"><div style="display:flex;justify-content:space-between"><div><b>${d.title}</b><br><small style="font-size:10px;background:#38bdf822;color:#38bdf8;padding:3px 8px;border-radius:20px">${d.subject}</small> <small style="opacity:.5">By Gaurav Gupta</small><br><small style="opacity:.7">${d.desc}</small></div><div style="display:flex;flex-direction:column;gap:6px">${driveLink?`<a href="${driveLink}" target="_blank" style="background:#22c55e;color:white;padding:6px 12px;border-radius:8px;text-decoration:none;font-size:11px;text-align:center">Open</a>`:''}<button onclick="likeSol('${d.id}',${d.likes||0})" style="background:#1e293b;color:#facc15;border:none;padding:6px 12px;border-radius:8px">👍</button>${isAdmin?`<button onclick="delSol('${d.id}')" style="background:#ef444422;color:#ef4444;border:none;padding:5px;border-radius:8px;font-size:10px">Del</button>`:''}</div></div>${hasImg?`<img src="${d.url}" class="sol-img">`:''}</div>`;});}
 function send(){let t=document.getElementById('chat').value.trim();if(!t)return;db.ref('chats').push({name:currentUser.name,email:currentUser.email||'admin',text:t,time:Date.now()});document.getElementById('chat').value='';}
 db.ref('chats').limitToLast(80).on('value',s=>{let box=document.getElementById('chatBox');box.innerHTML='';let count=0;s.forEach(child=>{count++;let d=child.val();box.innerHTML+=`<div class="msg ${d.email===currentUser?.email?'me':''}"><b>${d.name}:</b> ${d.text}<br><small style="opacity:.4;font-size:9px">${new Date(d.time).toLocaleTimeString()}</small></div>`});let tc=document.getElementById('totalChats');if(tc)tc.innerText=count;box.scrollTop=box.scrollHeight;});
 db.ref('leaderboard').on('value',s=>{let a=[];s.forEach(c=>a.push(c.val()));a.sort((x,y)=>y.time-x.time);a=a.slice(0,15);let bo=document.getElementById('board');bo.innerHTML='';a.forEach((d,i)=>{let h=Math.floor(d.time/3600),m=Math.floor(d.time%3600/60);bo.innerHTML+=`<div class="leader-item"><span>#${i+1} ${d.name}</span><span>${h>0?h+'h ':''}${m}m</span></div>`})});
 async function updateStreak(user,key){let today=new Date().toDateString();let last=new Date(user.lastLogin||0).toDateString();if(last===today)return;let newStreak=last===new Date(Date.now()-86400000).toDateString()?(user.streak||0)+1:1;await db.ref('users/'+key).update({streak:newStreak,lastLogin:Date.now()});currentUser.streak=newStreak;localStorage.setItem('iitm_user',JSON.stringify(currentUser));document.getElementById('streakCount').innerText=newStreak;}
 async function addAssignment(){if(!isAdmin)return;let title=document.getElementById('assignTitle').value.trim(),sub=document.getElementById('assignSub').value,date=document.getElementById('assignDate').value,link=document.getElementById('assignLink').value.trim();if(!title||!date){alert('Fill');return;}await db.ref('assignments').push({title:title,subject:sub,deadline:date,link:link,time:Date.now()});alert('Added!');}
 db.ref('assignments').on('value',s=>{let list=document.getElementById('assignmentsList');list.innerHTML='';if(!s.exists()){list.innerHTML='<p style="opacity:.4;text-align:center;padding:20px">No deadlines</p>';return;}let arr=[];s.forEach(c=>arr.push({id:c.key,...c.val()}));arr.reverse();arr.forEach(d=>{let dead=new Date(d.deadline);let now=new Date();let diff=Math.ceil((dead-now)/(1000*60*60*24));let color=diff<2?'#ef4444':diff<5?'#facc15':'#22c55e';let txt=diff<0?'OVERDUE':diff===0?'TODAY':`${diff} days left`;list.innerHTML+=`<div class="deadline-card"><div><b>${d.title}</b><br><small style="background:#38bdf822;color:#38bdf8;padding:2px 8px;border-radius:20px;font-size:10px">${d.subject}</small> <small style="color:${color};font-weight:800">${txt}</small></div><div>${d.link?`<a href="${d.link}" target="_blank" style="background:#38bdf8;color:#080d1d;padding:6px 12px;border-radius:8px;text-decoration:none;font-size:11px;font-weight:800">Open</a>`:''}</div></div>`});});
-async function uploadFree(){if(!isAdmin)return;let title=document.getElementById('title').value.trim(),subject=document.getElementById('subject').value,desc=document.getElementById('desc').value.trim(),link=document.getElementById('imageLink').value.trim();let file=document.getElementById('fileInput').files[0];if(!title){alert('Title');return;}document.getElementById('uploadStatus').innerText='Publishing...';let finalUrl=link;if(file){let reader=new FileReader();reader.onload=async function(e){finalUrl=e.target.result;await db.ref('solutions').push({title:title,subject:subject,desc:desc,url:finalUrl,time:Date.now(),by:currentUser.name,views:0,likes:0});document.getElementById('uploadStatus').innerText='✅ Published!';};reader.readAsDataURL(file);return;}await db.ref('solutions').push({title:title,subject:subject,desc:desc,url:finalUrl||'',time:Date.now(),by:currentUser.name,views:0,likes:0});document.getElementById('uploadStatus').innerText='✅ Published!';}
-db.ref('solutions').on('value',s=>{let list=document.getElementById('solutionsList');list.innerHTML='';if(!s.exists()){list.innerHTML='<p style="opacity:.4;text-align:center">No solutions</p>';return;}let arr=[];s.forEach(c=>arr.push({id:c.key,...c.val()}));arr.reverse();arr.forEach(d=>{let hasImg=d.url&&d.url.length>10;let driveLink=(d.desc.match(/https:\/\/[^\s]+/g)||[])[0];list.innerHTML+=`<div class="sol-card"><div style="display:flex;justify-content:space-between"><div><b>${d.title}</b><br><small style="font-size:10px;background:#38bdf822;color:#38bdf8;padding:3px 8px;border-radius:20px">${d.subject}</small> <small style="opacity:.5">👁️${d.views||0} 👍${d.likes||0}</small><br><small style="opacity:.7">${d.desc}</small></div><div style="display:flex;flex-direction:column;gap:6px">${driveLink?`<a href="${driveLink}" target="_blank" style="background:#22c55e;color:white;padding:6px 12px;border-radius:8px;text-decoration:none;font-size:11px;text-align:center">Open</a>`:''}<button onclick="likeSol('${d.id}',${d.likes||0})" style="background:#1e293b;color:#facc15;border:none;padding:6px 12px;border-radius:8px">👍</button>${isAdmin?`<button onclick="delSol('${d.id}')" style="background:#ef444422;color:#ef4444;border:none;padding:5px;border-radius:8px;font-size:10px">Del</button>`:''}</div></div>${hasImg?`<img src="${d.url}" class="sol-img">`:''}</div>`});});
+async function uploadFree(){if(!isAdmin)return;let title=document.getElementById('title').value.trim(),subject=document.getElementById('subject').value,desc=document.getElementById('desc').value.trim(),link=document.getElementById('imageLink').value.trim();let file=document.getElementById('fileInput').files[0];if(!title){alert('Title');return;}document.getElementById('uploadStatus').innerText='Publishing...';let finalUrl=link;if(file){let reader=new FileReader();reader.onload=async function(e){finalUrl=e.target.result;await db.ref('solutions').push({title:title,subject:subject,desc:desc,url:finalUrl,time:Date.now(),by:'Gaurav Gupta',views:0,likes:0});document.getElementById('uploadStatus').innerText='✅ Published by Gaurav Gupta!';};reader.readAsDataURL(file);return;}await db.ref('solutions').push({title:title,subject:subject,desc:desc,url:finalUrl||'',time:Date.now(),by:'Gaurav Gupta',views:0,likes:0});document.getElementById('uploadStatus').innerText='✅ Published by Gaurav Gupta!';}
+db.ref('solutions').on('value',s=>{allSols=[];s.forEach(c=>allSols.push({id:c.key,...c.val()}));allSols.reverse();filterSols();});
 function likeSol(id,l){db.ref('solutions/'+id).update({likes:(l||0)+1});}
 function delSol(id){if(!isAdmin)return;if(confirm('Delete?'))db.ref('solutions/'+id).remove();}
 db.ref('users').on('value',s=>{if(!isAdmin)return;document.getElementById('totalUsers').innerText=s.numChildren();let list=document.getElementById('usersList');list.innerHTML='';s.forEach(c=>{let d=c.val();list.innerHTML+=`<div style="display:flex;justify-content:space-between;background:#0f172a;padding:10px;border-radius:8px;margin-bottom:6px;font-size:12px"><span>${d.name}<br><small style="opacity:.5">${d.email} | 🔥${d.streak||0}</small></span><small>${new Date(d.created).toLocaleDateString()}</small></div>`});});
