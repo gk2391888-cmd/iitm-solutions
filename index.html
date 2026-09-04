@@ -69,7 +69,7 @@ input,select,textarea{width:100%;padding:12px;background:#080d1d;border:1px soli
 <div class="card" id="pyqTab" style="display:none">
 <div style="display:flex;justify-content:space-between;align-items:center"><h3>📄 PYQ Vault</h3><select id="pyqFilter" onchange="filterPYQ()" style="width:auto;padding:6px 12px;font-size:11px"><option value="All">All</option><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>CT</option><option>DBMS</option><option>PDSA</option></select></div>
 <p style="font-size:11px;opacity:.5;margin:8px 0">Last 3 years ke papers - By Gaurav Gupta</p>
-<div id="adminPYQBox" class="hidden" style="background:#0f172a;padding:14px;border-radius:12px;border:1px dashed #8b5cf633;margin-bottom:12px"><b style="color:#8b5cf6;font-size:12px">Add PYQ</b><select id="pyqSub"><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>CT</option><option>DBMS</option><option>PDSA</option></select><select id="pyqType"><option>Quiz 1</option><option>Quiz 2</option><option>GA</option><option>End Term</option><option>PYQ</option></select><input id="pyqYear" placeholder="Year e.g. 2024"><input id="pyqTitle" placeholder="Title e.g. Stats 1 Quiz 1 2024"><input id="pyqLink" placeholder="Drive Link"><button onclick="addPYQ()" style="width:100%;background:#8b5cf6;color:white;padding:12px;border-radius:10px;border:none;font-weight:900;margin-top:6px">Add PYQ</button></div>
+<div id="adminPYQBox" class="hidden" style="background:#0f172a;padding:14px;border-radius:12px;border:1px dashed #8b5cf633;margin-bottom:12px"><b style="color:#8b5cf6;font-size:12px">Add PYQ</b><select id="pyqSub"><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>CT</option><option>DBMS</option><option>PDSA</option></select><select id="pyqType"><option>Quiz 1</option><option>Quiz 2</option><option>GA</option><option>End Term</option><option>PYQ</option></select><input id="pyqYear" placeholder="Year e.g. 2024"><input id="pyqTitle" placeholder="Title e.g. Stats 1 Quiz 1 2024"><input id="pyqLink" placeholder="Drive Link"><button onclick="addPYQ()" id="pyqBtn" style="width:100%;background:#8b5cf6;color:white;padding:12px;border-radius:10px;border:none;font-weight:900;margin-top:6px">Add PYQ</button></div>
 <div id="pyqList"></div>
 </div>
 
@@ -129,12 +129,53 @@ async function askAI(){let q=document.getElementById('aiInput').value.trim();if(
 function filterByPill(s,el){document.querySelectorAll('.sub-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('subjectFilter').value=s;filterSols();}
 function filterSols(){let f=document.getElementById('subjectFilter').value;let l=document.getElementById('solutionsList');l.innerHTML='';let fil=f==='All'?allSols:allSols.filter(x=>x.subject===f);if(!fil.length){l.innerHTML='<p style="opacity:.4;text-align:center">No '+f+'</p>';return;}fil.forEach(d=>{let link=(d.desc.match(/https:\/\/[^\s]+/g)||[])[0];l.innerHTML+=`<div class="sol-card"><div style="display:flex;justify-content:space-between"><div><b>${d.title}</b><br><small style="background:#38bdf822;padding:3px 8px;border-radius:20px;font-size:10px">${d.subject}</small> <small style="opacity:.5">By Gaurav</small><br><small>${d.desc}</small></div><div>${link?`<a href="${link}" target="_blank" style="background:#22c55e;color:white;padding:6px 12px;border-radius:8px;text-decoration:none;font-size:11px">Open</a>`:''}</div></div>${d.url?`<img src="${d.url}" style="width:100%;border-radius:10px;margin-top:10px">`:''}</div>`;});}
 
-// PYQ VAULT
-async function addPYQ(){let sub=document.getElementById('pyqSub').value,type=document.getElementById('pyqType').value,year=document.getElementById('pyqYear').value,title=document.getElementById('pyqTitle').value,link=document.getElementById('pyqLink').value;if(!title||!link){alert('Title + Link');return;}await db.ref('pyqs').push({subject:sub,type:type,year:year,title:title,link:link,time:Date.now(),by:'Gaurav Gupta'});alert('PYQ Added!');}
+// ================= PYQ VAULT - 100% FIXED =================
+async function addPYQ(){
+  let sub=document.getElementById('pyqSub').value
+  let type=document.getElementById('pyqType').value
+  let year=document.getElementById('pyqYear').value || "2024"
+  let title=document.getElementById('pyqTitle').value.trim()
+  let link=document.getElementById('pyqLink').value.trim()
+
+  if(!title ||!link){
+    alert('❌ Title + Link daal bhai!')
+    return
+  }
+
+  let btn=document.getElementById('pyqBtn')
+  let oldText=btn.innerText
+  btn.innerText="Uploading... ⏳"
+  btn.disabled=true
+
+  try{
+    await db.ref('pyqs').push({
+      subject:sub,
+      type:type,
+      year:year,
+      title:title,
+      link:link,
+      time:Date.now(),
+      by:'Gaurav Gupta'
+    })
+
+    alert(`✅ ${sub} ka PYQ Add ho gaya!`)
+
+    // FIX: Form clear - isse dusra upload hoga
+    document.getElementById('pyqTitle').value=""
+    document.getElementById('pyqLink').value=""
+    document.getElementById('pyqYear').value=""
+    document.getElementById('pyqFilter').value="All"
+
+  }catch(e){
+    alert("Error: "+e.message)
+  }
+  btn.innerText=oldText
+  btn.disabled=false
+}
+
 db.ref('pyqs').on('value',s=>{allPYQ=[];s.forEach(c=>allPYQ.push(c.val()));allPYQ.reverse();filterPYQ();let el=document.getElementById('totalPYQ');if(el)el.innerText=allPYQ.length;});
 function filterPYQ(){let f=document.getElementById('pyqFilter').value;let list=document.getElementById('pyqList');list.innerHTML='';let fil=f==='All'?allPYQ:allPYQ.filter(x=>x.subject===f);if(!fil.length){list.innerHTML='<p style="opacity:.4;text-align:center;padding:20px">No PYQ for '+f+' yet<br><small>Admin will add soon!</small></p>';return;}fil.forEach(d=>{list.innerHTML+=`<div class="pyq-card"><div><b>${d.title}</b><br><small style="background:#8b5cf622;color:#8b5cf6;padding:2px 8px;border-radius:20px;font-size:10px">${d.subject} • ${d.type} • ${d.year||'2024'}</small></div><a href="${d.link}" target="_blank" style="background:#8b5cf6;color:white;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:11px;font-weight:800">Open 📄</a></div>`;});}
 
-// GRADE CALCULATOR
 function calculateGrade(){
  let q1=parseFloat(document.getElementById('quiz1').value)||0;
  let q2=parseFloat(document.getElementById('quiz2').value)||0;
