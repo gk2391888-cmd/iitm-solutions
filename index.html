@@ -50,10 +50,10 @@ input,select,textarea{width:100%;padding:12px;background:#080d1d;border:1px soli
 </div>
 
 <div class="card" id="aiTab" style="display:none">
-<div style="display:flex;justify-content:space-between;align-items:center"><h3>🤖 AI Doubt Solver</h3><span style="font-size:9px;background:#22c55e22;color:#22c55e;padding:4px 10px;border-radius:20px">FREE • V1</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center"><h3>🤖 AI Doubt Solver</h3><span style="font-size:9px;background:#22c55e22;color:#22c55e;padding:4px 10px;border-radius:20px">FREE • V1 FIXED</span></div>
 <p style="font-size:11px;opacity:.5;margin-top:6px">Maths, Stats, Python, CT - kuch bhi pucho!</p>
 <div id="aiBox"><div class="msg ai"><b>AI:</b> Hi! Mai IITM ka AI hu. Koi bhi doubt pucho - Maths, Python, Stats sab samjha dunga! 👋</div></div>
-<div style="display:flex;gap:8px"><input id="aiInput" placeholder="e.g. Explain Bayes theorem in simple words..." style="flex:1;margin:0" onkeypress="if(event.key==='Enter')askAI()"><button onclick="askAI()" style="background:#22c55e;color:white;padding:14px 22px;border-radius:12px;border:none;font-weight:900"><i class="fa-solid fa-paper-plane"></i></button></div>
+<div style="display:flex;gap:8px"><input id="aiInput" placeholder="e.g. 1+1 kya hota hai?" style="flex:1;margin:0" onkeypress="if(event.key==='Enter')askAI()"><button onclick="askAI()" style="background:#22c55e;color:white;padding:14px 22px;border-radius:12px;border:none;font-weight:900"><i class="fa-solid fa-paper-plane"></i></button></div>
 <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span onclick="quickAsk(this)" style="font-size:10px;background:#1a2340;padding:6px 10px;border-radius:20px;cursor:pointer">Explain Probability</span><span onclick="quickAsk(this)" style="font-size:10px;background:#1a2340;padding:6px 10px;border-radius:20px;cursor:pointer">Python loop example</span><span onclick="quickAsk(this)" style="font-size:10px;background:#1a2340;padding:6px 10px;border-radius:20px;cursor:pointer">What is p-value?</span></div>
 </div>
 
@@ -93,7 +93,7 @@ function st(){if(iv)return;iv=setInterval(()=>{sec++;upd();},1000);}function sp(
 function save(){if(sec<10){alert('10 sec min');return;}db.ref('leaderboard').push({name:currentUser.name,time:sec,t:Date.now()});rs();alert('Saved!');}
 function showTab(v){['study','ai','assign','chat','sols','admin'].forEach(x=>{let el=document.getElementById(x+'Tab');if(el)el.style.display=x==v?'block':'none';});document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t.getAttribute('onclick').includes(v));});}
 
-// AI DOUBT SOLVER - FREE NO KEY
+// AI DOUBT SOLVER - FIXED - NO PAYMENT ERROR
 async function askAI(){
 let input=document.getElementById('aiInput');
 let q=input.value.trim();
@@ -104,14 +104,36 @@ input.value='';
 box.innerHTML+=`<div id="typing" class="ai-typing">AI soch raha hai...</div>`;
 box.scrollTop=box.scrollHeight;
 try{
-let prompt=`You are IITM BS AI Tutor. Explain simply for IIT Madras BS students. Question: ${q}. Answer in Hinglish (Hindi+English mix) short, easy, with example if needed.`;
-let res=await fetch('https://text.pollinations.ai/'+encodeURIComponent(prompt));
-let ans=await res.text();
+let res = await fetch('https://ai.hackclub.com/chat/completions', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({
+   model: 'qwen/qwen3-32b',
+   messages: [
+     {role: 'system', content: 'You are IITM BS AI Tutor. Explain in simple Hinglish, short, with example. For IIT Madras BS students. Maths, Stats, Python, CT expert.'},
+     {role: 'user', content: q}
+   ]
+ })
+});
+let data = await res.json();
+let ans = data.choices[0].message.content;
 document.getElementById('typing')?.remove();
 box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${ans.replace(/\n/g,'<br>')}</div>`;
 }catch(e){
-document.getElementById('typing')?.remove();
-box.innerHTML+=`<div class="msg ai"><b>AI:</b> Error, phir se try karo. Internet check karo.</div>`;
+ try{
+  let res2 = await fetch('https://text.pollinations.ai/openai', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({model:'openai', messages:[{role:'user', content:q}], seed: 42})
+  });
+  let data2 = await res2.json();
+  let ans2 = data2.choices[0].message.content;
+  document.getElementById('typing')?.remove();
+  box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${ans2.replace(/\n/g,'<br>')}</div>`;
+ }catch(e2){
+  document.getElementById('typing')?.remove();
+  box.innerHTML+=`<div class="msg ai"><b>AI:</b> Bhai server busy hai, 10 sec baad try kar.</div>`;
+ }
 }
 box.scrollTop=box.scrollHeight;
 }
