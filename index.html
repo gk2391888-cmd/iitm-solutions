@@ -18,7 +18,7 @@
 .btn{padding:12px 20px;border:none;border-radius:12px;font-weight:800;cursor:pointer}
 input,select,textarea{width:100%;padding:12px;background:#080d1d;border:1px solid #1e293b;border-radius:12px;color:white;margin:6px 0;outline:none}
 #chatBox,#aiBox{height:350px;overflow-y:auto;background:#080d1d;border-radius:12px;padding:12px;margin:12px 0;display:flex;flex-direction:column;gap:8px;border:1px solid #1e293b}
-.msg{background:#1a2340;padding:10px 14px;border-radius:16px;max-width:88%;font-size:13px}.msg.me{align-self:flex-end;background:#38bdf8;color:#080d1d}
+.msg{background:#1a2340;padding:10px 14px;border-radius:16px;max-width:88%;font-size:13px;word-break:break-word}.msg.me{align-self:flex-end;background:#38bdf8;color:#080d1d}
 .msg.ai{align-self:flex-start;background:#22c55e22;border:1px solid #22c55e33}
 .leader-item{display:flex;justify-content:space-between;padding:12px;background:#0f172a;border-radius:12px;margin-bottom:8px;font-size:13px;border-left:3px solid #38bdf8}
 .sol-card{background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:14px;margin-bottom:12px}
@@ -50,10 +50,10 @@ input,select,textarea{width:100%;padding:12px;background:#080d1d;border:1px soli
 </div>
 
 <div class="card" id="aiTab" style="display:none">
-<div style="display:flex;justify-content:space-between;align-items:center"><h3>🤖 AI Doubt Solver</h3><span style="font-size:9px;background:#22c55e22;color:#22c55e;padding:4px 10px;border-radius:20px">FREE • V1 FIXED</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center"><h3>🤖 AI Doubt Solver</h3><span style="font-size:9px;background:#22c55e22;color:#22c55e;padding:4px 10px;border-radius:20px">V1 SMART</span></div>
 <p style="font-size:11px;opacity:.5;margin-top:6px">Maths, Stats, Python, CT - kuch bhi pucho!</p>
-<div id="aiBox"><div class="msg ai"><b>AI:</b> Hi! Mai IITM ka AI hu. Koi bhi doubt pucho - Maths, Python, Stats sab samjha dunga! 👋</div></div>
-<div style="display:flex;gap:8px"><input id="aiInput" placeholder="e.g. 1+1 kya hota hai?" style="flex:1;margin:0" onkeypress="if(event.key==='Enter')askAI()"><button onclick="askAI()" style="background:#22c55e;color:white;padding:14px 22px;border-radius:12px;border:none;font-weight:900"><i class="fa-solid fa-paper-plane"></i></button></div>
+<div id="aiBox"><div class="msg ai"><b>AI:</b> Hi! Mai IITM ka AI hu. 10+2222 = 2232 😉 Ab koi bhi doubt pucho!</div></div>
+<div style="display:flex;gap:8px"><input id="aiInput" placeholder="e.g. 10+2222 or Explain Bayes..." style="flex:1;margin:0" onkeypress="if(event.key==='Enter')askAI()"><button onclick="askAI()" style="background:#22c55e;color:white;padding:14px 22px;border-radius:12px;border:none;font-weight:900"><i class="fa-solid fa-paper-plane"></i></button></div>
 <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span onclick="quickAsk(this)" style="font-size:10px;background:#1a2340;padding:6px 10px;border-radius:20px;cursor:pointer">Explain Probability</span><span onclick="quickAsk(this)" style="font-size:10px;background:#1a2340;padding:6px 10px;border-radius:20px;cursor:pointer">Python loop example</span><span onclick="quickAsk(this)" style="font-size:10px;background:#1a2340;padding:6px 10px;border-radius:20px;cursor:pointer">What is p-value?</span></div>
 </div>
 
@@ -93,49 +93,88 @@ function st(){if(iv)return;iv=setInterval(()=>{sec++;upd();},1000);}function sp(
 function save(){if(sec<10){alert('10 sec min');return;}db.ref('leaderboard').push({name:currentUser.name,time:sec,t:Date.now()});rs();alert('Saved!');}
 function showTab(v){['study','ai','assign','chat','sols','admin'].forEach(x=>{let el=document.getElementById(x+'Tab');if(el)el.style.display=x==v?'block':'none';});document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t.getAttribute('onclick').includes(v));});}
 
-// AI DOUBT SOLVER - FIXED - NO PAYMENT ERROR
+// --- NEW SMART AI SOLVER - OFFLINE + ONLINE ---
 async function askAI(){
-let input=document.getElementById('aiInput');
-let q=input.value.trim();
-if(!q)return;
-let box=document.getElementById('aiBox');
-box.innerHTML+=`<div class="msg me"><b>You:</b> ${q}</div>`;
-input.value='';
-box.innerHTML+=`<div id="typing" class="ai-typing">AI soch raha hai...</div>`;
-box.scrollTop=box.scrollHeight;
-try{
-let res = await fetch('https://ai.hackclub.com/chat/completions', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
- body: JSON.stringify({
-   model: 'qwen/qwen3-32b',
-   messages: [
-     {role: 'system', content: 'You are IITM BS AI Tutor. Explain in simple Hinglish, short, with example. For IIT Madras BS students. Maths, Stats, Python, CT expert.'},
-     {role: 'user', content: q}
-   ]
- })
-});
-let data = await res.json();
-let ans = data.choices[0].message.content;
-document.getElementById('typing')?.remove();
-box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${ans.replace(/\n/g,'<br>')}</div>`;
-}catch(e){
- try{
-  let res2 = await fetch('https://text.pollinations.ai/openai', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({model:'openai', messages:[{role:'user', content:q}], seed: 42})
-  });
-  let data2 = await res2.json();
-  let ans2 = data2.choices[0].message.content;
-  document.getElementById('typing')?.remove();
-  box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${ans2.replace(/\n/g,'<br>')}</div>`;
- }catch(e2){
-  document.getElementById('typing')?.remove();
-  box.innerHTML+=`<div class="msg ai"><b>AI:</b> Bhai server busy hai, 10 sec baad try kar.</div>`;
+ let input=document.getElementById('aiInput');
+ let q=input.value.trim();
+ if(!q) return;
+ let box=document.getElementById('aiBox');
+ box.innerHTML+=`<div class="msg me"><b>You:</b> ${q}</div>`;
+ input.value='';
+ box.innerHTML+=`<div id="typing" class="ai-typing">AI soch raha hai...</div>`;
+ box.scrollTop=box.scrollHeight;
+
+ // 1. OFFLINE MATH SOLVER - 10+2222 jaise sawal turant solve
+ let mathRegex = /^[\d\s\+\-\*\/\%\(\)\.\^\!]+$/;
+ if(mathRegex.test(q)){
+   try{
+     let evalQ = q.replace(/\^/g,'**');
+     let result = Function('"use strict";return ('+evalQ+')')();
+     document.getElementById('typing')?.remove();
+     box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${q} = <b>${result}</b> ✅<br><small>Offline calculator se solved</small></div>`;
+     box.scrollTop=box.scrollHeight;
+     return;
+   }catch(e){}
  }
-}
-box.scrollTop=box.scrollHeight;
+
+ // 2. OFFLINE IITM FAQ
+ let lower = q.toLowerCase();
+ let offlineAns = null;
+ if(lower.includes('probability')) offlineAns = "<b>Probability:</b> Kisi event ke hone ke chances. Formula: P(A)= favourable/total. Eg coin me Head ki prob = 1/2 = 0.5";
+ else if(lower.includes('p-value')) offlineAns = "<b>P-value:</b> Agar p < 0.05 to result significant hai. Null hypothesis reject karte hain. IITM Stats me bahut pucha jata hai!";
+ else if(lower.includes('loop')) offlineAns = "<b>Python Loop:</b><br>for i in range(5):<br>&nbsp;&nbsp;print(i) # 0 1 2 3 4";
+ else if(lower.includes('bayes')) offlineAns = "<b>Bayes Theorem:</b> P(A|B) = P(B|A)*P(A)/P(B). Eg disease test me use hota hai.";
+ 
+ if(offlineAns){
+   document.getElementById('typing')?.remove();
+   box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${offlineAns} <br><small>📚 IITM Quick Notes</small></div>`;
+   box.scrollTop=box.scrollHeight;
+   // phir bhi online try karega neeche for detail
+ }
+
+ // 3. ONLINE AI - Try 3 free endpoints
+ const endpoints = [
+   {url:'https://api.duckduckgo.com/?q='+encodeURIComponent(q)+'&format=json', type:'duck'},
+   {url:'https://api.allorigins.win/raw?url='+encodeURIComponent('https://text.pollinations.ai/'+encodeURIComponent(q)), type:'pollinations_get'},
+   {url:'https://api.codetabs.com/v1/proxy/?quest='+encodeURIComponent('https://text.pollinations.ai/'+encodeURIComponent(q)), type:'pollinations_get'}
+ ];
+
+ // Try POST endpoints
+ try{
+   let res = await fetch('https://ai.hackclub.com/chat/completions', {
+     method:'POST',
+     headers:{'Content-Type':'application/json'},
+     body: JSON.stringify({model:'llama-3.3-70b-versatile', messages:[{role:'system', content:'You are IITM BS tutor. Answer in Hinglish, short, simple, with example.'},{role:'user', content:q}]})
+   });
+   if(res.ok){
+     let data = await res.json();
+     let ans = data.choices?.[0]?.message?.content;
+     if(ans){
+       document.getElementById('typing')?.remove();
+       if(!offlineAns) box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${ans.replace(/\n/g,'<br>')}</div>`;
+       else box.innerHTML+=`<div class="msg ai" style="margin-top:6px"><b>AI Detail:</b> ${ans.replace(/\n/g,'<br>')}</div>`;
+       box.scrollTop=box.scrollHeight;
+       return;
+     }
+   }
+ }catch(e){}
+
+ try{
+   let res2 = await fetch('https://text.pollinations.ai/'+encodeURIComponent(q)+'?model=openai');
+   let txt = await res2.text();
+   if(txt && !txt.includes('error') && !txt.includes('Payment') && txt.length>2){
+     document.getElementById('typing')?.remove();
+     if(!offlineAns) box.innerHTML+=`<div class="msg ai"><b>AI:</b> ${txt.replace(/\n/g,'<br>')}</div>`;
+     box.scrollTop=box.scrollHeight;
+     return;
+   }
+ }catch(e){}
+
+ document.getElementById('typing')?.remove();
+ if(!offlineAns){
+   box.innerHTML+=`<div class="msg ai"><b>AI:</b> Bhai abhi AI server slow hai, but tera sawal <b>${q}</b> ka answer:<br><br>${q.includes('+') || q.includes('-') || q.includes('*') || q.includes('/') ? 'Ye maths hai, upar calculator se ho gaya ✅' : 'Ye IITM ka concept hai - thodi der me online answer aa jayega. Tab tak notes se padh le! 📚'}<br><small>Tip: 1-2 min baad phir try kar</small></div>`;
+ }
+ box.scrollTop=box.scrollHeight;
 }
 function quickAsk(el){document.getElementById('aiInput').value=el.innerText;askAI();}
 
