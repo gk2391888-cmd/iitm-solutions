@@ -1,32 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>IITM SOLUTIONS</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IITM SOLUTIONS - Study Tracker</title>
 <style>
-body{font-family:Arial;background:#0f172a;color:white;text-align:center;margin:0}
-.header{padding:20px;background:#1e293b;font-size:24px;font-weight:bold}
-.timer-box{margin:40px auto;background:#1e293b;padding:30px;border-radius:20px;width:90%;max-width:400px}
-#time{font-size:60px;margin:20px 0;color:#38bdf8;font-weight:bold}
-button{padding:12px 25px;margin:5px;border:none;border-radius:10px;font-size:16px;cursor:pointer}
-.start{background:#22c55e;color:white}.stop{background:#ef4444;color:white}.reset{background:#64748b;color:white}
+*{margin:0;padding:0;box-sizing:border-box;font-family: 'Segoe UI', sans-serif}
+body{background:#0a0f1e;color:white;min-height:100vh}
+.header{background:rgba(30,41,59,0.8);backdrop-filter:blur(10px);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;position:sticky;top:0}
+.logo{font-weight:900;font-size:20px;letter-spacing:1px} .logo span{color:#38bdf8}
+.main{max-width:1000px;margin:20px auto;padding:0 15px;display:grid;grid-template-columns:1fr 350px;gap:20px}
+@media(max-width:768px){.main{grid-template-columns:1fr}}
+.card{background:#151d32;border:1px solid #1e293b;border-radius:16px;padding:25px}
+.timer-display{font-size:72px;font-weight:800;text-align:center;margin:20px 0;color:#38bdf8;letter-spacing:2px}
+@media(max-width:500px){.timer-display{font-size:50px}}
+.btns{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
+button{padding:12px 22px;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:0.2s}
+.start{background:#22c55e;color:white} .stop{background:#ef4444;color:white} .reset{background:#334155;color:white}
+button:active{transform:scale(0.95)}
+input{width:100%;padding:12px;background:#0a0f1e;border:1px solid #334155;border-radius:10px;color:white;margin:10px 0;outline:none}
+.input-group{margin:15px 0}
+.leader-title{font-size:18px;font-weight:800;margin-bottom:15px;display:flex;justify-content:space-between}
+.leader-item{display:flex;justify-content:space-between;padding:12px;background:#0f172a;border-radius:10px;margin-bottom:8px;border-left:3px solid #38bdf8}
+.rank{font-weight:800;color:#facc15;margin-right:8px}
+.live-dot{width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+.save-btn{background:#38bdf8;color:#0a0f1e;width:100%;margin-top:10px}
 </style>
 </head>
 <body>
-<div class="header">📚 IITM SOLUTIONS</div>
-<div class="timer-box">
-<h2>Study Stopwatch</h2>
-<div id="time">00:00:00</div>
+<div class="header"><div class="logo">IITM <span>SOLUTIONS</span></div><div style="font-size:12px">🔴 <span class="live-dot"></span> LIVE</div></div>
+<div class="main">
+<div class="card">
+<div class="input-group"><label style="font-size:13px;color:#94a3b8">Student Name</label><input id="nameInput" placeholder="Apna naam likho..."></div>
+<div class="timer-display" id="time">00:00:00</div>
+<div class="btns">
 <button class="start" onclick="start()">Start</button>
 <button class="stop" onclick="stop()">Stop</button>
 <button class="reset" onclick="reset()">Reset</button>
 </div>
+<button class="save-btn" onclick="saveTime()">💾 Save Today's Study</button>
+<p style="text-align:center;margin-top:15px;font-size:12px;color:#64748b">Study karte hi Start dabao, break pe Stop</p>
+</div>
+<div class="card">
+<div class="leader-title"><span>🏆 Today's Leaderboard</span><span style="font-size:12px;color:#22c55e">LIVE</span></div>
+<div id="leaderboard"><p style="text-align:center;color:#64748b;font-size:13px;padding:20px">Abhi koi data nahi hai<br>Save karo to yaha dikhega</p></div>
+<div style="margin-top:20px;padding-top:15px;border-top:1px solid #1e293b">
+<h4 style="font-size:14px;margin-bottom:10px">📚 IITM BS Quick Links</h4>
+<div style="display:grid;gap:8px">
+<a href="#" style="background:#1e293b;padding:10px;border-radius:8px;font-size:13px;color:#38bdf8;text-decoration:none">📝 Notes - Foundation</a>
+<a href="#" style="background:#1e293b;padding:10px;border-radius:8px;font-size:13px;color:#38bdf8;text-decoration:none">💬 Doubt Group - Join</a>
+</div>
+</div>
+</div>
+</div>
 <script>
 let sec=0,interval=null;
+let nameEl=document.getElementById('nameInput');
+let savedName=localStorage.getItem('iitm_name');
+if(savedName) nameEl.value=savedName;
+nameEl.addEventListener('input',()=>localStorage.setItem('iitm_name',nameEl.value));
 function update(){let h=String(Math.floor(sec/3600)).padStart(2,'0');let m=String(Math.floor(sec%3600/60)).padStart(2,'0');let s=String(sec%60).padStart(2,'0');document.getElementById('time').innerText=`${h}:${m}:${s}`;}
 function start(){if(interval)return;interval=setInterval(()=>{sec++;update();},1000);}
 function stop(){clearInterval(interval);interval=null;}
-function reset(){stop();sec=0;update();}update();
+function reset(){stop();sec=0;update();}
+function saveTime(){
+let name=nameEl.value.trim();
+if(!name){alert('Pehle naam likho bhai!');return;}
+if(sec<10){alert('Kam se kam 10 sec padh to le!');return;}
+let data=JSON.parse(localStorage.getItem('leader')||'[]');
+data.push({name:name,time:sec,date:new Date().toLocaleDateString()});
+data.sort((a,b)=>b.time-a.time);
+localStorage.setItem('leader',JSON.stringify(data));
+loadLeader();reset();alert('Saved! Leaderboard me dekh 🔥');
+}
+function loadLeader(){
+let data=JSON.parse(localStorage.getItem('leader')||'[]');
+let board=document.getElementById('leaderboard');
+if(data.length==0) return;
+board.innerHTML='';
+data.slice(0,10).forEach((d,i)=>{
+let h=Math.floor(d.time/3600),m=Math.floor((d.time%3600)/60);
+let timeStr=`${h}h ${m}m`;
+board.innerHTML+=`<div class="leader-item"><span><span class="rank">#${i+1}</span> ${d.name}</span><span style="color:#38bdf8;font-weight:700">${timeStr}</span></div>`;
+});
+}
+loadLeader();update();
 </script>
 </body>
 </html>
