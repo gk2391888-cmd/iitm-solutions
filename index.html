@@ -34,9 +34,9 @@ input,select,textarea{width:100%;padding:13px 16px;background:#080d1d;border:1px
 .hidden{display:none!important}
 .creator-badge{background:linear-gradient(135deg,var(--p),var(--p2));color:white;padding:6px 14px;border-radius:100px;font-size:10px;font-weight:800}
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(10,16,35,.98);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.08);padding:8px 0 16px;z-index:99;justify-content:space-around}
-.bottom-nav .b-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:14px;cursor:pointer;font-size:10px;font-weight:700;opacity:.6}
-.bottom-nav .b-item.active{opacity:1;color:var(--p);background:rgba(56,189,248,.12)}
-.bottom-nav .b-item i{font-size:20px}
+.bottom-nav.b-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:14px;cursor:pointer;font-size:10px;font-weight:700;opacity:.6}
+.bottom-nav.b-item.active{opacity:1;color:var(--p);background:rgba(56,189,248,.12)}
+.bottom-nav.b-item i{font-size:20px}
 @media(max-width:900px){.bottom-nav{display:flex}.tabs{display:none}}
 #menuDrawer{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none}
 #menuDrawer.open{display:block}
@@ -50,7 +50,7 @@ input,select,textarea{width:100%;padding:13px 16px;background:#080d1d;border:1px
 </style></head><body>
 <div id="loginScreen" class="login-screen"><div class="login-box"><div style="text-align:center;margin-bottom:20px"><div class="creator-badge">👑 GAURAV GUPTA</div></div><h1 style="text-align:center;font-size:30px">IITM <span style="background:linear-gradient(90deg,#38bdf8,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">SOLUTIONS</span></h1>
 <div id="loginForm" style="margin-top:20px">
-<button onclick="googleLogin()" style="width:100%;background:white;color:black;padding:13px;border-radius:14px;border:none;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px"><img src="https://www.svgrepo.com/show/475656/google-color.svg" style="width:20px"> Continue with Google</button>
+<button onclick="googleLogin()" id="gBtn" style="width:100%;background:white;color:black;padding:13px;border-radius:14px;border:none;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px"><img src="https://www.svgrepo.com/show/475656/google-color.svg" style="width:20px"> Continue with Google</button>
 <div style="text-align:center;margin:14px 0;opacity:.3;font-size:11px;display:flex;align-items:center;gap:10px"><div style="flex:1;height:1px;background:rgba(255,255,255,.2)"></div>OR<div style="flex:1;height:1px;background:rgba(255,255,255,.2)"></div></div>
 <input id="loginEmail" placeholder="📧 Email"><input id="loginPass" type="password" placeholder="🔒 Password"><button onclick="login()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;padding:15px;border-radius:14px;border:none;font-weight:800;margin-top:12px">Login →</button><p style="margin-top:16px;font-size:12px;text-align:center;opacity:.7">New? <span onclick="toggleAuth()" style="color:#38bdf8;cursor:pointer;font-weight:700">Create Account</span></p></div>
 <div id="signupForm" class="hidden" style="margin-top:20px"><input id="regName" placeholder="👤 Full Name"><input id="regEmail" placeholder="📧 Email"><input id="regPass" type="password" placeholder="🔒 Password"><button onclick="register()" style="width:100%;background:linear-gradient(90deg,#22c55e,#16a34a);color:white;padding:15px;border-radius:14px;border:none;font-weight:800;margin-top:12px">Create Account ✨</button><p style="margin-top:16px;font-size:12px;text-align:center;opacity:.7">Have account? <span onclick="toggleAuth()" style="color:#38bdf8;cursor:pointer;font-weight:700">Login</span></p></div><p id="authStatus" style="font-size:11px;margin-top:14px;text-align:center"></p></div></div>
@@ -74,33 +74,98 @@ input,select,textarea{width:100%;padding:13px 16px;background:#080d1d;border:1px
 <div id="menuDrawer" onclick="closeMenu()"><div class="drawer-content" onclick="event.stopPropagation()"><div class="drawer-handle"></div><h3>☰ All Options</h3><div class="drawer-item" onclick="showTab('ai');closeMenu()"><i class="fa-solid fa-robot"></i><div><b>AI Assistant</b></div></div><div class="drawer-item" onclick="showTab('calc');closeMenu()"><i class="fa-solid fa-calculator"></i><div><b>Calc</b></div></div><div class="drawer-item" onclick="showTab('notes');closeMenu()"><i class="fa-solid fa-graduation-cap"></i><div><b>Notes</b></div></div><div class="drawer-item" onclick="showTab('confess');closeMenu()"><i class="fa-solid fa-mask"></i><div><b>Confess</b></div></div><div class="drawer-item" id="drawerAdmin" style="display:none" onclick="showTab('admin');closeMenu()"><i class="fa-solid fa-crown"></i><div><b>Admin</b></div></div><div style="text-align:center;margin-top:16px"><button onclick="closeMenu()" style="background:#1e293b;color:white;padding:10px 24px;border-radius:100px;border:none">Close ✕</button></div></div></div>
 </div>
 <script>
-const firebaseConfig={apiKey:"AIzaSyBtugz-3SDbpoH5zOQvQI0AoAb6kbqb0dc",authDomain:"iitm-solutions.firebaseapp.com",databaseURL:"https://iitm-solutions-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"iitm-solutions",storageBucket:"iitm-solutions.firebasestorage.app",messagingSenderId:"411649171402",appId:"1:411649171402:web:e527b8a01a518080b6b933"};
+const firebaseConfig={apiKey:"AIzaSyBtugz-3SDbpoH5zO0vQI0AoAb6kbqb0dc",authDomain:"iitm-solutions.firebaseapp.com",databaseURL:"https://iitm-solutions-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"iitm-solutions",storageBucket:"iitm-solutions.firebasestorage.app",messagingSenderId:"411649171402",appId:"1:411649171402:web:e527b8a01a518080b6b933"};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();const auth=firebase.auth();
 let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),iv=null,allSols=[],allPYQ=[];
+
 function toggleAuth(){document.getElementById('loginForm').classList.toggle('hidden');document.getElementById('signupForm').classList.toggle('hidden');}
-async function register(){let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPass').value;if(!n||!e||p.length<6){document.getElementById('authStatus').innerText='❌ Fill all';return;}let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(s.exists()){document.getElementById('authStatus').innerText='❌ Exists';return;}let u=db.ref('users').push();await u.set({name:n,email:e,pass:btoa(p),created:Date.now(),streak:0});document.getElementById('authStatus').innerText='✅ Created!';toggleAuth();}
-async function login(){let e=document.getElementById('loginEmail').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;if(e==='admin@iitm.com'&&p==='admin123'){currentUser={name:'Gaurav Gupta',email:e};isAdmin=true;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_admin','true');showApp();return;}let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(!s.exists()){document.getElementById('authStatus').innerText='❌ Not found';return;}let f=null;s.forEach(c=>{let d=c.val();d._key=c.key;if(atob(d.pass)===p)f=d;});if(!f){document.getElementById('authStatus').innerText='❌ Wrong';return;}currentUser=f;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_userKey',f._key);showApp();}
+
+async function register(){let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPass').value;if(!n||!e||p.length<6){document.getElementById('authStatus').innerText='❌ Fill all';return;}let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(s.exists()){document.getElementById('authStatus').innerText='❌ Exists';return;}let u=db.ref('users').push();await u.set({name:n,email:e,pass:btoa(p),created:Date.now(),streak:0});document.getElementById('authStatus').innerText='✅ Created! Login now';toggleAuth();}
+async function login(){let e=document.getElementById('loginEmail').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;if(e==='admin@iitm.com'&&p==='admin123'){currentUser={name:'Gaurav Gupta',email:e};isAdmin=true;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_admin','true');showApp();return;}let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(!s.exists()){document.getElementById('authStatus').innerText='❌ Not found';return;}let f=null;s.forEach(c=>{let d=c.val();d._key=c.key;if(atob(d.pass)===p)f=d;});if(!f){document.getElementById('authStatus').innerText='❌ Wrong password';return;}currentUser=f;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_userKey',f._key);showApp();}
+
+// === GOOGLE LOGIN FIXED - V3.8.2 ===
 function googleLogin(){
-  let provider=new firebase.auth.GoogleAuthProvider();
+  const statusEl = document.getElementById('authStatus');
+  const btn = document.getElementById('gBtn');
+  statusEl.innerText = '⏳ Opening Google...';
+  if(btn) btn.disabled = true;
+
+  let provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('email');
+  provider.addScope('profile');
+  provider.setCustomParameters({prompt: 'select_account'});
+
   auth.signInWithPopup(provider).then(async (res)=>{
-    let u=res.user;let email=u.email.toLowerCase();let name=u.displayName;let photo=u.photoURL;
-    if(email.includes('admin') || email==='gaurav.gupta.aiml@gmail.com'){
-      currentUser={name:'Gaurav Gupta',email:email,photo:photo};isAdmin=true;
-      localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_admin','true');localStorage.setItem('iitm_userPhoto',photo);
-      showApp();return;
+    await handleGoogleUser(res.user);
+  }).catch(async (e)=>{
+    console.log("Popup error:", e.code, e.message);
+    if(e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request'){
+      statusEl.innerText = '📱 Redirecting to Google...';
+      try { await auth.signInWithRedirect(provider); }
+      catch(err){ statusEl.innerText = '❌ '+err.message; if(btn) btn.disabled=false; }
+    } else if(e.code === 'auth/unauthorized-domain'){
+      statusEl.innerHTML = '❌ Domain not authorized. Firebase > Authentication > Settings > Authorised domains me domain add karo';
+      if(btn) btn.disabled=false;
+    } else if(e.code === 'auth/api-key-not-valid'){
+      statusEl.innerHTML = '❌ API Key invalid. Firebase Project Settings se naya config copy karo';
+      if(btn) btn.disabled=false;
+    } else {
+      statusEl.innerText = '❌ '+e.message;
+      if(btn) btn.disabled=false;
     }
-    let snap=await db.ref('users').orderByChild('email').equalTo(email).once('value');
-    let key=null;
-    if(!snap.exists()){
-      let nu=db.ref('users').push();
-      await nu.set({name:name,email:email,pass:'google',photo:photo,created:Date.now(),streak:0});
-      key=nu.key;
-    }else{snap.forEach(c=>{key=c.key});}
-    currentUser={name:name,email:email,photo:photo};
-    localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_userKey',key);localStorage.setItem('iitm_userPhoto',photo);
-    showApp();
-  }).catch(e=>{document.getElementById('authStatus').innerText='❌ '+e.message;});
+  });
 }
+
+async function handleGoogleUser(u){
+  let email = u.email.toLowerCase();
+  let name = u.displayName || email.split('@')[0];
+  let photo = u.photoURL || '';
+  let statusEl = document.getElementById('authStatus');
+
+  if(email.includes('admin') || email === 'gaurav.gupta.aiml@gmail.com' || email === 'admin@iitm.com'){
+    currentUser={name:'Gaurav Gupta',email:email,photo:photo};
+    isAdmin=true;
+    localStorage.setItem('iitm_user',JSON.stringify(currentUser));
+    localStorage.setItem('iitm_admin','true');
+    localStorage.setItem('iitm_userPhoto',photo);
+    statusEl.innerText = '✅ Admin login!';
+    showApp();
+    return;
+  }
+
+  let snap = await db.ref('users').orderByChild('email').equalTo(email).once('value');
+  let key = null;
+  if(!snap.exists()){
+    let nu = db.ref('users').push();
+    await nu.set({name:name,email:email,pass:'google',photo:photo,created:Date.now(),streak:0});
+    key = nu.key;
+  } else {
+    snap.forEach(c=>{ key = c.key; db.ref('users/'+c.key).update({photo:photo, name:name}); });
+  }
+  currentUser={name:name,email:email,photo:photo};
+  localStorage.setItem('iitm_user',JSON.stringify(currentUser));
+  localStorage.setItem('iitm_userKey',key);
+  localStorage.setItem('iitm_userPhoto',photo);
+  showApp();
+}
+
+// Handle redirect result (for mobile)
+auth.getRedirectResult().then(async (res)=>{
+  if(res && res.user){
+    await handleGoogleUser(res.user);
+  }
+}).catch(e=>{
+  console.log("Redirect error", e);
+  if(e && e.message) document.getElementById('authStatus').innerText = '❌ '+e.message;
+});
+
+// Auto login if already signed in Firebase
+auth.onAuthStateChanged(async (user)=>{
+  if(user &&!localStorage.getItem('iitm_user')){
+    await handleGoogleUser(user);
+  }
+});
+
 function showApp(){let u=JSON.parse(localStorage.getItem('iitm_user')||'null');if(u){currentUser=u;isAdmin=localStorage.getItem('iitm_admin')==='true';}if(!currentUser)return;document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');let photo=localStorage.getItem('iitm_userPhoto');if(photo){let img=document.getElementById('userPhoto');if(img){img.src=photo;img.style.display='block';}}loadStreak();if(isAdmin){document.getElementById('adminBadge').classList.remove('hidden');document.getElementById('adminTabBtn').style.display='block';document.getElementById('adminPYQBox').classList.remove('hidden');document.getElementById('adminSolBox').classList.remove('hidden');document.getElementById('adminNotesBox').classList.remove('hidden');document.getElementById('drawerAdmin').style.display='flex';document.querySelectorAll('.admin-only').forEach(el=>el.classList.remove('hidden'));}upd();}
 function logout(){let k=localStorage.getItem('iitm_userKey')||'admin';db.ref('studying/'+k).remove();auth.signOut().then(()=>{localStorage.clear();location.reload();});}
 window.onload=()=>{let u=localStorage.getItem('iitm_user');if(u){currentUser=JSON.parse(u);isAdmin=localStorage.getItem('iitm_admin')==='true';showApp();}};
