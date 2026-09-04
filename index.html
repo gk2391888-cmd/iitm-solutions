@@ -1,116 +1,78 @@
-// IITM SOLUTIONS V1.5 - By Gaurav Gupta - FULL CODE
-import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
+<!DOCTYPE html>
+<html>
+<head>
+<title>IITM Solutions V1.5 - By Gaurav Gupta</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{background:#0a0a0f;color:white;font-family:sans-serif;padding:15px}
+.card{background:#1a1a2e;padding:15px;border-radius:15px;margin:15px 0}
+button{padding:10px 15px;border-radius:20px;border:1px solid #7c3aed;background:#7c3aed;color:white;cursor:pointer;margin:5px}
+input,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none}
+</style>
+</head>
+<body>
 
-export default function Home() {
-  const [subject, setSubject] = useState('All')
-  const [pyqs, setPyqs] = useState([])
-  const [solutions, setSolutions] = useState([])
-  // PYQ Admin States
-  const [file, setFile] = useState(null)
-  const [pyqTitle, setPyqTitle] = useState('')
-  const [pyqSubject, setPyqSubject] = useState('Maths 1')
-  const [pyqType, setPyqType] = useState('Quiz 1')
-  const [uploading, setUploading] = useState(false)
+<h1 style="text-align:center;color:#8b5cf6">IITM SOLUTIONS V1.5</h1>
+<p style="text-align:center">Crafted by <b>Gaurav Gupta</b> | IITM BS | 28 Users Live</p>
 
-  // Fetch PYQs
-  useEffect(() => {
-    fetchPYQs()
-  }, [])
+<div class="card">
+<h3>📄 PYQ Vault</h3>
+<div id="pyqList">Loading...</div>
+</div>
 
-  const fetchPYQs = async () => {
-    const { data } = await supabase.from('pyqs').select('*').order('created_at', { ascending: false })
-    if (data) setPyqs(data)
-  }
+<div class="card" style="border:2px dashed #7c3aed">
+<h3>🔐 Admin - PYQ Upload (Fixed by Gaurav Gupta)</h3>
+<input id="title" placeholder="Title Ex: Stats 1 Quiz 1 2024">
+<select id="subject">
+<option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>CT</option>
+</select>
+<select id="type">
+<option>Quiz 1</option><option>Quiz 2</option><option>GA</option><option>End Term</option>
+</select>
+<input type="file" id="file" accept=".pdf">
+<button onclick="upload()" id="btn">Upload PYQ - By Gaurav Gupta</button>
+</div>
 
-  const handlePYQUpload = async () => {
-    if (!file ||!pyqTitle) return alert("Title + File chahiye!")
-    setUploading(true)
-    try {
-      const uniqueName = `${Date.now()}_${pyqSubject}_${file.name}`
-      const { error: upErr } = await supabase.storage.from('pyqs').upload(uniqueName, file, { upsert: true })
-      if (upErr) throw upErr
-      const { data: urlData } = supabase.storage.from('pyqs').getPublicUrl(uniqueName)
+<script>
+const SUPABASE_URL = "Tera_Supabase_URL_Daal"
+const SUPABASE_KEY = "Tera_Anon_Key_Daal"
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
-      const { error: dbErr } = await supabase.from('pyqs').insert([{
-        title: pyqTitle, subject: pyqSubject, exam_type: pyqType,
-        file_url: urlData.publicUrl, uploaded_by: 'Gaurav Gupta'
-      }])
-      if (dbErr) throw dbErr
-
-      alert(`✅ ${pyqSubject} Uploaded!`)
-      setFile(null); setPyqTitle('');
-      document.getElementById('pyq-file').value = ''
-      fetchPYQs()
-    } catch (e) { alert(e.message) }
-    setUploading(false)
-  }
-
-  return (
-    <div style={{ background: '#0a0a0f', color: 'white', minHeight: '100vh', padding: '20px', fontFamily: 'sans-serif' }}>
-
-      {/* HEADER - By Gaurav Gupta */}
-      <div style={{ textAlign: 'center', padding: '20px', borderBottom: '2px solid #7c3aed' }}>
-        <h1 style={{ fontSize: '32px', background: 'linear-gradient(90deg,#8b5cf6,#ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          IITM SOLUTIONS V1.5
-        </h1>
-        <p>Crafted by <b>Gaurav Gupta</b> | IITM BS | 28 Users Live</p>
-      </div>
-
-      {/* FILTER */}
-      <div style={{ margin: '20px 0', display: 'flex', gap: '10px', overflowX: 'auto' }}>
-        {['All','Maths 1','Maths 2','Stats 1','Stats 2','Python','CT'].map(s => (
-          <button key={s} onClick={() => setSubject(s)} style={{
-            padding: '8px 15px', borderRadius: '20px', border: '1px solid #7c3aed',
-            background: subject === s? '#7c3aed' : 'transparent', color: 'white', cursor: 'pointer'
-          }}>{s}</button>
-        ))}
-      </div>
-
-      {/* GRADE CALCULATOR */}
-      <div style={{ background: '#1a1a2e', padding: '15px', borderRadius: '15px', marginBottom: '20px' }}>
-        <h3>🧮 Grade Calculator - By Gaurav Gupta</h3>
-        <p style={{fontSize:'12px', color:'#aaa'}}>CGPA nikalo 2 sec me</p>
-        {/* Tera purana calculator yaha rahega */}
-      </div>
-
-      {/* PYQ VAULT */}
-      <div style={{ background: '#1a1a2e', padding: '15px', borderRadius: '15px', marginBottom: '20px' }}>
-        <h3>📄 PYQ Vault - {pyqs.length} PYQs Available</h3>
-        <div style={{ display: 'grid', gap: '10px', marginTop: '10px' }}>
-          {pyqs.filter(p => subject === 'All' || p.subject === subject).map(p => (
-            <a key={p.id} href={p.file_url} target="_blank" style={{ background: '#2a2a4a', padding: '10px', borderRadius: '10px', color: 'white', textDecoration: 'none' }}>
-              <b>{p.subject}</b> - {p.title} ({p.exam_type}) <span style={{float:'right'}}>📥</span>
-            </a>
-          ))}
-        </div>
-      </div>
-
-      {/* ADMIN - PYQ UPLOAD - 100% FIXED */}
-      <div style={{ background: '#000', border: '2px dashed #7c3aed', padding: '20px', borderRadius: '15px' }}>
-        <h3>🔐 Admin Panel - PYQ Upload (Fixed)</h3>
-        <input type="text" placeholder="Title - Ex: Stats 1 Quiz 1 2024" value={pyqTitle} onChange={e=>setPyqTitle(e.target.value)} style={{width:'100%', padding:'10px', margin:'10px 0', borderRadius:'8px'}} />
-
-        <div style={{display:'flex', gap:'10px'}}>
-          <select value={pyqSubject} onChange={e=>setPyqSubject(e.target.value)} style={{flex:1, padding:'10px', borderRadius:'8px'}}>
-            <option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>CT</option><option>DBMS</option><option>PDSA</option>
-          </select>
-          <select value={pyqType} onChange={e=>setPyqType(e.target.value)} style={{flex:1, padding:'10px', borderRadius:'8px'}}>
-            <option>Quiz 1</option><option>Quiz 2</option><option>GA</option><option>End Term</option>
-          </select>
-        </div>
-
-        <input id="pyq-file" type="file" accept=".pdf" onChange={e=>setFile(e.target.files[0])} style={{margin:'15px 0', color:'white'}} />
-
-        <button onClick={handlePYQUpload} disabled={uploading} style={{width:'100%', padding:'12px', background:'linear-gradient(90deg,#7c3aed,#ec4899)', color:'white', border:'none', borderRadius:'10px', fontWeight:'bold', cursor:'pointer'}}>
-          {uploading? 'Uploading...' : `Upload ${pyqSubject} - By Gaurav Gupta`}
-        </button>
-        <p style={{fontSize:'11px', color:'#888', marginTop:'10px'}}>Made with ❤️ by Gaurav Gupta | Upload ke baad auto refresh hoga</p>
-      </div>
-
-      <div style={{textAlign:'center', marginTop:'30px', color:'#666', fontSize:'12px'}}>
-        Made with ❤️ by Gaurav Gupta | Made in India 🇮🇳 | IITM BS
-      </div>
-    </div>
-  )
+async function load(){
+  let {data} = await supabase.from('pyqs').select('*').order('created_at',{ascending:false})
+  let html=""
+  if(data) data.forEach(p=>{
+    html+=`<div style="background:#2a2a4a;padding:10px;border-radius:10px;margin:5px 0"><b>${p.subject}</b> - ${p.title} <a href="${p.file_url}" target="_blank" style="float:right">📥</a></div>`
+  })
+  document.getElementById('pyqList').innerHTML=html||"No PYQ yet"
 }
+load()
+
+async function upload(){
+  let title=document.getElementById('title').value
+  let subject=document.getElementById('subject').value
+  let type=document.getElementById('type').value
+  let file=document.getElementById('file').files[0]
+  if(!file||!title) return alert("Title + File daal bhai!")
+
+  document.getElementById('btn').innerText="Uploading..."
+  let uniqueName=Date.now()+"_"+subject+"_"+file.name
+
+  let {error:upErr}=await supabase.storage.from('pyqs').upload(uniqueName,file,{upsert:true})
+  if(upErr){alert(upErr.message); return}
+
+  let {data:urlData}=supabase.storage.from('pyqs').getPublicUrl(uniqueName)
+
+  let {error:dbErr}=await supabase.from('pyqs').insert([{title,subject,exam_type:type,file_url:urlData.publicUrl,uploaded_by:'Gaurav Gupta'}])
+  if(dbErr){alert(dbErr.message)} else {
+    alert("✅ "+subject+" Uploaded!")
+    document.getElementById('title').value=""; document.getElementById('file').value=""
+    load()
+  }
+  document.getElementById('btn').innerText="Upload PYQ - By Gaurav Gupta"
+}
+</script>
+
+<p style="text-align:center;color:#666;font-size:12px">Made with ❤️ by Gaurav Gupta | Made in India 🇮🇳</p>
+</body>
+</html>
