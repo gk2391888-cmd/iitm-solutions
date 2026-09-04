@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>IITM SOLUTIONS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{font-family:Arial;background:#0f172a;color:white;text-align:center;margin:0}
+.header{padding:20px;background:#1e293b;font-size:24px;font-weight:bold}
+.timer-box{margin:40px auto;background:#1e293b;padding:30px;border-radius:20px;width:90%;max-width:400px}
+#time{font-size:60px;margin:20px 0;color:#38bdf8;font-weight:bold}
+button{padding:12px 25px;margin:5px;border:none;border-radius:10px;font-size:16px;cursor:pointer}
+.start{background:#22c55e;color:white}.stop{background:#ef4444;color:white}.reset{background:#64748b;color:white}
+</style>
+</head>
+<body>
+<div class="header">📚 IITM SOLUTIONS</div>
+<div class="timer-box">
+<h2>Study Stopwatch</h2>
+<div id="time">00:00:00</div>
+<button class="start" onclick="start()">Start</button>
+<button class="stop" onclick="stop()">Stop</button>
+<button class="reset" onclick="reset()">Reset</button>
+</div>
+<script>
+let sec=0,interval=null;
+function update(){let h=String(Math.floor(sec/3600)).padStart(2,'0');let m=String(Math.floor(sec%3600/60)).padStart(2,'0');let s=String(sec%60).padStart(2,'0');document.getElementById('time').innerText=`${h}:${m}:${s}`;}
+function start(){if(interval)return;interval=setInterval(()=>{sec++;update();},1000);}
+function stop(){clearInterval(interval);interval=null;}
+function reset(){stop();sec=0;update();}update();
+</script>
+</body>
+</html>
