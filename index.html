@@ -15,7 +15,16 @@
 <div id="mainApp" class="hidden"><div class="header"><div class="logo">IITM <span>SOLUTIONS</span><small>BY GAURAV GUPTA</small></div><div style="display:flex;gap:10px;align-items:center"><div id="streakBox" style="background:linear-gradient(135deg,#f97316,#ef4444);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800">🔥 <span id="streakCount">0</span></div><img id="userPhoto" onclick="openProfile()" style="width:32px;height:32px;border-radius:50%;display:none;cursor:pointer;border:2px solid #38bdf8"><span id="adminBadge" class="admin-badge hidden">👑 GAURAV</span><button onclick="logout()" style="background:#1e293b;color:white;padding:8px 14px;border-radius:100px;border:none;font-size:11px"><i class="fa-solid fa-right-from-bracket"></i></button></div></div>
 <div class="tabs"><div class="tab active" onclick="showTab('study')"><i class="fa-solid fa-stopwatch"></i> Timer</div><div class="tab" onclick="showTab('boardM')"><i class="fa-solid fa-trophy"></i> Board</div><div class="tab" onclick="showTab('ai')"><i class="fa-solid fa-robot"></i> AI</div><div class="tab" onclick="showTab('pyq')"><i class="fa-solid fa-file-lines"></i> PYQ</div><div class="tab" onclick="showTab('calc')"><i class="fa-solid fa-calculator"></i> Calc</div><div class="tab" onclick="showTab('notes')"><i class="fa-solid fa-graduation-cap"></i> Notes</div><div class="tab" onclick="showTab('confess')"><i class="fa-solid fa-mask"></i> Confess</div><div class="tab" onclick="showTab('chat')"><i class="fa-solid fa-comments"></i> Chat</div><div class="tab" onclick="showTab('sols')"><i class="fa-solid fa-book-open"></i> Sols</div><div class="tab" onclick="openProfile()"><i class="fa-solid fa-user"></i> Profile</div><div class="tab" id="adminTabBtn" onclick="showTab('admin')" style="display:none"><i class="fa-solid fa-crown"></i> Admin</div></div>
 <div class="main"><div>
-<div class="card" id="studyTab"><div style="display:flex;gap:8px;margin-bottom:12px"><select id="studySubject" style="flex:1;margin:0"><option>Foundation</option><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>DBMS</option><option>PDSA</option><option>English 1</option><option>CT</option></select><div id="dDayBox" style="background:rgba(239,68,68,.15);color:#ef4444;padding:10px 14px;border-radius:12px;font-size:11px;font-weight:800;border:1px solid rgba(239,68,68,.2)">D-12 Quiz</div></div><div class="timer" id="time">00:00:00</div><div style="display:flex;gap:12px;justify-content:center"><button class="btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white" onclick="st()"><i class="fa-solid fa-play"></i> Start</button><button class="btn" style="background:#1e293b;color:#94a3b8" onclick="sp()"><i class="fa-solid fa-pause"></i></button><button class="btn" style="background:#1e293b;color:#94a3b8" onclick="rs()"><i class="fa-solid fa-rotate"></i></button></div><button onclick="save()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;margin-top:20px;padding:16px;border-radius:16px;font-weight:800;border:none">💾 Save Session (+Streak 🔥)</button>
+<div class="card" id="studyTab"><div style="display:flex;gap:8px;margin-bottom:12px"><select id="studySubject" style="flex:1;margin:0"><option>Foundation</option><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>DBMS</option><option>PDSA</option><option>English 1</option><option>CT</option></select><div id="dDayBox" style="background:rgba(239,68,68,.15);color:#ef4444;padding:10px 14px;border-radius:12px;font-size:11px;font-weight:800;border:1px solid rgba(239,68,68,.2)">D-12 Quiz</div></div><div class="timer" id="time">00:00:00</div>
+
+<!-- UPDATED BUTTONS - START/STOP + PAUSE/RESUME -->
+<div style="display:flex;gap:12px;justify-content:center">
+  <button id="startStopBtn" class="btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white;min-width:110px" onclick="toggleStartStop()"><i class="fa-solid fa-play"></i> <span id="startStopText">Start</span></button>
+  <button id="pauseResumeBtn" class="btn" style="background:#1e293b;color:#94a3b8;min-width:110px;opacity:0.5" onclick="togglePauseResume()"><i class="fa-solid fa-pause"></i> <span id="pauseResumeText">Pause</span></button>
+  <button class="btn" style="background:#1e293b;color:#94a3b8" onclick="rs()"><i class="fa-solid fa-rotate"></i></button>
+</div>
+
+<button onclick="save()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;margin-top:20px;padding:16px;border-radius:16px;font-weight:800;border:none">💾 Save Session (+Streak 🔥)</button>
 <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div style="background:#080b1a;padding:12px;border-radius:14px;text-align:center"><small style="opacity:.6;font-size:9px">TODAY</small><h3 id="todayTime" style="color:#38bdf8;font-size:18px">0m</h3></div><div style="background:#080b1a;padding:12px;border-radius:14px;text-align:center"><small style="opacity:.6;font-size:9px">WEEK</small><h3 id="weekTime" style="color:#22c55e;font-size:18px">0m</h3></div><div style="background:#080b1a;padding:12px;border-radius:14px;text-align:center"><small style="opacity:.6;font-size:9px">TOTAL</small><h3 id="totalTime" style="color:#facc15;font-size:18px">0m</h3></div></div>
 <div style="margin-top:24px;border-top:1px solid rgba(255,255,255,.06);padding-top:18px"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">👀 Live Studying <span id="liveCount" style="background:#22c55e22;color:#22c55e;padding:3px 10px;border-radius:20px;font-size:11px">0</span></h3></div><div id="liveGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px"></div></div>
 </div>
@@ -38,7 +47,7 @@
 const firebaseConfig={apiKey:"AIzaSyBtugz-3SDbpoH5zOOvQI0AoAb6kbqb0dc",authDomain:"iitm-solutions.firebaseapp.com",databaseURL:"https://iitm-solutions-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"iitm-solutions",storageBucket:"iitm-solutions.firebasestorage.app",messagingSenderId:"411649171402",appId:"1:411649171402:web:e5278ba01a518080b0b933"};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();const auth=firebase.auth();
 emailjs.init("0g35NzGfXah-1DMhS");const SERVICE_ID="service_q3nz8on",TEMPLATE_ID="template_ayh2de9";
-let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),iv=null,allSols=[],allPYQ=[],currentBoardFilter='total',startTimestamp=0,wakeLock=null,allLeaderData=[],liveStudyingData={},studyingCache={};
+let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),iv=null,allSols=[],allPYQ=[],currentBoardFilter='total',startTimestamp=0,wakeLock=null,allLeaderData=[],liveStudyingData={},studyingCache={},isPaused=false;
 function toggleAuth(){document.getElementById('loginForm').classList.toggle('hidden');document.getElementById('signupForm').classList.toggle('hidden');}
 (function(){['regDay','pDay'].forEach(id=>{let el=document.getElementById(id);if(!el)return;for(let i=1;i<=31;i++){let o=document.createElement('option');o.value=i;o.text=i;el.appendChild(o);}});['regYear','pYear'].forEach(id=>{let el=document.getElementById(id);if(!el)return;for(let i=2008;i>=1975;i--){let o=document.createElement('option');o.value=i;o.text=i;el.appendChild(o);}});['regAge','pAge'].forEach(id=>{let el=document.getElementById(id);if(!el)return;for(let i=15;i<=60;i++){let o=document.createElement('option');o.value=i;o.text=i+' years';el.appendChild(o);}});})();
 async function register(){let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPass').value;let g=document.getElementById('regGender').value,d=document.getElementById('regDay').value,m=document.getElementById('regMonth').value,y=document.getElementById('regYear').value,a=document.getElementById('regAge').value;if(!n||!e||p.length<6||!g||!d||!m||!y||!a){document.getElementById('authStatus').innerText='❌ All fields';return;}let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(s.exists()){document.getElementById('authStatus').innerText='❌ Exists';return;}let u=db.ref('users').push();await u.set({name:n,email:e,pass:btoa(p),gender:g,day:d,month:m,year:y,age:a,dob:d+'/'+m+'/'+y,created:Date.now(),streak:0});document.getElementById('authStatus').innerText='✅ Created!';toggleAuth();}
@@ -46,17 +55,87 @@ async function login(){let e=document.getElementById('loginEmail').value.trim().
 function googleLogin(){let provider=new firebase.auth.GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});auth.signInWithPopup(provider).then(async res=>{await handleGoogleUser(res.user);}).catch(async e=>{try{await auth.signInWithRedirect(provider);}catch(err){}});}
 async function handleGoogleUser(u){let email=u.email.toLowerCase();let name=u.displayName||email.split('@')[0];let photo=u.photoURL||'';if(email.includes('admin')||email==='gaurav.gupta.aiml@gmail.com'){currentUser={name:'Gaurav Gupta',email:email,photo:photo};isAdmin=true;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_admin','true');localStorage.setItem('iitm_userPhoto',photo);showApp();return;}let snap=await db.ref('users').orderByChild('email').equalTo(email).once('value');let key=null;if(!snap.exists()){let nu=db.ref('users').push();await nu.set({name:name,email:email,pass:'google',photo:photo,created:Date.now(),streak:0});key=nu.key;}else{snap.forEach(c=>{key=c.key;});}currentUser={name:name,email:email,photo:photo};localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_userKey',key);localStorage.setItem('iitm_userPhoto',photo);showApp();}
 async function checkIsAdmin(email){if(!email) return false; let e=email.toLowerCase(); if(e==='admin@iitm.com'||e==='gaurav.gupta.aiml@gmail.com') return true; let safe=e.replace(/\./g,'_').replace(/@/g,'_at_'); let s=await db.ref('admins/'+safe).once('value'); if(s.exists()) return true; return false;}
-async function showApp(){let u=JSON.parse(localStorage.getItem('iitm_user')||'null');if(u){currentUser=u;}if(!currentUser) return;document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');let photo=localStorage.getItem('iitm_userPhoto');if(photo){let img=document.getElementById('userPhoto');if(img){img.src=photo;img.style.display='block';}}loadStreak();let adminCheck=await checkIsAdmin(currentUser.email);isAdmin=adminCheck||localStorage.getItem('iitm_admin')==='true';if(isAdmin){document.getElementById('adminBadge').classList.remove('hidden');document.getElementById('adminTabBtn').style.display='block';document.getElementById('adminPYQBox').classList.remove('hidden');document.getElementById('adminSolBox').classList.remove('hidden');document.getElementById('adminNotesBox').classList.remove('hidden');document.querySelectorAll('.admin-only').forEach(el=>el.classList.remove('hidden'));}upd();setTimeout(()=>{loadYPTStats();loadDDay();},300);}
+async function showApp(){let u=JSON.parse(localStorage.getItem('iitm_user')||'null');if(u){currentUser=u;}if(!currentUser) return;document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');let photo=localStorage.getItem('iitm_userPhoto');if(photo){let img=document.getElementById('userPhoto');if(img){img.src=photo;img.style.display='block';}}loadStreak();let adminCheck=await checkIsAdmin(currentUser.email);isAdmin=adminCheck||localStorage.getItem('iitm_admin')==='true';if(isAdmin){document.getElementById('adminBadge').classList.remove('hidden');document.getElementById('adminTabBtn').style.display='block';document.getElementById('adminPYQBox').classList.remove('hidden');document.getElementById('adminSolBox').classList.remove('hidden');document.getElementById('adminNotesBox').classList.remove('hidden');document.querySelectorAll('.admin-only').forEach(el=>el.classList.remove('hidden'));}upd();updateButtons();setTimeout(()=>{loadYPTStats();loadDDay();},300);}
 function logout(){let k=localStorage.getItem('iitm_userKey')||'admin';db.ref('studying/'+k).remove();auth.signOut().then(()=>{localStorage.clear();location.reload();});}
 window.onload=()=>{let u=localStorage.getItem('iitm_user');if(u){currentUser=JSON.parse(u);isAdmin=localStorage.getItem('iitm_admin')==='true';showApp();}};
+
+// NEW TIMER LOGIC - START/STOP + PAUSE/RESUME
 function upd(){let h=String(Math.floor(sec/3600)).padStart(2,'0'),m=String(Math.floor(sec%3600/60)).padStart(2,'0'),s=String(sec%60).padStart(2,'0');document.getElementById('time').innerText=h+':'+m+':'+s;localStorage.setItem('sec',sec);}
-function st(){if(iv) return;startTimestamp=Date.now()-sec*1000;iv=setInterval(()=>{sec=Math.floor((Date.now()-startTimestamp)/1000);upd();},1000);if(timerWorker)timerWorker.postMessage('start');if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(l=>wakeLock=l).catch(()=>{});}let k=localStorage.getItem('iitm_userKey')||'admin';let photo=localStorage.getItem('iitm_userPhoto')||'';let sub=document.getElementById('studySubject')?.value||'General';db.ref('studying/'+k).set({name:currentUser.name,startAt:startTimestamp,photo:photo,subject:sub});}
-function sp(){clearInterval(iv);iv=null;if(timerWorker)timerWorker.postMessage('stop');sec=Math.floor((Date.now()-startTimestamp)/1000);localStorage.setItem('sec',sec);let k=localStorage.getItem('iitm_userKey')||'admin';db.ref('studying/'+k).remove();if(wakeLock){wakeLock.release().then(()=>wakeLock=null);}}
-function rs(){sp();sec=0;startTimestamp=0;upd();localStorage.setItem('sec',0);}
-document.addEventListener('visibilitychange',()=>{if(!iv) return; if(document.visibilityState==='visible'){sec=Math.floor((Date.now()-startTimestamp)/1000);upd();}});
-if(timerWorker){timerWorker.onmessage=()=>{if(iv){sec=Math.floor((Date.now()-startTimestamp)/1000);upd();}};}
+function updateButtons(){
+  let startBtn=document.getElementById('startStopBtn');
+  let pauseBtn=document.getElementById('pauseResumeBtn');
+  if(!startBtn||!pauseBtn) return;
+  if(iv &&!isPaused){
+    startBtn.innerHTML=`<i class="fa-solid fa-stop"></i> <span>Stop</span>`;
+    startBtn.style.background='linear-gradient(135deg,#ef4444,#dc2626)';
+    pauseBtn.innerHTML=`<i class="fa-solid fa-pause"></i> <span>Pause</span>`;
+    pauseBtn.style.background='#1e293b'; pauseBtn.style.color='#94a3b8'; pauseBtn.style.opacity='1';
+  } else if(iv && isPaused){
+    startBtn.innerHTML=`<i class="fa-solid fa-stop"></i> <span>Stop</span>`;
+    startBtn.style.background='linear-gradient(135deg,#ef4444,#dc2626)';
+    pauseBtn.innerHTML=`<i class="fa-solid fa-play"></i> <span>Resume</span>`;
+    pauseBtn.style.background='linear-gradient(135deg,#f59e0b,#d97706)'; pauseBtn.style.color='white'; pauseBtn.style.opacity='1';
+  } else {
+    startBtn.innerHTML=`<i class="fa-solid fa-play"></i> <span>Start</span>`;
+    startBtn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';
+    pauseBtn.innerHTML=`<i class="fa-solid fa-pause"></i> <span>Pause</span>`;
+    pauseBtn.style.background='#1e293b'; pauseBtn.style.color='#94a3b8'; pauseBtn.style.opacity='0.5';
+  }
+}
+function toggleStartStop(){
+  if(iv){ // STOP
+    clearInterval(iv); iv=null; isPaused=false;
+    if(timerWorker) timerWorker.postMessage('stop');
+    sec=Math.floor((Date.now()-startTimestamp)/1000); localStorage.setItem('sec',sec);
+    let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();
+    if(wakeLock){wakeLock.release().then(()=>wakeLock=null);}
+    sec=0; startTimestamp=0; upd(); localStorage.setItem('sec',0);
+    updateButtons();
+  } else { // START
+    isPaused=false;
+    startTimestamp=Date.now()-sec*1000;
+    iv=setInterval(()=>{ if(!isPaused){ sec=Math.floor((Date.now()-startTimestamp)/1000); upd(); } },1000);
+    if(timerWorker) timerWorker.postMessage('start');
+    if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(l=>wakeLock=l).catch(()=>{});}
+    let k=localStorage.getItem('iitm_userKey')||'admin';
+    let photo=localStorage.getItem('iitm_userPhoto')||'';
+    let sub=document.getElementById('studySubject')?.value||'General';
+    db.ref('studying/'+k).set({name:currentUser.name,startAt:startTimestamp,photo:photo,subject:sub});
+    updateButtons();
+  }
+}
+function togglePauseResume(){
+  if(!iv) return;
+  if(!isPaused){ // PAUSE
+    isPaused=true;
+    sec=Math.floor((Date.now()-startTimestamp)/1000); localStorage.setItem('sec',sec);
+    let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();
+    if(timerWorker) timerWorker.postMessage('stop');
+    updateButtons();
+  } else { // RESUME
+    isPaused=false;
+    startTimestamp=Date.now()-sec*1000;
+    let k=localStorage.getItem('iitm_userKey')||'admin';
+    let photo=localStorage.getItem('iitm_userPhoto')||'';
+    let sub=document.getElementById('studySubject')?.value||'General';
+    db.ref('studying/'+k).set({name:currentUser.name,startAt:startTimestamp,photo:photo,subject:sub});
+    if(timerWorker) timerWorker.postMessage('start');
+    updateButtons();
+  }
+}
+function st(){toggleStartStop();}
+function sp(){toggleStartStop();}
+function rs(){
+  clearInterval(iv); iv=null; isPaused=false;
+  if(timerWorker) timerWorker.postMessage('stop');
+  sec=0; startTimestamp=0; upd(); localStorage.setItem('sec',0);
+  let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();
+  updateButtons();
+}
+document.addEventListener('visibilitychange',()=>{if(!iv||isPaused) return; if(document.visibilityState==='visible'){sec=Math.floor((Date.now()-startTimestamp)/1000);upd();}});
+if(timerWorker){timerWorker.onmessage=()=>{if(iv&&!isPaused){sec=Math.floor((Date.now()-startTimestamp)/1000);upd();}};}
 function loadStreak(){let st=parseInt(localStorage.getItem('streak')||'0');document.getElementById('streakCount').innerText=st;}
-function save(){if(sec<10){alert('10 sec min');return;}sp();let today=new Date().toDateString();let last=localStorage.getItem('lastStudyDate');let streak=parseInt(localStorage.getItem('streak')||'0');if(last!==today){let y=new Date();y.setDate(y.getDate()-1);if(last===y.toDateString()||!last){streak++;}else{streak=1;}localStorage.setItem('streak',streak);localStorage.setItem('lastStudyDate',today);let key=localStorage.getItem('iitm_userKey');if(key){db.ref('users/'+key).update({streak:streak});}loadStreak();}let sub=document.getElementById('studySubject')?.value||'General';db.ref('leaderboard').push({name:currentUser.name,time:sec,subject:sub,t:Date.now(),streak:streak});rs();alert(`✅ Saved ${sub}! 🔥 ${streak}`);}
+function save(){if(sec<10){alert('10 sec min');return;}let wasRunning=!!iv; if(wasRunning){clearInterval(iv); iv=null; let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();}let today=new Date().toDateString();let last=localStorage.getItem('lastStudyDate');let streak=parseInt(localStorage.getItem('streak')||'0');if(last!==today){let y=new Date();y.setDate(y.getDate()-1);if(last===y.toDateString()||!last){streak++;}else{streak=1;}localStorage.setItem('streak',streak);localStorage.setItem('lastStudyDate',today);let key=localStorage.getItem('iitm_userKey');if(key){db.ref('users/'+key).update({streak:streak});}loadStreak();}let sub=document.getElementById('studySubject')?.value||'General';db.ref('leaderboard').push({name:currentUser.name,time:sec,subject:sub,t:Date.now(),streak:streak});rs();alert(`✅ Saved ${sub}! 🔥 ${streak}`);}
 function showTab(v){['study','boardM','ai','pyq','calc','notes','confess','chat','sols','admin'].forEach(x=>{let el=document.getElementById(x+'Tab');if(el)el.style.display=x==v?'block':'none';});document.querySelectorAll('.b-item').forEach(b=>{if(b.dataset.tab) b.classList.toggle('active',b.dataset.tab===v);});}
 function openMenu(){document.getElementById('menuDrawer').classList.add('open')}function closeMenu(){document.getElementById('menuDrawer').classList.remove('open')}
 function openProfile(){let u=JSON.parse(localStorage.getItem('iitm_user')||'{}');document.getElementById('profileEmail').innerText=u.email||'';document.getElementById('pName').value=u.name||'';let pic=localStorage.getItem('iitm_userPhoto')||'https://ui-avatars.com/api/?name='+encodeURIComponent(u.name||'User');document.getElementById('profilePic').src=pic;document.getElementById('profileModal').classList.add('open');}
@@ -69,8 +148,6 @@ function verifyAndReset(){let email=document.getElementById('resetEmail').value.
 function loadYPTStats(){db.ref('leaderboard').on('value',s=>{let todayStr=new Date().toDateString();let todaySec=0,weekSec=0,totalSec=0;let days=[0,0,0,0,0,0,0];s.forEach(c=>{let d=c.val();if(d.name!==currentUser.name) return; totalSec+=parseInt(d.time||0); let dt=new Date(d.t); if(dt.toDateString()===todayStr) todaySec+=parseInt(d.time||0); if(Date.now()-d.t<7*86400000) weekSec+=parseInt(d.time||0); let diff=Math.floor((Date.now()-d.t)/86400000); if(diff<7) days[6-diff]+=Math.floor(d.time/60);}); document.getElementById('todayTime').innerText=Math.floor(todaySec/60)+'m'; document.getElementById('weekTime').innerText=Math.floor(weekSec/60)+'m'; document.getElementById('totalTime').innerText=Math.floor(totalSec/60)+'m';});}
 function loadDDay(){db.ref('dday').on('value',s=>{let el=document.getElementById('dDayBox'); if(!s.exists()){el.innerText='D-12 Quiz';return;} let d=s.val(); let target=new Date(d.date); let diff=Math.ceil((target-Date.now())/86400000); el.innerText=diff>0?`D-${diff} ${d.title}`:`${d.title}`;});}
 function setDDay(){let title=document.getElementById('dDayTitle').value.trim()||'Quiz'; let date=document.getElementById('dDayDate').value; if(!date) return alert('Date'); db.ref('dday').set({title:title,date:date}); alert('Set');}
-
-// GLITCH FIX - 496830h FIX
 function filterBoard(type){currentBoardFilter=type;document.getElementById('btnTotal').style.background=type==='total'?'linear-gradient(90deg,#38bdf8,#8b5cf6)':'#1e293b';document.getElementById('btnToday').style.background=type==='today'?'linear-gradient(90deg,#38bdf8,#8b5cf6)':'#1e293b';document.getElementById('btnWeek').style.background=type==='week'?'linear-gradient(90deg,#38bdf8,#8b5cf6)':'#1e293b';renderBoards();}
 function renderBoards(){
   let map={};
@@ -87,7 +164,7 @@ function renderBoards(){
   });
   Object.keys(liveStudyingData).forEach(name=>{
     let liveSec = liveStudyingData[name];
-    if(liveSec > 12*3600 || liveSec < 0) return; // Glitch protection
+    if(liveSec > 12*3600 || liveSec < 0) return;
     if(!map[name]) map[name]={name:name,time:0,live:0,streak:0};
     map[name].live=liveSec;
   });
@@ -111,7 +188,6 @@ function renderBoards(){
   document.getElementById('boardMobile').innerHTML=html;
 }
 db.ref('leaderboard').on('value',s=>{allLeaderData=[];s.forEach(c=>{allLeaderData.push(c.val());});renderBoards();});
-
 function renderLiveGrid(){
   let grid=document.getElementById('liveGrid'),countEl=document.getElementById('liveCount');
   if(!grid) return;
@@ -149,7 +225,6 @@ db.ref('studying').on('value',snap=>{
   renderBoards();
 });
 setInterval(()=>{renderLiveGrid();renderBoards();},1000);
-
 async function makeAdminByEmail(){let e=document.getElementById('newAdminEmail').value.trim().toLowerCase();let safe=e.replace(/\./g,'_').replace(/@/g,'_at_');await db.ref('admins/'+safe).set({email:e,time:Date.now()});let snap=await db.ref('users').orderByChild('email').equalTo(e).once('value');snap.forEach(c=>{db.ref('users/'+c.key).update({isAdmin:true});});document.getElementById('adminStatus').innerText='✅ Admin';}
 async function removeAdminByEmail(){let e=document.getElementById('newAdminEmail').value.trim().toLowerCase();let safe=e.replace(/\./g,'_').replace(/@/g,'_at_');await db.ref('admins/'+safe).remove();document.getElementById('adminStatus').innerText='Removed';}
 db.ref('admins').on('value',s=>{let l=document.getElementById('adminList');if(!l) return;l.innerHTML='';s.forEach(c=>{let d=c.val();l.innerHTML+=`<div style="background:#0f172a;padding:8px 12px;border-radius:10px;margin-top:6px"><span>👑 ${d.email}</span></div>`;});});
