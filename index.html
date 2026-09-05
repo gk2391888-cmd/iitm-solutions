@@ -24,7 +24,7 @@
 </div>
 <button onclick="save()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;margin-top:20px;padding:16px;border-radius:16px;font-weight:800;border:none">💾 Save Session (+Streak 🔥)</button>
 <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div style="background:#080b1a;padding:12px;border-radius:14px;text-align:center"><small style="opacity:.6;font-size:9px">TODAY</small><h3 id="todayTime" style="color:#38bdf8;font-size:18px">0m</h3></div><div style="background:#080b1a;padding:12px;border-radius:14px;text-align:center"><small style="opacity:.6;font-size:9px">WEEK</small><h3 id="weekTime" style="color:#22c55e;font-size:18px">0m</h3></div><div style="background:#080b1a;padding:12px;border-radius:14px;text-align:center"><small style="opacity:.6;font-size:9px">TOTAL</small><h3 id="totalTime" style="color:#facc15;font-size:18px">0m</h3></div></div>
-<div style="margin-top:24px;border-top:1px solid rgba(255,255,255,.06);padding-top:18px"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">👀 Live Studying <span id="liveCount" style="background:#22c55e22;color:#22c55e;padding:3px 10px;border-radius:20px;font-size:11px">0</span></h3></div><div id="liveGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px"><div style="text-align:center;opacity:.4;font-size:11px;grid-column:1/-1;padding:20px">No one studying live right now</div></div></div>
+<div style="margin-top:24px;border-top:1px solid rgba(255,255,255,.06);padding-top:18px"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">👀 Live Studying <span id="liveCount" style="background:#22c55e22;color:#22c55e;padding:3px 10px;border-radius:20px;font-size:11px">0</span></h3></div><div id="liveGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px"></div></div>
 </div>
 <div class="card" id="boardMTab" style="display:none"><h3>🏆 Leaderboard - LIVE + TOTAL</h3><div style="display:flex;gap:8px;margin-top:12px"><button onclick="filterBoard('total')" id="btnTotal" style="background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;padding:8px 14px;border-radius:20px;border:none;font-size:11px;font-weight:800">Total</button><button onclick="filterBoard('today')" id="btnToday" style="background:#1e293b;color:#94a3b8;padding:8px 14px;border-radius:20px;border:none;font-size:11px">Today</button><button onclick="filterBoard('week')" id="btnWeek" style="background:#1e293b;color:#94a3b8;padding:8px 14px;border-radius:20px;border:none;font-size:11px">Week</button></div><div id="boardMobile" style="margin-top:14px"></div></div>
 <div class="card" id="aiTab" style="display:none"><h3>🤖 AI</h3><div id="aiBox"><div class="msg ai">Hey! I am your IITM study buddy.</div></div><div style="display:flex;gap:10px;background:#080b1a;padding:8px;border-radius:16px;border:1px solid #1e293b;margin-top:10px"><input id="aiInput" placeholder="Ask..." style="flex:1;margin:0;background:transparent;border:none"><button onclick="askAI()" style="background:linear-gradient(135deg,#38bdf8,#8b5cf6);color:white;width:46px;height:46px;border-radius:50%;border:none"><i class="fa-solid fa-paper-plane"></i></button></div></div>
@@ -56,76 +56,21 @@ async function checkIsAdmin(email){if(!email) return false; let e=email.toLowerC
 async function showApp(){let u=JSON.parse(localStorage.getItem('iitm_user')||'null');if(u){currentUser=u;}if(!currentUser) return;document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');let photo=localStorage.getItem('iitm_userPhoto');if(photo){let img=document.getElementById('userPhoto');if(img){img.src=photo;img.style.display='block';}}loadStreak();let adminCheck=await checkIsAdmin(currentUser.email);isAdmin=adminCheck||localStorage.getItem('iitm_admin')==='true';if(isAdmin){document.getElementById('adminBadge').classList.remove('hidden');document.getElementById('adminTabBtn').style.display='block';document.getElementById('adminPYQBox').classList.remove('hidden');document.getElementById('adminSolBox').classList.remove('hidden');document.getElementById('adminNotesBox').classList.remove('hidden');document.querySelectorAll('.admin-only').forEach(el=>el.classList.remove('hidden'));}upd();updateButtons();setTimeout(()=>{loadYPTStats();loadDDay();},300);}
 function logout(){let k=localStorage.getItem('iitm_userKey')||'admin';db.ref('studying/'+k).remove();auth.signOut().then(()=>{localStorage.clear();location.reload();});}
 window.onload=()=>{let u=localStorage.getItem('iitm_user');if(u){currentUser=JSON.parse(u);isAdmin=localStorage.getItem('iitm_admin')==='true';showApp();}};
-
-// TIMER FIX
-function upd(){
-  let h=String(Math.floor(sec/3600)).padStart(2,'0');
-  let m=String(Math.floor((sec%3600)/60)).padStart(2,'0');
-  let s=String(sec%60).padStart(2,'0');
-  document.getElementById('time').innerText=h+':'+m+':'+s;
-  localStorage.setItem('sec',sec);
-}
+function upd(){let h=String(Math.floor(sec/3600)).padStart(2,'0'),m=String(Math.floor(sec%3600/60)).padStart(2,'0'),s=String(sec%60).padStart(2,'0');document.getElementById('time').innerText=h+':'+m+':'+s;localStorage.setItem('sec',sec);}
 function updateButtons(){
-  let startBtn=document.getElementById('startStopBtn');
-  let pauseBtn=document.getElementById('pauseResumeBtn');
-  if(!startBtn||!pauseBtn) return;
-  if(iv &&!isPaused){
-    startBtn.innerHTML=`<i class="fa-solid fa-stop"></i> <span>Stop</span>`;
-    startBtn.style.background='linear-gradient(135deg,#ef4444,#dc2626)';
-    pauseBtn.innerHTML=`<i class="fa-solid fa-pause"></i> <span>Pause</span>`;
-    pauseBtn.style.background='#1e293b'; pauseBtn.style.color='#94a3b8'; pauseBtn.style.opacity='1';
-  } else if(iv && isPaused){
-    startBtn.innerHTML=`<i class="fa-solid fa-stop"></i> <span>Stop</span>`;
-    startBtn.style.background='linear-gradient(135deg,#ef4444,#dc2626)';
-    pauseBtn.innerHTML=`<i class="fa-solid fa-play"></i> <span>Resume</span>`;
-    pauseBtn.style.background='linear-gradient(135deg,#f59e0b,#d97706)'; pauseBtn.style.color='white'; pauseBtn.style.opacity='1';
-  } else {
-    startBtn.innerHTML=`<i class="fa-solid fa-play"></i> <span>Start</span>`;
-    startBtn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';
-    pauseBtn.innerHTML=`<i class="fa-solid fa-pause"></i> <span>Pause</span>`;
-    pauseBtn.style.background='#1e293b'; pauseBtn.style.color='#94a3b8'; pauseBtn.style.opacity='0.5';
-  }
+  let startBtn=document.getElementById('startStopBtn');let pauseBtn=document.getElementById('pauseResumeBtn');if(!startBtn||!pauseBtn) return;
+  if(iv &&!isPaused){startBtn.innerHTML=`<i class="fa-solid fa-stop"></i> <span>Stop</span>`;startBtn.style.background='linear-gradient(135deg,#ef4444,#dc2626)';pauseBtn.innerHTML=`<i class="fa-solid fa-pause"></i> <span>Pause</span>`;pauseBtn.style.background='#1e293b';pauseBtn.style.color='#94a3b8';pauseBtn.style.opacity='1';}
+  else if(iv && isPaused){startBtn.innerHTML=`<i class="fa-solid fa-stop"></i> <span>Stop</span>`;startBtn.style.background='linear-gradient(135deg,#ef4444,#dc2626)';pauseBtn.innerHTML=`<i class="fa-solid fa-play"></i> <span>Resume</span>`;pauseBtn.style.background='linear-gradient(135deg,#f59e0b,#d97706)';pauseBtn.style.color='white';pauseBtn.style.opacity='1';}
+  else{startBtn.innerHTML=`<i class="fa-solid fa-play"></i> <span>Start</span>`;startBtn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';pauseBtn.innerHTML=`<i class="fa-solid fa-pause"></i> <span>Pause</span>`;pauseBtn.style.background='#1e293b';pauseBtn.style.color='#94a3b8';pauseBtn.style.opacity='0.5';}
 }
 function toggleStartStop(){
-  if(iv){
-    clearInterval(iv); iv=null; isPaused=false;
-    if(timerWorker) timerWorker.postMessage('stop');
-    sec=Math.floor((Date.now()-startTimestamp)/1000); localStorage.setItem('sec',sec);
-    let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();
-    if(wakeLock){wakeLock.release().then(()=>wakeLock=null);}
-    sec=0; startTimestamp=0; upd(); localStorage.setItem('sec',0);
-    updateButtons();
-  } else {
-    isPaused=false;
-    startTimestamp=Date.now()-sec*1000;
-    iv=setInterval(()=>{ if(!isPaused){ sec=Math.floor((Date.now()-startTimestamp)/1000); upd(); } },1000);
-    if(timerWorker) timerWorker.postMessage('start');
-    if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(l=>wakeLock=l).catch(()=>{});}
-    let k=localStorage.getItem('iitm_userKey')||'admin';
-    let photo=localStorage.getItem('iitm_userPhoto')||'';
-    let sub=document.getElementById('studySubject')?.value||'General';
-    db.ref('studying/'+k).set({name:currentUser.name,startAt:startTimestamp,photo:photo,subject:sub});
-    updateButtons();
-  }
+  if(iv){clearInterval(iv); iv=null; isPaused=false;if(timerWorker) timerWorker.postMessage('stop');sec=Math.floor((Date.now()-startTimestamp)/1000); localStorage.setItem('sec',sec);let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();if(wakeLock){wakeLock.release().then(()=>wakeLock=null);}sec=0; startTimestamp=0; upd(); localStorage.setItem('sec',0);updateButtons();}
+  else{isPaused=false;startTimestamp=Date.now()-sec*1000;iv=setInterval(()=>{ if(!isPaused){ sec=Math.floor((Date.now()-startTimestamp)/1000); upd(); } },1000);if(timerWorker) timerWorker.postMessage('start');if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(l=>wakeLock=l).catch(()=>{});}let k=localStorage.getItem('iitm_userKey')||'admin';let photo=localStorage.getItem('iitm_userPhoto')||'';let sub=document.getElementById('studySubject')?.value||'General';db.ref('studying/'+k).set({name:currentUser.name,startAt:startTimestamp,photo:photo,subject:sub});updateButtons();}
 }
 function togglePauseResume(){
   if(!iv) return;
-  if(!isPaused){
-    isPaused=true;
-    sec=Math.floor((Date.now()-startTimestamp)/1000); localStorage.setItem('sec',sec);
-    let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();
-    if(timerWorker) timerWorker.postMessage('stop');
-    updateButtons();
-  } else {
-    isPaused=false;
-    startTimestamp=Date.now()-sec*1000;
-    let k=localStorage.getItem('iitm_userKey')||'admin';
-    let photo=localStorage.getItem('iitm_userPhoto')||'';
-    let sub=document.getElementById('studySubject')?.value||'General';
-    db.ref('studying/'+k).set({name:currentUser.name,startAt:startTimestamp,photo:photo,subject:sub});
-    if(timerWorker) timerWorker.postMessage('start');
-    updateButtons();
-  }
+  if(!isPaused){isPaused=true;sec=Math.floor((Date.now()-startTimestamp)/1000); localStorage.setItem('sec',sec);let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();if(timerWorker) timerWorker.postMessage('stop');updateButtons();}
+  else{isPaused=false;startTimestamp=Date.now()-sec*1000;let k=localStorage.getItem('iitm_userKey')||'admin';let photo=localStorage.getItem('iitm_userPhoto')||'';let sub=document.getElementById('studySubject')?.value||'General';db.ref('studying/'+k).set({name:currentUser.name,startAt:startTimestamp,photo:photo,subject:sub});if(timerWorker) timerWorker.postMessage('start');updateButtons();}
 }
 function st(){toggleStartStop();}function sp(){toggleStartStop();}
 function rs(){clearInterval(iv); iv=null; isPaused=false;if(timerWorker) timerWorker.postMessage('stop');sec=0; startTimestamp=0; upd(); localStorage.setItem('sec',0);let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();updateButtons();}
@@ -148,8 +93,7 @@ function filterBoard(type){currentBoardFilter=type;document.getElementById('btnT
 function renderBoards(){
   let map={};
   allLeaderData.forEach(d=>{
-    let entryTime=d.t||Date.now();
-    let include=false;
+    let entryTime=d.t||Date.now();let include=false;
     if(currentBoardFilter==='total') include=true;
     else if(currentBoardFilter==='today'){if(new Date(entryTime).toDateString()===new Date().toDateString()) include=true;}
     else if(currentBoardFilter==='week'){if(Date.now()-entryTime<7*86400000) include=true;}
@@ -159,8 +103,10 @@ function renderBoards(){
     map[key].time+=parseInt(d.time||0);
     if(d.streak) map[key].streak=Math.max(map[key].streak,d.streak||0);
   });
-  Object.values(liveStudyingDataById).forEach(live=>{
-    let liveSec=live.elapsed;
+  // Live add - real-time elapsed from studyingCache
+  Object.values(studyingCache).forEach(live=>{
+    if(!live.startAt) return;
+    let liveSec = Math.floor((Date.now()-live.startAt)/1000);
     if(liveSec>12*3600||liveSec<0) return;
     let key=live.name.toLowerCase().trim();
     if(!map[key]) map[key]={displayName:live.name,time:0,live:0,streak:0};
@@ -175,10 +121,7 @@ function renderBoards(){
   if(a.length===0) html='<div style="text-align:center;opacity:.5;padding:20px">No data</div>';
   else a.forEach((d,i)=>{
     let rank=i==0?'🥇':i==1?'🥈':i==2?'🥉':`#${i+1}`;
-    let totalSec=d.totalDisplay;
-    let hrs=Math.floor(totalSec/3600);
-    let mins=Math.floor((totalSec%3600)/60);
-    let secs=totalSec%60;
+    let totalSec=d.totalDisplay;let hrs=Math.floor(totalSec/3600);let mins=Math.floor((totalSec%3600)/60);let secs=totalSec%60;
     let timeStr=hrs>0?`${hrs}h ${mins}m`:mins>0?`${mins}m ${secs}s`:`${secs}s`;
     let liveBadge=d.live>0?`<span style="background:#22c55e;color:black;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:800;margin-left:6px">● LIVE +${Math.floor(d.live/60)}m</span>`:'';
     html+=`<div class="leader-item" style="${d.live>0?'border:1px solid #22c55e':''}"><span>${rank} ${d.displayName} ${d.streak?'🔥'+d.streak:''} ${liveBadge}</span><span style="font-weight:800;color:${d.live>0?'#22c55e':'#38bdf8'}">${timeStr}</span></div>`;
@@ -187,24 +130,29 @@ function renderBoards(){
   if(document.getElementById('boardMobile')) document.getElementById('boardMobile').innerHTML=html;
 }
 db.ref('leaderboard').on('value',s=>{allLeaderData=[];s.forEach(c=>{allLeaderData.push(c.val());});renderBoards();});
+
+// === LIVE GRID FIX - HAR SECOND CHALEGA ===
 function renderLiveGrid(){
   let grid=document.getElementById('liveGrid'),countEl=document.getElementById('liveCount');
   if(!grid) return;
-  let liveList=Object.values(liveStudyingDataById);
-  if(liveList.length===0){
+  let liveKeys = Object.keys(studyingCache);
+  if(liveKeys.length===0){
     grid.innerHTML='<div style="text-align:center;opacity:.4;font-size:11px;grid-column:1/-1;padding:20px">No one studying live right now</div>';
     if(countEl) countEl.innerText='0';
     return;
   }
   grid.innerHTML='';
   let count=0;
-  liveList.forEach(d=>{
-    let elapsed=d.elapsed||0;
-    if(elapsed>12*3600) return;
+  let now = Date.now();
+  Object.values(studyingCache).forEach(d=>{
+    if(!d.startAt) return;
+    let elapsed = Math.floor((now - d.startAt)/1000);
+    if(elapsed < 0) elapsed = 0;
+    if(elapsed > 12*3600) return;
     count++;
     let h=String(Math.floor(elapsed/3600)).padStart(2,'0'),m=String(Math.floor(elapsed%3600/60)).padStart(2,'0'),s=String(elapsed%60).padStart(2,'0');
-    let avatar=d.photo?`<img src="${d.photo}" style="width:32px;height:32px;border-radius:50%">`:`<div style="width:32px;height:32px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center">${d.name[0]}</div>`;
-    grid.innerHTML+=`<div style="background:#0f172a;border-radius:16px;padding:10px;text-align:center"><div style="display:flex;justify-content:center">${avatar}</div><div style="font-size:10px;margin-top:6px">${d.name.substring(0,10)}<br><small style="color:#38bdf8">${d.subject||''}</small></div><div style="font-size:11px;font-weight:800">${h}:${m}:${s}</div><div style="font-size:8px;color:#22c55e">● LIVE</div></div>`;
+    let avatar=d.photo?`<img src="${d.photo}" style="width:32px;height:32px;border-radius:50%">`:`<div style="width:32px;height:32px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;font-weight:800">${d.name[0].toUpperCase()}</div>`;
+    grid.innerHTML+=`<div style="background:#0f172a;border-radius:16px;padding:10px;text-align:center;border:1px solid ${d.name===currentUser.name?'#22c55e33':'transparent'}"><div style="display:flex;justify-content:center">${avatar}</div><div style="font-size:10px;margin-top:6px;font-weight:700">${d.name.substring(0,10)}<br><small style="color:#38bdf8;font-weight:500">${d.subject||''}</small></div><div style="font-size:11px;font-weight:800;margin-top:4px">${h}:${m}:${s}</div><div style="font-size:8px;color:#22c55e;font-weight:800">● LIVE</div></div>`;
   });
   if(countEl) countEl.innerText=count;
 }
@@ -214,22 +162,26 @@ db.ref('studying').on('value',snap=>{
   let now=Date.now();
   snap.forEach(child=>{
     let d=child.val();
-    if(!d.startAt||d.startAt<1000000000000||d.startAt>now||isNaN(d.startAt)){
-      db.ref('studying/'+child.key).remove();
-      return;
-    }
+    if(!d.startAt || d.startAt < 1000000000000 || d.startAt > now || isNaN(d.startAt)){db.ref('studying/'+child.key).remove();return;}
     let elapsed=Math.floor((now-d.startAt)/1000);
-    if(elapsed>12*3600||elapsed<0){
-      db.ref('studying/'+child.key).remove();
-      return;
-    }
+    if(elapsed > 12*3600 || elapsed < 0){db.ref('studying/'+child.key).remove();return;}
     studyingCache[child.key]=d;
     liveStudyingDataById[child.key]={name:d.name,elapsed:elapsed,photo:d.photo,subject:d.subject,startAt:d.startAt};
   });
   renderLiveGrid();
   renderBoards();
 });
-setInterval(()=>{renderLiveGrid();renderBoards();},1000);
+
+// HAR SECOND UPDATE - FIX FOR LIVE TIMER
+setInterval(()=>{
+  if(iv &&!isPaused){
+    sec=Math.floor((Date.now()-startTimestamp)/1000);
+    upd();
+  }
+  renderLiveGrid();
+  renderBoards();
+},1000);
+
 async function makeAdminByEmail(){let e=document.getElementById('newAdminEmail').value.trim().toLowerCase();let safe=e.replace(/\./g,'_').replace(/@/g,'_at_');await db.ref('admins/'+safe).set({email:e,time:Date.now()});let snap=await db.ref('users').orderByChild('email').equalTo(e).once('value');snap.forEach(c=>{db.ref('users/'+c.key).update({isAdmin:true});});document.getElementById('adminStatus').innerText='✅ Admin';}
 async function removeAdminByEmail(){let e=document.getElementById('newAdminEmail').value.trim().toLowerCase();let safe=e.replace(/\./g,'_').replace(/@/g,'_at_');await db.ref('admins/'+safe).remove();document.getElementById('adminStatus').innerText='Removed';}
 db.ref('admins').on('value',s=>{let l=document.getElementById('adminList');if(!l) return;l.innerHTML='';s.forEach(c=>{let d=c.val();l.innerHTML+=`<div style="background:#0f172a;padding:8px 12px;border-radius:10px;margin-top:6px"><span>👑 ${d.email}</span></div>`;});});
