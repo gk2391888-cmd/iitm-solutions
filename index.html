@@ -63,9 +63,46 @@ function updateButtons(){
   else if(iv && isPaused){startBtn.innerHTML=`<i class="fa-solid fa-stop"></i> <span>Stop</span>`;startBtn.style.background='linear-gradient(135deg,#ef4444,#dc2626)';pauseBtn.innerHTML=`<i class="fa-solid fa-play"></i> <span>Resume</span>`;pauseBtn.style.background='linear-gradient(135deg,#f59e0b,#d97706)';pauseBtn.style.color='white';pauseBtn.style.opacity='1';}
   else{startBtn.innerHTML=`<i class="fa-solid fa-play"></i> <span>Start</span>`;startBtn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';pauseBtn.innerHTML=`<i class="fa-solid fa-pause"></i> <span>Pause</span>`;pauseBtn.style.background='#1e293b';pauseBtn.style.color='#94a3b8';pauseBtn.style.opacity='0.5';}
 }
+// AUTO SAVE ON STOP
 function toggleStartStop(){
-  if(iv){clearInterval(iv); iv=null; isPaused=false;if(timerWorker) timerWorker.postMessage('stop');sec=Math.floor((Date.now()-startTimestamp)/1000); localStorage.setItem('sec',sec);let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();if(wakeLock){wakeLock.release().then(()=>wakeLock=null);}sec=0; startTimestamp=0; upd(); localStorage.setItem('sec',0);updateButtons();}
-  else{isPaused=false;startTimestamp=Date.now()-sec*1000;iv=setInterval(()=>{ if(!isPaused){ sec=Math.floor((Date.now()-startTimestamp)/1000); upd(); } },1000);if(timerWorker) timerWorker.postMessage('start');if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(l=>wakeLock=l).catch(()=>{});}let k=localStorage.getItem('iitm_userKey')||'admin';let photo=localStorage.getItem('iitm_userPhoto')||'';let sub=document.getElementById('studySubject')?.value||'General';db.ref('studying/'+k).set({name:currentUser.name,startAt:startTimestamp,photo:photo,subject:sub});updateButtons();}
+  if(iv){
+    clearInterval(iv); iv=null; isPaused=false;
+    if(timerWorker) timerWorker.postMessage('stop');
+    let finalSec = Math.floor((Date.now()-startTimestamp)/1000);
+    if(finalSec < 0 || isNaN(finalSec)) finalSec = sec;
+    let k=localStorage.getItem('iitm_userKey')||'admin';
+    db.ref('studying/'+k).remove();
+    if(wakeLock){wakeLock.release().then(()=>wakeLock=null);}
+    if(finalSec >= 5){
+      let sub=document.getElementById('studySubject')?.value||'General';
+      let today=new Date().toDateString();
+      let last=localStorage.getItem('lastStudyDate');
+      let streak=parseInt(localStorage.getItem('streak')||'0');
+      if(last!==today){
+        let y=new Date();y.setDate(y.getDate()-1);
+        if(last===y.toDateString()||!last){streak++;}else{streak=1;}
+        localStorage.setItem('streak',streak);
+        localStorage.setItem('lastStudyDate',today);
+        let key=localStorage.getItem('iitm_userKey');
+        if(key){db.ref('users/'+key).update({streak:streak});}
+        loadStreak();
+      }
+      db.ref('leaderboard').push({name:currentUser.name,time:finalSec,subject:sub,t:Date.now(),streak:streak});
+    }
+    sec=0; startTimestamp=0; upd(); localStorage.setItem('sec',0);
+    updateButtons();
+  } else {
+    isPaused=false;
+    startTimestamp=Date.now()-sec*1000;
+    iv=setInterval(()=>{ if(!isPaused){ sec=Math.floor((Date.now()-startTimestamp)/1000); upd(); } },1000);
+    if(timerWorker) timerWorker.postMessage('start');
+    if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(l=>wakeLock=l).catch(()=>{});}
+    let k=localStorage.getItem('iitm_userKey')||'admin';
+    let photo=localStorage.getItem('iitm_userPhoto')||'';
+    let sub=document.getElementById('studySubject')?.value||'General';
+    db.ref('studying/'+k).set({name:currentUser.name,startAt:startTimestamp,photo:photo,subject:sub});
+    updateButtons();
+  }
 }
 function togglePauseResume(){
   if(!iv) return;
@@ -73,7 +110,13 @@ function togglePauseResume(){
   else{isPaused=false;startTimestamp=Date.now()-sec*1000;let k=localStorage.getItem('iitm_userKey')||'admin';let photo=localStorage.getItem('iitm_userPhoto')||'';let sub=document.getElementById('studySubject')?.value||'General';db.ref('studying/'+k).set({name:currentUser.name,startAt:startTimestamp,photo:photo,subject:sub});if(timerWorker) timerWorker.postMessage('start');updateButtons();}
 }
 function st(){toggleStartStop();}function sp(){toggleStartStop();}
-function rs(){clearInterval(iv); iv=null; isPaused=false;if(timerWorker) timerWorker.postMessage('stop');sec=0; startTimestamp=0; upd(); localStorage.setItem('sec',0);let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();updateButtons();}
+function rs(){
+  if(sec >= 5 && iv){
+    let sub=document.getElementById('studySubject')?.value||'General';
+    db.ref('leaderboard').push({name:currentUser.name,time:sec,subject:sub,t:Date.now(),streak:parseInt(localStorage.getItem('streak')||'0')});
+  }
+  clearInterval(iv); iv=null; isPaused=false;if(timerWorker) timerWorker.postMessage('stop');sec=0; startTimestamp=0; upd(); localStorage.setItem('sec',0);let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();updateButtons();
+}
 document.addEventListener('visibilitychange',()=>{if(!iv||isPaused) return; if(document.visibilityState==='visible'){sec=Math.floor((Date.now()-startTimestamp)/1000);upd();}});
 if(timerWorker){timerWorker.onmessage=()=>{if(iv&&!isPaused){sec=Math.floor((Date.now()-startTimestamp)/1000);upd();}};}
 function loadStreak(){let st=parseInt(localStorage.getItem('streak')||'0');document.getElementById('streakCount').innerText=st;}
@@ -103,7 +146,6 @@ function renderBoards(){
     map[key].time+=parseInt(d.time||0);
     if(d.streak) map[key].streak=Math.max(map[key].streak,d.streak||0);
   });
-  // Live add - real-time elapsed from studyingCache
   Object.values(studyingCache).forEach(live=>{
     if(!live.startAt) return;
     let liveSec = Math.floor((Date.now()-live.startAt)/1000);
@@ -130,8 +172,6 @@ function renderBoards(){
   if(document.getElementById('boardMobile')) document.getElementById('boardMobile').innerHTML=html;
 }
 db.ref('leaderboard').on('value',s=>{allLeaderData=[];s.forEach(c=>{allLeaderData.push(c.val());});renderBoards();});
-
-// === LIVE GRID FIX - HAR SECOND CHALEGA ===
 function renderLiveGrid(){
   let grid=document.getElementById('liveGrid'),countEl=document.getElementById('liveCount');
   if(!grid) return;
@@ -141,14 +181,11 @@ function renderLiveGrid(){
     if(countEl) countEl.innerText='0';
     return;
   }
-  grid.innerHTML='';
-  let count=0;
-  let now = Date.now();
+  grid.innerHTML='';let count=0;let now = Date.now();
   Object.values(studyingCache).forEach(d=>{
     if(!d.startAt) return;
     let elapsed = Math.floor((now - d.startAt)/1000);
-    if(elapsed < 0) elapsed = 0;
-    if(elapsed > 12*3600) return;
+    if(elapsed < 0) elapsed = 0;if(elapsed > 12*3600) return;
     count++;
     let h=String(Math.floor(elapsed/3600)).padStart(2,'0'),m=String(Math.floor(elapsed%3600/60)).padStart(2,'0'),s=String(elapsed%60).padStart(2,'0');
     let avatar=d.photo?`<img src="${d.photo}" style="width:32px;height:32px;border-radius:50%">`:`<div style="width:32px;height:32px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center;font-weight:800">${d.name[0].toUpperCase()}</div>`;
@@ -157,9 +194,7 @@ function renderLiveGrid(){
   if(countEl) countEl.innerText=count;
 }
 db.ref('studying').on('value',snap=>{
-  studyingCache={};
-  liveStudyingDataById={};
-  let now=Date.now();
+  studyingCache={};liveStudyingDataById={};let now=Date.now();
   snap.forEach(child=>{
     let d=child.val();
     if(!d.startAt || d.startAt < 1000000000000 || d.startAt > now || isNaN(d.startAt)){db.ref('studying/'+child.key).remove();return;}
@@ -168,20 +203,9 @@ db.ref('studying').on('value',snap=>{
     studyingCache[child.key]=d;
     liveStudyingDataById[child.key]={name:d.name,elapsed:elapsed,photo:d.photo,subject:d.subject,startAt:d.startAt};
   });
-  renderLiveGrid();
-  renderBoards();
+  renderLiveGrid();renderBoards();
 });
-
-// HAR SECOND UPDATE - FIX FOR LIVE TIMER
-setInterval(()=>{
-  if(iv &&!isPaused){
-    sec=Math.floor((Date.now()-startTimestamp)/1000);
-    upd();
-  }
-  renderLiveGrid();
-  renderBoards();
-},1000);
-
+setInterval(()=>{if(iv &&!isPaused){sec=Math.floor((Date.now()-startTimestamp)/1000);upd();}renderLiveGrid();renderBoards();},1000);
 async function makeAdminByEmail(){let e=document.getElementById('newAdminEmail').value.trim().toLowerCase();let safe=e.replace(/\./g,'_').replace(/@/g,'_at_');await db.ref('admins/'+safe).set({email:e,time:Date.now()});let snap=await db.ref('users').orderByChild('email').equalTo(e).once('value');snap.forEach(c=>{db.ref('users/'+c.key).update({isAdmin:true});});document.getElementById('adminStatus').innerText='✅ Admin';}
 async function removeAdminByEmail(){let e=document.getElementById('newAdminEmail').value.trim().toLowerCase();let safe=e.replace(/\./g,'_').replace(/@/g,'_at_');await db.ref('admins/'+safe).remove();document.getElementById('adminStatus').innerText='Removed';}
 db.ref('admins').on('value',s=>{let l=document.getElementById('adminList');if(!l) return;l.innerHTML='';s.forEach(c=>{let d=c.val();l.innerHTML+=`<div style="background:#0f172a;padding:8px 12px;border-radius:10px;margin-top:6px"><span>👑 ${d.email}</span></div>`;});});
