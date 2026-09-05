@@ -44,9 +44,8 @@
 <script>
 const firebaseConfig={apiKey:"AIzaSyBtugz-3SDbpoH5zOOvQI0AoAb6kbqb0dc",authDomain:"iitm-solutions.firebaseapp.com",databaseURL:"https://iitm-solutions-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"iitm-solutions",storageBucket:"iitm-solutions.firebasestorage.app",messagingSenderId:"411649171402",appId:"1:411649171402:web:e5278ba01a518080b0b933"};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();const auth=firebase.auth();
-// EMAILJS INIT - FIXED FOR EMAIL DELIVERY
 emailjs.init({publicKey:"0g35NzGfXah-1DMhS"});
-const SERVICE_ID="service_q3nz8on",TEMPLATE_ID="template_ayh2de9";
+const SERVICE_ID="service_q3nz8on",TEMPLATE_ID="template_otvm3vh";
 let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),iv=null,allSols=[],allPYQ=[],currentBoardFilter='total',startTimestamp=0,wakeLock=null,allLeaderData=[],studyingCache={},isPaused=false;
 
 function toggleAuth(){document.getElementById('loginForm').classList.toggle('hidden');document.getElementById('signupForm').classList.toggle('hidden');}
@@ -81,7 +80,7 @@ function openProfile(){let u=JSON.parse(localStorage.getItem('iitm_user')||'{}')
 function closeProfile(){document.getElementById('profileModal').classList.remove('open');}
 async function saveProfile(){let n=document.getElementById('pName').value.trim(),g=document.getElementById('pGender').value,d=document.getElementById('pDay').value,m=document.getElementById('pMonth').value,y=document.getElementById('pYear').value,a=document.getElementById('pAge').value,bio=document.getElementById('pBio').value.trim();if(!n){document.getElementById('profileStatus').innerText='❌ Name required';return;}let key=localStorage.getItem('iitm_userKey');let u=JSON.parse(localStorage.getItem('iitm_user')||'{}');u.name=n;u.gender=g;u.day=d;u.month=m;u.year=y;u.age=a;u.bio=bio;u.dob=d+'/'+m+'/'+y;u.profileComplete=true;localStorage.setItem('iitm_user',JSON.stringify(u));localStorage.setItem('iitm_profile_done','true');if(key){await db.ref('users/'+key).update({name:n,gender:g,day:d,month:m,year:y,age:a,bio:bio,dob:d+'/'+m+'/'+y,profileComplete:true});}currentUser=u;document.getElementById('profileStatus').innerText='✅ Saved!';document.getElementById('profileStatus').style.color='#22c55e';setTimeout(()=>{closeProfile();document.getElementById('profileStatus').innerText='';},800);}
 
-// === EMAIL OTP FIXED - AB EMAIL PE JAYEGA ===
+// === EMAIL OTP FIXED ===
 function openOTP(){document.getElementById('otpModal').classList.add('open');document.getElementById('otpStep1').classList.remove('hidden');document.getElementById('otpStep2').classList.add('hidden');document.getElementById('otpStatus').innerText='';}
 function openOTPFromProfile(){closeProfile();setTimeout(()=>{openOTP();let em=JSON.parse(localStorage.getItem('iitm_user')||'{}').email||'';document.getElementById('resetEmail').value=em;},350);}
 function closeOTP(){document.getElementById('otpModal').classList.remove('open');}
@@ -94,13 +93,10 @@ async function sendOTP(){
   document.getElementById('otpStatus').innerText='⏳ OTP sending to '+email+'...';
   document.getElementById('otpStatus').style.color='#38bdf8';
   if(btn){btn.disabled=true;btn.innerText='Sending...';}
-
   let otp=Math.floor(100000+Math.random()*900000).toString();
   let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');
   try{await db.ref('password_resets/'+safe).set({email:email,otp:otp,expiry:Date.now()+5*60*1000,time:Date.now()});}catch(e){}
-
   try{
-    // EmailJS v4 correct syntax
     const response = await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
       to_email: email,
       to_name: email.split('@')[0],
@@ -114,11 +110,9 @@ async function sendOTP(){
     document.getElementById('otpStatus').style.color='#22c55e';
   }catch(err){
     console.error('EmailJS failed', err);
-    // Still show OTP on screen as fallback but email should work after template fix
-    document.getElementById('otpStatus').innerHTML=`⚠️ Email service error, but OTP generated:<br><b style="color:#22c55e;font-size:22px;letter-spacing:5px">${otp}</b><br><small>Use this OTP - EmailJS template check karo</small><br><small style="opacity:.5">${err.text||err.message||'Service error'}</small>`;
+    document.getElementById('otpStatus').innerHTML=`⚠️ Email fail, OTP: <b style="color:#22c55e;font-size:20px">${otp}</b><br><small>${err.text||err.message||'Error'}</small>`;
     document.getElementById('otpStatus').style.color='#facc15';
   }
-
   document.getElementById('otpStep1').classList.add('hidden');
   document.getElementById('otpStep2').classList.remove('hidden');
   if(btn){btn.disabled=false;btn.innerText='Send OTP to Email 📩';}
