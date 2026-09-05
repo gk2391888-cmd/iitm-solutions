@@ -16,14 +16,11 @@
 <div class="tabs"><div class="tab active" onclick="showTab('study')"><i class="fa-solid fa-stopwatch"></i> Timer</div><div class="tab" onclick="showTab('boardM')"><i class="fa-solid fa-trophy"></i> Board</div><div class="tab" onclick="showTab('ai')"><i class="fa-solid fa-robot"></i> AI</div><div class="tab" onclick="showTab('pyq')"><i class="fa-solid fa-file-lines"></i> PYQ</div><div class="tab" onclick="showTab('calc')"><i class="fa-solid fa-calculator"></i> Calc</div><div class="tab" onclick="showTab('notes')"><i class="fa-solid fa-graduation-cap"></i> Notes</div><div class="tab" onclick="showTab('confess')"><i class="fa-solid fa-mask"></i> Confess</div><div class="tab" onclick="showTab('chat')"><i class="fa-solid fa-comments"></i> Chat</div><div class="tab" onclick="showTab('sols')"><i class="fa-solid fa-book-open"></i> Sols</div><div class="tab" onclick="openProfile()"><i class="fa-solid fa-user"></i> Profile</div><div class="tab" id="adminTabBtn" onclick="showTab('admin')" style="display:none"><i class="fa-solid fa-crown"></i> Admin</div></div>
 <div class="main"><div>
 <div class="card" id="studyTab"><div style="display:flex;gap:8px;margin-bottom:12px"><select id="studySubject" style="flex:1;margin:0"><option>Foundation</option><option>Maths 1</option><option>Maths 2</option><option>Stats 1</option><option>Stats 2</option><option>Python</option><option>DBMS</option><option>PDSA</option><option>English 1</option><option>CT</option></select><div id="dDayBox" style="background:rgba(239,68,68,.15);color:#ef4444;padding:10px 14px;border-radius:12px;font-size:11px;font-weight:800;border:1px solid rgba(239,68,68,.2)">D-12 Quiz</div></div><div class="timer" id="time">00:00:00</div>
-
-<!-- UPDATED BUTTONS - START/STOP + PAUSE/RESUME -->
 <div style="display:flex;gap:12px;justify-content:center">
-  <button id="startStopBtn" class="btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white;min-width:110px" onclick="toggleStartStop()"><i class="fa-solid fa-play"></i> <span id="startStopText">Start</span></button>
-  <button id="pauseResumeBtn" class="btn" style="background:#1e293b;color:#94a3b8;min-width:110px;opacity:0.5" onclick="togglePauseResume()"><i class="fa-solid fa-pause"></i> <span id="pauseResumeText">Pause</span></button>
+  <button id="startStopBtn" class="btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white;min-width:110px" onclick="toggleStartStop()"><i class="fa-solid fa-play"></i> <span>Start</span></button>
+  <button id="pauseResumeBtn" class="btn" style="background:#1e293b;color:#94a3b8;min-width:110px;opacity:0.5" onclick="togglePauseResume()"><i class="fa-solid fa-pause"></i> <span>Pause</span></button>
   <button class="btn" style="background:#1e293b;color:#94a3b8" onclick="rs()"><i class="fa-solid fa-rotate"></i></button>
 </div>
-
 <button onclick="save()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;margin-top:20px;padding:16px;border-radius:16px;font-weight:800;border:none">💾 Save Session (+Streak 🔥)</button>
 <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div style="background:#080b1a;padding:12px;border-radius:14px;text-align:center"><small style="opacity:.6;font-size:9px">TODAY</small><h3 id="todayTime" style="color:#38bdf8;font-size:18px">0m</h3></div><div style="background:#080b1a;padding:12px;border-radius:14px;text-align:center"><small style="opacity:.6;font-size:9px">WEEK</small><h3 id="weekTime" style="color:#22c55e;font-size:18px">0m</h3></div><div style="background:#080b1a;padding:12px;border-radius:14px;text-align:center"><small style="opacity:.6;font-size:9px">TOTAL</small><h3 id="totalTime" style="color:#facc15;font-size:18px">0m</h3></div></div>
 <div style="margin-top:24px;border-top:1px solid rgba(255,255,255,.06);padding-top:18px"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:13px">👀 Live Studying <span id="liveCount" style="background:#22c55e22;color:#22c55e;padding:3px 10px;border-radius:20px;font-size:11px">0</span></h3></div><div id="liveGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px"></div></div>
@@ -36,7 +33,7 @@
 <div class="card" id="confessTab" style="display:none"><div style="display:flex;justify-content:space-between"><h3>😶‍🌫️ Confessions</h3><button onclick="clearConfessions()" class="hidden admin-only" style="background:rgba(239,68,68,.1);color:#ef4444;padding:6px 10px;border-radius:8px;border:none;font-size:10px">Clear All</button></div><div id="confessBox"></div><div style="display:flex;gap:10px;background:#080b1a;padding:8px;border-radius:16px;border:1px solid #1e293b;margin-top:10px"><input id="confessInput" placeholder="Anonymous..." style="flex:1;margin:0;background:transparent;border:none"><button onclick="sendConfess()" style="background:#1e293b;color:#f97316;padding:10px 16px;border-radius:12px;border:none;font-weight:800">Post</button></div></div>
 <div class="card" id="chatTab" style="display:none"><div style="display:flex;justify-content:space-between"><h3>💬 Chat - <span id="chatCount">0</span></h3><button onclick="clearChats()" class="hidden admin-only" style="background:rgba(239,68,68,.1);color:#ef4444;padding:6px 10px;border-radius:8px;border:none;font-size:10px">Clear All</button></div><div id="chatBox"></div><div style="display:flex;gap:10px;background:#080b1a;padding:8px;border-radius:16px;border:1px solid #1e293b"><input id="chat" placeholder="Type..." style="flex:1;margin:0;background:transparent;border:none"><button onclick="send()" style="background:linear-gradient(135deg,#38bdf8,#8b5cf6);color:white;width:46px;height:46px;border-radius:50%;border:none"><i class="fa-solid fa-paper-plane"></i></button></div></div>
 <div class="card" id="solsTab" style="display:none"><div style="display:flex;justify-content:space-between"><h3>📚 Solutions - <span id="solCount">0</span></h3><select id="subjectFilter" onchange="filterSols()" style="width:auto;padding:8px 14px;font-size:11px;border-radius:100px"><option value="All">All</option><option>Foundation</option><option>Maths 1</option><option>Python</option></select></div><div id="adminSolBox" class="hidden" style="background:#080b1a;padding:14px;border-radius:14px;margin-top:14px;border:1px dashed #38bdf844"><input id="solTitle" placeholder="Title"><select id="solSub"><option>Foundation</option><option>Maths 1</option><option>Python</option></select><input id="solLink" placeholder="Drive Link"><button onclick="addSolution()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;padding:12px;border-radius:10px;border:none;font-weight:800;margin-top:6px">Upload</button></div><div id="solutionsList" style="margin-top:16px"></div></div>
-<div class="card" id="adminTab" style="display:none"><h3>👑 Admin Dashboard</h3><div class="admin-stat"><div class="stat-box"><h2 id="totalUsers">0</h2><small>Users</small></div><div class="stat-box"><h2 id="totalPYQ">0</h2><small>PYQs</small></div><div class="stat-box"><h2 id="totalNotes">0</h2><small>Notes</small></div><div class="stat-box"><h2 id="totalSols">0</h2><small>Sols</small></div></div><div style="margin-top:16px;background:#080b1a;padding:14px;border-radius:14px;border:1px dashed #facc15"><h4>👑 Make Admin</h4><input id="newAdminEmail" placeholder="Email"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><button onclick="makeAdminByEmail()" style="background:linear-gradient(90deg,#facc15,#f97316);color:black;padding:12px;border-radius:10px;border:none;font-weight:800">Make Admin 👑</button><button onclick="removeAdminByEmail()" style="background:rgba(239,68,68,.15);color:#ef4444;padding:12px;border-radius:10px;border:1px solid rgba(239,68,68,.3)">Remove</button></div><p id="adminStatus" style="font-size:10px;margin-top:8px"></p><div id="adminList"></div></div><div style="margin-top:16px;background:#080b1a;padding:14px;border-radius:14px;border:1px dashed #38bdf8"><h4>D-Day</h4><input id="dDayTitle" placeholder="Title"><input id="dDayDate" type="date"><button onclick="setDDay()" style="width:100%;background:#38bdf8;color:black;padding:10px;border-radius:10px;border:none;font-weight:800;margin-top:6px">Set D-Day</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px"><button onclick="if(confirm('Reset Leaderboard?'))db.ref('leaderboard').remove()" style="background:rgba(239,68,68,.15);color:#ef4444;padding:12px;border-radius:12px;border:1px solid rgba(239,68,68,.3)">Reset Board</button><button onclick="if(confirm('Clear Live?')){db.ref('studying').remove();alert('Cleared!');}" style="background:rgba(34,197,94,.15);color:#22c55e;padding:12px;border-radius:12px;border:1px solid rgba(34,197,94,.3)">Clear Live (Fix Glitch)</button></div><div style="margin-top:20px"><h4>Users</h4><div id="usersList"></div></div></div>
+<div class="card" id="adminTab" style="display:none"><h3>👑 Admin Dashboard</h3><div class="admin-stat"><div class="stat-box"><h2 id="totalUsers">0</h2><small>Users</small></div><div class="stat-box"><h2 id="totalPYQ">0</h2><small>PYQs</small></div><div class="stat-box"><h2 id="totalNotes">0</h2><small>Notes</small></div><div class="stat-box"><h2 id="totalSols">0</h2><small>Sols</small></div></div><div style="margin-top:16px;background:#080b1a;padding:14px;border-radius:14px;border:1px dashed #facc15"><h4>👑 Make Admin</h4><input id="newAdminEmail" placeholder="Email"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><button onclick="makeAdminByEmail()" style="background:linear-gradient(90deg,#facc15,#f97316);color:black;padding:12px;border-radius:10px;border:none;font-weight:800">Make Admin 👑</button><button onclick="removeAdminByEmail()" style="background:rgba(239,68,68,.15);color:#ef4444;padding:12px;border-radius:10px;border:1px solid rgba(239,68,68,.3)">Remove</button></div><p id="adminStatus" style="font-size:10px;margin-top:8px"></p><div id="adminList"></div></div><div style="margin-top:16px;background:#080b1a;padding:14px;border-radius:14px;border:1px dashed #38bdf8"><h4>D-Day</h4><input id="dDayTitle" placeholder="Title"><input id="dDayDate" type="date"><button onclick="setDDay()" style="width:100%;background:#38bdf8;color:black;padding:10px;border-radius:10px;border:none;font-weight:800;margin-top:6px">Set D-Day</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px"><button onclick="if(confirm('Reset Leaderboard?'))db.ref('leaderboard').remove()" style="background:rgba(239,68,68,.15);color:#ef4444;padding:12px;border-radius:12px;border:1px solid rgba(239,68,68,.3)">Reset Board</button><button onclick="if(confirm('Clear Live?')){db.ref('studying').remove();alert('Cleared!');}" style="background:rgba(34,197,94,.15);color:#22c55e;padding:12px;border-radius:12px;border:1px solid rgba(34,197,94,.3)">Clear Live</button></div><div style="margin-top:20px"><h4>Users</h4><div id="usersList"></div></div></div>
 </div><div class="desktop-only"><div class="card"><h3>🏆 Leaderboard - LIVE</h3><div id="board" style="margin-top:14px"></div></div></div></div>
 <div class="bottom-nav"><div class="b-item active" onclick="showTab('study')" data-tab="study"><i class="fa-solid fa-stopwatch"></i><span>Timer</span></div><div class="b-item" onclick="showTab('boardM')" data-tab="boardM"><i class="fa-solid fa-trophy"></i><span>Board</span></div><div class="b-item" onclick="showTab('ai')" data-tab="ai"><i class="fa-solid fa-robot"></i><span>AI</span></div><div class="b-item" onclick="showTab('chat')" data-tab="chat"><i class="fa-solid fa-comments"></i><span>Chat</span></div><div class="b-item" onclick="openMenu()"><i class="fa-solid fa-bars"></i><span>Menu</span></div></div>
 <div id="menuDrawer" onclick="closeMenu()"><div class="drawer-content" onclick="event.stopPropagation()"><div class="drawer-handle"></div><h3>☰ Menu</h3><div class="drawer-item" onclick="showTab('boardM');closeMenu()"><i class="fa-solid fa-trophy"></i><div><b>Leaderboard</b></div></div><div class="drawer-item" onclick="showTab('pyq');closeMenu()"><i class="fa-solid fa-file-lines"></i><div><b>PYQ</b></div></div><div class="drawer-item" onclick="showTab('notes');closeMenu()"><i class="fa-solid fa-graduation-cap"></i><div><b>Notes</b></div></div><div style="text-align:center;margin-top:16px"><button onclick="closeMenu()" style="background:#1e293b;color:white;padding:10px 24px;border-radius:100px;border:none">Close</button></div></div></div>
@@ -47,7 +44,7 @@
 const firebaseConfig={apiKey:"AIzaSyBtugz-3SDbpoH5zOOvQI0AoAb6kbqb0dc",authDomain:"iitm-solutions.firebaseapp.com",databaseURL:"https://iitm-solutions-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"iitm-solutions",storageBucket:"iitm-solutions.firebasestorage.app",messagingSenderId:"411649171402",appId:"1:411649171402:web:e5278ba01a518080b0b933"};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();const auth=firebase.auth();
 emailjs.init("0g35NzGfXah-1DMhS");const SERVICE_ID="service_q3nz8on",TEMPLATE_ID="template_ayh2de9";
-let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),iv=null,allSols=[],allPYQ=[],currentBoardFilter='total',startTimestamp=0,wakeLock=null,allLeaderData=[],liveStudyingData={},studyingCache={},isPaused=false;
+let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),iv=null,allSols=[],allPYQ=[],currentBoardFilter='total',startTimestamp=0,wakeLock=null,allLeaderData=[],studyingCache={},isPaused=false,liveStudyingDataById={};
 function toggleAuth(){document.getElementById('loginForm').classList.toggle('hidden');document.getElementById('signupForm').classList.toggle('hidden');}
 (function(){['regDay','pDay'].forEach(id=>{let el=document.getElementById(id);if(!el)return;for(let i=1;i<=31;i++){let o=document.createElement('option');o.value=i;o.text=i;el.appendChild(o);}});['regYear','pYear'].forEach(id=>{let el=document.getElementById(id);if(!el)return;for(let i=2008;i>=1975;i--){let o=document.createElement('option');o.value=i;o.text=i;el.appendChild(o);}});['regAge','pAge'].forEach(id=>{let el=document.getElementById(id);if(!el)return;for(let i=15;i<=60;i++){let o=document.createElement('option');o.value=i;o.text=i+' years';el.appendChild(o);}});})();
 async function register(){let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPass').value;let g=document.getElementById('regGender').value,d=document.getElementById('regDay').value,m=document.getElementById('regMonth').value,y=document.getElementById('regYear').value,a=document.getElementById('regAge').value;if(!n||!e||p.length<6||!g||!d||!m||!y||!a){document.getElementById('authStatus').innerText='❌ All fields';return;}let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(s.exists()){document.getElementById('authStatus').innerText='❌ Exists';return;}let u=db.ref('users').push();await u.set({name:n,email:e,pass:btoa(p),gender:g,day:d,month:m,year:y,age:a,dob:d+'/'+m+'/'+y,created:Date.now(),streak:0});document.getElementById('authStatus').innerText='✅ Created!';toggleAuth();}
@@ -58,8 +55,6 @@ async function checkIsAdmin(email){if(!email) return false; let e=email.toLowerC
 async function showApp(){let u=JSON.parse(localStorage.getItem('iitm_user')||'null');if(u){currentUser=u;}if(!currentUser) return;document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');let photo=localStorage.getItem('iitm_userPhoto');if(photo){let img=document.getElementById('userPhoto');if(img){img.src=photo;img.style.display='block';}}loadStreak();let adminCheck=await checkIsAdmin(currentUser.email);isAdmin=adminCheck||localStorage.getItem('iitm_admin')==='true';if(isAdmin){document.getElementById('adminBadge').classList.remove('hidden');document.getElementById('adminTabBtn').style.display='block';document.getElementById('adminPYQBox').classList.remove('hidden');document.getElementById('adminSolBox').classList.remove('hidden');document.getElementById('adminNotesBox').classList.remove('hidden');document.querySelectorAll('.admin-only').forEach(el=>el.classList.remove('hidden'));}upd();updateButtons();setTimeout(()=>{loadYPTStats();loadDDay();},300);}
 function logout(){let k=localStorage.getItem('iitm_userKey')||'admin';db.ref('studying/'+k).remove();auth.signOut().then(()=>{localStorage.clear();location.reload();});}
 window.onload=()=>{let u=localStorage.getItem('iitm_user');if(u){currentUser=JSON.parse(u);isAdmin=localStorage.getItem('iitm_admin')==='true';showApp();}};
-
-// NEW TIMER LOGIC - START/STOP + PAUSE/RESUME
 function upd(){let h=String(Math.floor(sec/3600)).padStart(2,'0'),m=String(Math.floor(sec%3600/60)).padStart(2,'0'),s=String(sec%60).padStart(2,'0');document.getElementById('time').innerText=h+':'+m+':'+s;localStorage.setItem('sec',sec);}
 function updateButtons(){
   let startBtn=document.getElementById('startStopBtn');
@@ -83,7 +78,7 @@ function updateButtons(){
   }
 }
 function toggleStartStop(){
-  if(iv){ // STOP
+  if(iv){
     clearInterval(iv); iv=null; isPaused=false;
     if(timerWorker) timerWorker.postMessage('stop');
     sec=Math.floor((Date.now()-startTimestamp)/1000); localStorage.setItem('sec',sec);
@@ -91,7 +86,7 @@ function toggleStartStop(){
     if(wakeLock){wakeLock.release().then(()=>wakeLock=null);}
     sec=0; startTimestamp=0; upd(); localStorage.setItem('sec',0);
     updateButtons();
-  } else { // START
+  } else {
     isPaused=false;
     startTimestamp=Date.now()-sec*1000;
     iv=setInterval(()=>{ if(!isPaused){ sec=Math.floor((Date.now()-startTimestamp)/1000); upd(); } },1000);
@@ -106,13 +101,13 @@ function toggleStartStop(){
 }
 function togglePauseResume(){
   if(!iv) return;
-  if(!isPaused){ // PAUSE
+  if(!isPaused){
     isPaused=true;
     sec=Math.floor((Date.now()-startTimestamp)/1000); localStorage.setItem('sec',sec);
     let k=localStorage.getItem('iitm_userKey')||'admin'; db.ref('studying/'+k).remove();
     if(timerWorker) timerWorker.postMessage('stop');
     updateButtons();
-  } else { // RESUME
+  } else {
     isPaused=false;
     startTimestamp=Date.now()-sec*1000;
     let k=localStorage.getItem('iitm_userKey')||'admin';
@@ -148,6 +143,8 @@ function verifyAndReset(){let email=document.getElementById('resetEmail').value.
 function loadYPTStats(){db.ref('leaderboard').on('value',s=>{let todayStr=new Date().toDateString();let todaySec=0,weekSec=0,totalSec=0;let days=[0,0,0,0,0,0,0];s.forEach(c=>{let d=c.val();if(d.name!==currentUser.name) return; totalSec+=parseInt(d.time||0); let dt=new Date(d.t); if(dt.toDateString()===todayStr) todaySec+=parseInt(d.time||0); if(Date.now()-d.t<7*86400000) weekSec+=parseInt(d.time||0); let diff=Math.floor((Date.now()-d.t)/86400000); if(diff<7) days[6-diff]+=Math.floor(d.time/60);}); document.getElementById('todayTime').innerText=Math.floor(todaySec/60)+'m'; document.getElementById('weekTime').innerText=Math.floor(weekSec/60)+'m'; document.getElementById('totalTime').innerText=Math.floor(totalSec/60)+'m';});}
 function loadDDay(){db.ref('dday').on('value',s=>{let el=document.getElementById('dDayBox'); if(!s.exists()){el.innerText='D-12 Quiz';return;} let d=s.val(); let target=new Date(d.date); let diff=Math.ceil((target-Date.now())/86400000); el.innerText=diff>0?`D-${diff} ${d.title}`:`${d.title}`;});}
 function setDDay(){let title=document.getElementById('dDayTitle').value.trim()||'Quiz'; let date=document.getElementById('dDayDate').value; if(!date) return alert('Date'); db.ref('dday').set({title:title,date:date}); alert('Set');}
+
+// LEADERBOARD FIX - NAAM NAHI HATEGA
 function filterBoard(type){currentBoardFilter=type;document.getElementById('btnTotal').style.background=type==='total'?'linear-gradient(90deg,#38bdf8,#8b5cf6)':'#1e293b';document.getElementById('btnToday').style.background=type==='today'?'linear-gradient(90deg,#38bdf8,#8b5cf6)':'#1e293b';document.getElementById('btnWeek').style.background=type==='week'?'linear-gradient(90deg,#38bdf8,#8b5cf6)':'#1e293b';renderBoards();}
 function renderBoards(){
   let map={};
@@ -158,22 +155,25 @@ function renderBoards(){
     else if(currentBoardFilter==='today'){if(new Date(entryTime).toDateString()===new Date().toDateString()) include=true;}
     else if(currentBoardFilter==='week'){if(Date.now()-entryTime<7*86400000) include=true;}
     if(!include) return;
-    let key=d.name;
-    if(!map[key]) map[key]={name:d.name,time:0,live:0,streak:d.streak||0};
+    let key=d.name.toLowerCase().trim();
+    if(!map[key]) map[key]={displayName:d.name,time:0,live:0,streak:d.streak||0};
     map[key].time+=parseInt(d.time||0);
+    if(d.streak) map[key].streak=Math.max(map[key].streak,d.streak||0);
   });
-  Object.keys(liveStudyingData).forEach(name=>{
-    let liveSec = liveStudyingData[name];
-    if(liveSec > 12*3600 || liveSec < 0) return;
-    if(!map[name]) map[name]={name:name,time:0,live:0,streak:0};
-    map[name].live=liveSec;
+  Object.values(liveStudyingDataById).forEach(live=>{
+    let liveSec=live.elapsed;
+    if(liveSec>12*3600||liveSec<0) return;
+    let key=live.name.toLowerCase().trim();
+    if(!map[key]) map[key]={displayName:live.name,time:0,live:0,streak:0};
+    map[key].live=Math.max(map[key].live,liveSec);
+    map[key].displayName=live.name;
   });
   let a=Object.values(map);
-  a.forEach(u=>{u.totalDisplay=u.time+u.live; if(u.totalDisplay > 999*3600) u.totalDisplay = u.time;});
+  a.forEach(u=>{u.totalDisplay=u.time+u.live; if(u.totalDisplay>999*3600) u.totalDisplay=u.time;});
   a.sort((x,y)=>y.totalDisplay-x.totalDisplay);
-  a=a.slice(0,25);
+  a=a.slice(0,30);
   let html='';
-  if(a.length===0) html='<div style="text-align:center;opacity:.5;padding:20px">No data</div>';
+  if(a.length===0) html='<div style="text-align:center;opacity:.5;padding:20px">No data yet - Start studying!</div>';
   else a.forEach((d,i)=>{
     let rank=i==0?'🥇':i==1?'🥈':i==2?'🥉':`#${i+1}`;
     let totalSec=d.totalDisplay;
@@ -182,10 +182,10 @@ function renderBoards(){
     let secs=totalSec%60;
     let timeStr=hrs>0?`${hrs}h ${mins}m`:mins>0?`${mins}m ${secs}s`:`${secs}s`;
     let liveBadge=d.live>0?`<span style="background:#22c55e;color:black;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:800;margin-left:6px">● LIVE +${Math.floor(d.live/60)}m</span>`:'';
-    html+=`<div class="leader-item" style="${d.live>0?'border:1px solid #22c55e':''}"><span>${rank} ${d.name} ${d.streak?'🔥'+d.streak:''} ${liveBadge}</span><span style="font-weight:800;color:${d.live>0?'#22c55e':'#38bdf8'}">${timeStr}</span></div>`;
+    html+=`<div class="leader-item" style="${d.live>0?'border:1px solid #22c55e;background:linear-gradient(90deg,#0f172a,#1a2e1a)':''}"><span>${rank} ${d.displayName} ${d.streak?'🔥'+d.streak:''} ${liveBadge}</span><span style="font-weight:800;color:${d.live>0?'#22c55e':'#38bdf8'}">${timeStr}</span></div>`;
   });
-  document.getElementById('board').innerHTML=html;
-  document.getElementById('boardMobile').innerHTML=html;
+  if(document.getElementById('board')) document.getElementById('board').innerHTML=html;
+  if(document.getElementById('boardMobile')) document.getElementById('boardMobile').innerHTML=html;
 }
 db.ref('leaderboard').on('value',s=>{allLeaderData=[];s.forEach(c=>{allLeaderData.push(c.val());});renderBoards();});
 function renderLiveGrid(){
@@ -193,9 +193,9 @@ function renderLiveGrid(){
   if(!grid) return;
   grid.innerHTML='';
   let count=0;
-  Object.values(studyingCache).forEach(d=>{
-    let elapsed = liveStudyingData[d.name]||0;
-    if(elapsed > 12*3600) return;
+  Object.values(liveStudyingDataById).forEach(d=>{
+    let elapsed=d.elapsed||0;
+    if(elapsed>12*3600) return;
     count++;
     let h=String(Math.floor(elapsed/3600)).padStart(2,'0'),m=String(Math.floor(elapsed%3600/60)).padStart(2,'0'),s=String(elapsed%60).padStart(2,'0');
     let avatar=d.photo?`<img src="${d.photo}" style="width:32px;height:32px;border-radius:50%">`:`<div style="width:32px;height:32px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center">${d.name[0]}</div>`;
@@ -205,21 +205,21 @@ function renderLiveGrid(){
 }
 db.ref('studying').on('value',snap=>{
   studyingCache={};
-  liveStudyingData={};
-  let now = Date.now();
+  liveStudyingDataById={};
+  let now=Date.now();
   snap.forEach(child=>{
     let d=child.val();
-    if(!d.startAt || d.startAt < 1000000000000 || d.startAt > now || isNaN(d.startAt)){
+    if(!d.startAt||d.startAt<1000000000000||d.startAt>now||isNaN(d.startAt)){
       db.ref('studying/'+child.key).remove();
       return;
     }
     let elapsed=Math.floor((now-d.startAt)/1000);
-    if(elapsed > 12*3600 || elapsed < 0){
+    if(elapsed>12*3600||elapsed<0){
       db.ref('studying/'+child.key).remove();
       return;
     }
     studyingCache[child.key]=d;
-    liveStudyingData[d.name]=elapsed;
+    liveStudyingDataById[child.key]={name:d.name,elapsed:elapsed,photo:d.photo,subject:d.subject,startAt:d.startAt};
   });
   renderLiveGrid();
   renderBoards();
