@@ -27,7 +27,7 @@
 <div class="card" id="confessTab" style="display:none"><div style="display:flex;justify-content:space-between"><h3>😶‍🌫️ Confessions</h3><button onclick="clearConfessions()" class="hidden admin-only" style="background:rgba(239,68,68,.1);color:#ef4444;padding:6px 10px;border-radius:8px;border:none;font-size:10px">Clear All</button></div><div id="confessBox"></div><div style="display:flex;gap:10px;background:#080b1a;padding:8px;border-radius:16px;border:1px solid #1e293b;margin-top:10px"><input id="confessInput" placeholder="Anonymous..." style="flex:1;margin:0;background:transparent;border:none"><button onclick="sendConfess()" style="background:#1e293b;color:#f97316;padding:10px 16px;border-radius:12px;border:none;font-weight:800">Post</button></div></div>
 <div class="card" id="chatTab" style="display:none"><div style="display:flex;justify-content:space-between"><h3>💬 Chat - <span id="chatCount">0</span></h3><button onclick="clearChats()" class="hidden admin-only" style="background:rgba(239,68,68,.1);color:#ef4444;padding:6px 10px;border-radius:8px;border:none;font-size:10px">Clear All</button></div><div id="chatBox"></div><div style="display:flex;gap:10px;background:#080b1a;padding:8px;border-radius:16px;border:1px solid #1e293b"><input id="chat" placeholder="Type..." style="flex:1;margin:0;background:transparent;border:none"><button onclick="send()" style="background:linear-gradient(135deg,#38bdf8,#8b5cf6);color:white;width:46px;height:46px;border-radius:50%;border:none"><i class="fa-solid fa-paper-plane"></i></button></div></div>
 <div class="card" id="solsTab" style="display:none"><div style="display:flex;justify-content:space-between"><h3>📚 Solutions - <span id="solCount">0</span></h3><select id="subjectFilter" onchange="filterSols()" style="width:auto;padding:8px 14px;font-size:11px;border-radius:100px"><option value="All">All</option><option>Foundation</option><option>Maths 1</option><option>Python</option></select></div><div id="adminSolBox" class="hidden" style="background:#080b1a;padding:14px;border-radius:14px;margin-top:14px;border:1px dashed #38bdf844"><input id="solTitle" placeholder="Title"><select id="solSub"><option>Foundation</option><option>Maths 1</option><option>Python</option></select><input id="solLink" placeholder="Drive Link"><button onclick="addSolution()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;padding:12px;border-radius:10px;border:none;font-weight:800;margin-top:6px">Upload</button></div><div id="solutionsList" style="margin-top:16px"></div></div>
-<div class="card" id="adminTab" style="display:none"><h3>👑 Admin Dashboard</h3><div class="admin-stat"><div class="stat-box"><h2 id="totalUsers">0</h2><small>Users</small></div><div class="stat-box"><h2 id="totalPYQ">0</h2><small>PYQs</small></div><div class="stat-box"><h2 id="totalNotes">0</h2><small>Notes</small></div><div class="stat-box"><h2 id="totalSols">0</h2><small>Sols</small></div></div><div style="margin-top:16px;background:#080b1a;padding:14px;border-radius:14px;border:1px dashed #facc15"><h4>👑 Make Admin</h4><input id="newAdminEmail" placeholder="Email"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><button onclick="makeAdminByEmail()" style="background:linear-gradient(90deg,#facc15,#f97316);color:black;padding:12px;border-radius:10px;border:none;font-weight:800">Make Admin 👑</button><button onclick="removeAdminByEmail()" style="background:rgba(239,68,68,.15);color:#ef4444;padding:12px;border-radius:10px;border:1px solid rgba(239,68,68,.3)">Remove</button></div><p id="adminStatus" style="font-size:10px;margin-top:8px"></p><div id="adminList"></div></div><div style="margin-top:16px;background:#080b1a;padding:14px;border-radius:14px;border:1px dashed #38bdf8"><h4>D-Day</h4><input id="dDayTitle" placeholder="Title"><input id="dDayDate" type="date"><button onclick="setDDay()" style="width:100%;background:#38bdf8;color:black;padding:10px;border-radius:10px;border:none;font-weight:800;margin-top:6px">Set D-Day</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px"><button onclick="if(confirm('Reset Leaderboard?'))db.ref('leaderboard').remove()" style="background:rgba(239,68,68,.15);color:#ef4444;padding:12px;border-radius:12px;border:1px solid rgba(239,68,68,.3)">Reset Board</button><button onclick="if(confirm('Clear Live?'))db.ref('studying').remove()" style="background:rgba(34,197,94,.15);color:#22c55e;padding:12px;border-radius:12px;border:1px solid rgba(34,197,94,.3)">Clear Live</button></div><div style="margin-top:20px"><h4>Users</h4><div id="usersList"></div></div></div>
+<div class="card" id="adminTab" style="display:none"><h3>👑 Admin Dashboard</h3><div class="admin-stat"><div class="stat-box"><h2 id="totalUsers">0</h2><small>Users</small></div><div class="stat-box"><h2 id="totalPYQ">0</h2><small>PYQs</small></div><div class="stat-box"><h2 id="totalNotes">0</h2><small>Notes</small></div><div class="stat-box"><h2 id="totalSols">0</h2><small>Sols</small></div></div><div style="margin-top:16px;background:#080b1a;padding:14px;border-radius:14px;border:1px dashed #facc15"><h4>👑 Make Admin</h4><input id="newAdminEmail" placeholder="Email"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><button onclick="makeAdminByEmail()" style="background:linear-gradient(90deg,#facc15,#f97316);color:black;padding:12px;border-radius:10px;border:none;font-weight:800">Make Admin 👑</button><button onclick="removeAdminByEmail()" style="background:rgba(239,68,68,.15);color:#ef4444;padding:12px;border-radius:10px;border:1px solid rgba(239,68,68,.3)">Remove</button></div><p id="adminStatus" style="font-size:10px;margin-top:8px"></p><div id="adminList"></div></div><div style="margin-top:16px;background:#080b1a;padding:14px;border-radius:14px;border:1px dashed #38bdf8"><h4>D-Day</h4><input id="dDayTitle" placeholder="Title"><input id="dDayDate" type="date"><button onclick="setDDay()" style="width:100%;background:#38bdf8;color:black;padding:10px;border-radius:10px;border:none;font-weight:800;margin-top:6px">Set D-Day</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px"><button onclick="if(confirm('Reset Leaderboard?'))db.ref('leaderboard').remove()" style="background:rgba(239,68,68,.15);color:#ef4444;padding:12px;border-radius:12px;border:1px solid rgba(239,68,68,.3)">Reset Board</button><button onclick="if(confirm('Clear Live?')){db.ref('studying').remove();alert('Cleared!');}" style="background:rgba(34,197,94,.15);color:#22c55e;padding:12px;border-radius:12px;border:1px solid rgba(34,197,94,.3)">Clear Live (Fix Glitch)</button></div><div style="margin-top:20px"><h4>Users</h4><div id="usersList"></div></div></div>
 </div><div class="desktop-only"><div class="card"><h3>🏆 Leaderboard - LIVE</h3><div id="board" style="margin-top:14px"></div></div></div></div>
 <div class="bottom-nav"><div class="b-item active" onclick="showTab('study')" data-tab="study"><i class="fa-solid fa-stopwatch"></i><span>Timer</span></div><div class="b-item" onclick="showTab('boardM')" data-tab="boardM"><i class="fa-solid fa-trophy"></i><span>Board</span></div><div class="b-item" onclick="showTab('ai')" data-tab="ai"><i class="fa-solid fa-robot"></i><span>AI</span></div><div class="b-item" onclick="showTab('chat')" data-tab="chat"><i class="fa-solid fa-comments"></i><span>Chat</span></div><div class="b-item" onclick="openMenu()"><i class="fa-solid fa-bars"></i><span>Menu</span></div></div>
 <div id="menuDrawer" onclick="closeMenu()"><div class="drawer-content" onclick="event.stopPropagation()"><div class="drawer-handle"></div><h3>☰ Menu</h3><div class="drawer-item" onclick="showTab('boardM');closeMenu()"><i class="fa-solid fa-trophy"></i><div><b>Leaderboard</b></div></div><div class="drawer-item" onclick="showTab('pyq');closeMenu()"><i class="fa-solid fa-file-lines"></i><div><b>PYQ</b></div></div><div class="drawer-item" onclick="showTab('notes');closeMenu()"><i class="fa-solid fa-graduation-cap"></i><div><b>Notes</b></div></div><div style="text-align:center;margin-top:16px"><button onclick="closeMenu()" style="background:#1e293b;color:white;padding:10px 24px;border-radius:100px;border:none">Close</button></div></div></div>
@@ -69,27 +69,58 @@ function verifyAndReset(){let email=document.getElementById('resetEmail').value.
 function loadYPTStats(){db.ref('leaderboard').on('value',s=>{let todayStr=new Date().toDateString();let todaySec=0,weekSec=0,totalSec=0;let days=[0,0,0,0,0,0,0];s.forEach(c=>{let d=c.val();if(d.name!==currentUser.name) return; totalSec+=parseInt(d.time||0); let dt=new Date(d.t); if(dt.toDateString()===todayStr) todaySec+=parseInt(d.time||0); if(Date.now()-d.t<7*86400000) weekSec+=parseInt(d.time||0); let diff=Math.floor((Date.now()-d.t)/86400000); if(diff<7) days[6-diff]+=Math.floor(d.time/60);}); document.getElementById('todayTime').innerText=Math.floor(todaySec/60)+'m'; document.getElementById('weekTime').innerText=Math.floor(weekSec/60)+'m'; document.getElementById('totalTime').innerText=Math.floor(totalSec/60)+'m';});}
 function loadDDay(){db.ref('dday').on('value',s=>{let el=document.getElementById('dDayBox'); if(!s.exists()){el.innerText='D-12 Quiz';return;} let d=s.val(); let target=new Date(d.date); let diff=Math.ceil((target-Date.now())/86400000); el.innerText=diff>0?`D-${diff} ${d.title}`:`${d.title}`;});}
 function setDDay(){let title=document.getElementById('dDayTitle').value.trim()||'Quiz'; let date=document.getElementById('dDayDate').value; if(!date) return alert('Date'); db.ref('dday').set({title:title,date:date}); alert('Set');}
+
+// GLITCH FIX - 496830h FIX
 function filterBoard(type){currentBoardFilter=type;document.getElementById('btnTotal').style.background=type==='total'?'linear-gradient(90deg,#38bdf8,#8b5cf6)':'#1e293b';document.getElementById('btnToday').style.background=type==='today'?'linear-gradient(90deg,#38bdf8,#8b5cf6)':'#1e293b';document.getElementById('btnWeek').style.background=type==='week'?'linear-gradient(90deg,#38bdf8,#8b5cf6)':'#1e293b';renderBoards();}
 function renderBoards(){
   let map={};
-  allLeaderData.forEach(d=>{let entryTime=d.t||Date.now();let include=false;if(currentBoardFilter==='total') include=true;else if(currentBoardFilter==='today'){if(new Date(entryTime).toDateString()===new Date().toDateString()) include=true;}else if(currentBoardFilter==='week'){if(Date.now()-entryTime<7*86400000) include=true;}if(!include) return;let key=d.name;if(!map[key]) map[key]={name:d.name,time:0,live:0,streak:d.streak||0};map[key].time+=parseInt(d.time||0);});
-  Object.keys(liveStudyingData).forEach(name=>{if(!map[name]) map[name]={name:name,time:0,live:0,streak:0};map[name].live=liveStudyingData[name];});
-  let a=Object.values(map);a.forEach(u=>u.totalDisplay=u.time+u.live);a.sort((x,y)=>y.totalDisplay-x.totalDisplay);a=a.slice(0,25);
-  let html='';if(a.length===0) html='<div style="text-align:center;opacity:.5;padding:20px">No data</div>';else a.forEach((d,i)=>{let rank=i==0?'🥇':i==1?'🥈':i==2?'🥉':`#${i+1}`;let totalSec=d.totalDisplay;let hrs=Math.floor(totalSec/3600);let mins=Math.floor((totalSec%3600)/60);let secs=totalSec%60;let timeStr=hrs>0?`${hrs}h ${mins}m`:mins>0?`${mins}m ${secs}s`:`${secs}s`;let liveBadge=d.live>0?`<span style="background:#22c55e;color:black;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:800;margin-left:6px">● LIVE +${Math.floor(d.live/60)}m</span>`:'';html+=`<div class="leader-item" style="${d.live>0?'border:1px solid #22c55e':''}"><span>${rank} ${d.name} ${d.streak?'🔥'+d.streak:''} ${liveBadge}</span><span style="font-weight:800;color:${d.live>0?'#22c55e':'#38bdf8'}">${timeStr}</span></div>`;});
-  document.getElementById('board').innerHTML=html;document.getElementById('boardMobile').innerHTML=html;
+  allLeaderData.forEach(d=>{
+    let entryTime=d.t||Date.now();
+    let include=false;
+    if(currentBoardFilter==='total') include=true;
+    else if(currentBoardFilter==='today'){if(new Date(entryTime).toDateString()===new Date().toDateString()) include=true;}
+    else if(currentBoardFilter==='week'){if(Date.now()-entryTime<7*86400000) include=true;}
+    if(!include) return;
+    let key=d.name;
+    if(!map[key]) map[key]={name:d.name,time:0,live:0,streak:d.streak||0};
+    map[key].time+=parseInt(d.time||0);
+  });
+  Object.keys(liveStudyingData).forEach(name=>{
+    let liveSec = liveStudyingData[name];
+    if(liveSec > 12*3600 || liveSec < 0) return; // Glitch protection
+    if(!map[name]) map[name]={name:name,time:0,live:0,streak:0};
+    map[name].live=liveSec;
+  });
+  let a=Object.values(map);
+  a.forEach(u=>{u.totalDisplay=u.time+u.live; if(u.totalDisplay > 999*3600) u.totalDisplay = u.time;});
+  a.sort((x,y)=>y.totalDisplay-x.totalDisplay);
+  a=a.slice(0,25);
+  let html='';
+  if(a.length===0) html='<div style="text-align:center;opacity:.5;padding:20px">No data</div>';
+  else a.forEach((d,i)=>{
+    let rank=i==0?'🥇':i==1?'🥈':i==2?'🥉':`#${i+1}`;
+    let totalSec=d.totalDisplay;
+    let hrs=Math.floor(totalSec/3600);
+    let mins=Math.floor((totalSec%3600)/60);
+    let secs=totalSec%60;
+    let timeStr=hrs>0?`${hrs}h ${mins}m`:mins>0?`${mins}m ${secs}s`:`${secs}s`;
+    let liveBadge=d.live>0?`<span style="background:#22c55e;color:black;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:800;margin-left:6px">● LIVE +${Math.floor(d.live/60)}m</span>`:'';
+    html+=`<div class="leader-item" style="${d.live>0?'border:1px solid #22c55e':''}"><span>${rank} ${d.name} ${d.streak?'🔥'+d.streak:''} ${liveBadge}</span><span style="font-weight:800;color:${d.live>0?'#22c55e':'#38bdf8'}">${timeStr}</span></div>`;
+  });
+  document.getElementById('board').innerHTML=html;
+  document.getElementById('boardMobile').innerHTML=html;
 }
 db.ref('leaderboard').on('value',s=>{allLeaderData=[];s.forEach(c=>{allLeaderData.push(c.val());});renderBoards();});
-setInterval(()=>{renderLiveGrid();renderBoards();},1000);
+
 function renderLiveGrid(){
   let grid=document.getElementById('liveGrid'),countEl=document.getElementById('liveCount');
   if(!grid) return;
   grid.innerHTML='';
   let count=0;
   Object.values(studyingCache).forEach(d=>{
+    let elapsed = liveStudyingData[d.name]||0;
+    if(elapsed > 12*3600) return;
     count++;
-    let startAt=d.startAt||(Date.now()-(d.sec||0)*1000);
-    let elapsed=Math.floor((Date.now()-startAt)/1000);
-    if(elapsed<0) elapsed=0;
     let h=String(Math.floor(elapsed/3600)).padStart(2,'0'),m=String(Math.floor(elapsed%3600/60)).padStart(2,'0'),s=String(elapsed%60).padStart(2,'0');
     let avatar=d.photo?`<img src="${d.photo}" style="width:32px;height:32px;border-radius:50%">`:`<div style="width:32px;height:32px;border-radius:50%;background:#1e293b;display:flex;align-items:center;justify-content:center">${d.name[0]}</div>`;
     grid.innerHTML+=`<div style="background:#0f172a;border-radius:16px;padding:10px;text-align:center"><div style="display:flex;justify-content:center">${avatar}</div><div style="font-size:10px;margin-top:6px">${d.name.substring(0,10)}<br><small style="color:#38bdf8">${d.subject||''}</small></div><div style="font-size:11px;font-weight:800">${h}:${m}:${s}</div><div style="font-size:8px;color:#22c55e">● LIVE</div></div>`;
@@ -97,16 +128,28 @@ function renderLiveGrid(){
   if(countEl) countEl.innerText=count;
 }
 db.ref('studying').on('value',snap=>{
-  studyingCache={};liveStudyingData={};
+  studyingCache={};
+  liveStudyingData={};
+  let now = Date.now();
   snap.forEach(child=>{
     let d=child.val();
-    if(!d.startAt && d.sec) d.startAt=Date.now()-d.sec*1000;
+    if(!d.startAt || d.startAt < 1000000000000 || d.startAt > now || isNaN(d.startAt)){
+      db.ref('studying/'+child.key).remove();
+      return;
+    }
+    let elapsed=Math.floor((now-d.startAt)/1000);
+    if(elapsed > 12*3600 || elapsed < 0){
+      db.ref('studying/'+child.key).remove();
+      return;
+    }
     studyingCache[child.key]=d;
-    let elapsed=Math.floor((Date.now()-d.startAt)/1000);
     liveStudyingData[d.name]=elapsed;
   });
-  renderLiveGrid();renderBoards();
+  renderLiveGrid();
+  renderBoards();
 });
+setInterval(()=>{renderLiveGrid();renderBoards();},1000);
+
 async function makeAdminByEmail(){let e=document.getElementById('newAdminEmail').value.trim().toLowerCase();let safe=e.replace(/\./g,'_').replace(/@/g,'_at_');await db.ref('admins/'+safe).set({email:e,time:Date.now()});let snap=await db.ref('users').orderByChild('email').equalTo(e).once('value');snap.forEach(c=>{db.ref('users/'+c.key).update({isAdmin:true});});document.getElementById('adminStatus').innerText='✅ Admin';}
 async function removeAdminByEmail(){let e=document.getElementById('newAdminEmail').value.trim().toLowerCase();let safe=e.replace(/\./g,'_').replace(/@/g,'_at_');await db.ref('admins/'+safe).remove();document.getElementById('adminStatus').innerText='Removed';}
 db.ref('admins').on('value',s=>{let l=document.getElementById('adminList');if(!l) return;l.innerHTML='';s.forEach(c=>{let d=c.val();l.innerHTML+=`<div style="background:#0f172a;padding:8px 12px;border-radius:10px;margin-top:6px"><span>👑 ${d.email}</span></div>`;});});
