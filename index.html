@@ -52,34 +52,28 @@ let currentUser=null,isAdmin=false,sec=parseInt(localStorage.getItem('sec')||0),
 function emergencySkip(){localStorage.setItem('iitm_user', JSON.stringify({name:'Guest User', email:'guest@iitm.com'}));localStorage.setItem('iitm_userKey','guest_'+Date.now());document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');currentUser=JSON.parse(localStorage.getItem('iitm_user'));upd();updateButtons();loadYPTStats();loadDDay();}
 function toggleAuth(){document.getElementById('loginForm').classList.toggle('hidden');document.getElementById('signupForm').classList.toggle('hidden');}
 (function(){['regDay','pDay'].forEach(id=>{let el=document.getElementById(id);if(!el)return;el.innerHTML='<option value="">Day</option>';for(let i=1;i<=31;i++){let o=document.createElement('option');o.value=i;o.text=i;el.appendChild(o);}});let months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];['regMonth','pMonth'].forEach(id=>{let el=document.getElementById(id);if(!el)return;el.innerHTML='<option value="">Month</option>';months.forEach((m,i)=>{let o=document.createElement('option');o.value=i+1;o.text=m;el.appendChild(o);});});['regYear','pYear'].forEach(id=>{let el=document.getElementById(id);if(!el)return;el.innerHTML='<option value="">Year</option>';for(let i=2008;i>=1975;i--){let o=document.createElement('option');o.value=i;o.text=i;el.appendChild(o);}});['regAge','pAge'].forEach(id=>{let el=document.getElementById(id);if(!el)return;el.innerHTML='<option value="">Age</option>';for(let i=15;i<=60;i++){let o=document.createElement('option');o.value=i;o.text=i+' years';el.appendChild(o);}});})();
+
 async function register(){let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPass').value;let g=document.getElementById('regGender').value,d=document.getElementById('regDay').value,m=document.getElementById('regMonth').value,y=document.getElementById('regYear').value,a=document.getElementById('regAge').value;if(!n||!e||p.length<6||!g||!d||!m||!y||!a){document.getElementById('authStatus').innerText='❌ All fields required';return;}try{let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(s.exists()){document.getElementById('authStatus').innerText='❌ Email exists';return;}let u=db.ref('users').push();await u.set({name:n,email:e,pass:btoa(p),gender:g,day:d,month:m,year:y,age:a,dob:d+'/'+m+'/'+y,created:Date.now(),streak:0,profileComplete:true});document.getElementById('authStatus').innerText='✅ Created! Login now';document.getElementById('authStatus').style.color='#22c55e';toggleAuth();}catch(err){document.getElementById('authStatus').innerText='❌ DB Error: '+err.message;}}
+
 async function login(){let e=document.getElementById('loginEmail').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;if(!e||!p){document.getElementById('authStatus').innerText='❌ Email & Pass required';return;}if(e==='admin@iitm.com'&&p==='admin123'){currentUser={name:'Gaurav Gupta',email:e};isAdmin=true;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_admin','true');showApp();return;}document.getElementById('authStatus').innerText='⏳ Logging in...';try{let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(!s.exists()){document.getElementById('authStatus').innerText='❌ Email not found';return;}let f=null;s.forEach(c=>{let d=c.val();d._key=c.key;if(atob(d.pass)===p)f=d;});if(!f){document.getElementById('authStatus').innerText='❌ Wrong password';return;}currentUser=f;localStorage.setItem('iitm_user',JSON.stringify(currentUser));localStorage.setItem('iitm_userKey',f._key);if(f.profileComplete) localStorage.setItem('iitm_profile_done','true');showApp();}catch(err){document.getElementById('authStatus').innerText='❌ Login error: '+err.message;}}
 
-// ===== GOOGLE LOGIN FIXED - REDIRECT METHOD =====
 function googleLogin(){
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({prompt:'select_account'});
   const statusEl = document.getElementById('authStatus');
   statusEl.innerText = '⏳ Google khul raha hai...';
   statusEl.style.color = '#38bdf8';
-  auth.signInWithRedirect(provider).catch(e=>{
+  auth.signInWithPopup(provider).then(async (result)=>{
+    statusEl.innerText = '✅ Login ho gaya: ' + result.user.email;
+    statusEl.style.color = '#22c55e';
+    await handleGoogleUser(result.user);
+  }).catch(e=>{
+    console.error(e);
     statusEl.innerText = '❌ ' + e.code + ': ' + e.message;
     statusEl.style.color = '#ef4444';
-    alert('Google Login Error: ' + e.message + '\n\nFix: Firebase > Authentication > Settings > Authorized domains me iitm-solutions.vercel.app add karo');
+    alert('Google Login Error\n\nCode: '+e.code+'\nMessage: '+e.message+'\n\nFix: 1) Firebase > Auth > Sign-in method > Google Enabled karo\n2) Firebase > Auth > Settings > Authorized domains me '+location.hostname+' add karo\n3) Google Cloud > Credentials > Browser key > Dont restrict key');
   });
 }
-auth.getRedirectResult().then(async (result)=>{
-  if(result && result.user){
-    const statusEl = document.getElementById('authStatus');
-    if(statusEl){ statusEl.innerText = '✅ ' + result.user.email; statusEl.style.color='#22c55e'; }
-    await handleGoogleUser(result.user);
-  }
-}).catch(e=>{ console.log('RedirectResult error', e); });
-auth.onAuthStateChanged(async (user)=>{
-  if(user && document.getElementById('loginScreen') &&!document.getElementById('loginScreen').classList.contains('hidden')){
-    await handleGoogleUser(user);
-  }
-});
 
 async function handleGoogleUser(u){
   try{
