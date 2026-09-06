@@ -4,127 +4,111 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
-<style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif}body{background:#060a18;color:#e2e8f0}.login-screen{position:fixed;inset:0;background:radial-gradient(ellipse at top,#1e293b 0%,#060a18 60%);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{background:linear-gradient(180deg,#111d36 0%,#0f172a 100%);border:1px solid #1e293b;border-radius:28px;padding:36px;max-width:440px;width:100%}.header{background:rgba(15,23,42,.8);backdrop-filter:blur(20px);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:100}.main{max-width:1300px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1fr 360px;gap:16px;padding-bottom:110px}@media(max-width:900px){.main{grid-template-columns:1fr}}.card{background:linear-gradient(180deg,#151f3a 0%,#0f172a 100%);border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:22px;margin-bottom:16px}.timer{font-size:72px;font-weight:900;text-align:center;background:linear-gradient(90deg,#38bdf8,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:10px auto}.btn{padding:12px 22px;border:none;border-radius:14px;font-weight:800;cursor:pointer}input,select{width:100%;padding:13px 16px;background:#080d1d;border:1px solid #1e293b;border-radius:14px;color:white;margin:7px 0;outline:none;font-size:13px}.dob-row{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:8px}.hidden{display:none!important}#signupOtpModal,#otpModal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px}#signupOtpModal.open,#otpModal.open{display:flex!important}</style>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+<style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif}body{background:#060a18;color:#e2e8f0}.login-screen{position:fixed;inset:0;background:radial-gradient(ellipse at top,#1e293b 0%,#060a18 60%);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.login-box{background:linear-gradient(180deg,#111d36 0%,#0f172a 100%);border:1px solid #1e293b;border-radius:28px;padding:32px;max-width:420px;width:100%}.btn{width:100%;padding:14px;border:none;border-radius:14px;font-weight:800;cursor:pointer}input,select{width:100%;padding:13px 16px;background:#080d1d;border:1px solid #1e293b;border-radius:14px;color:white;margin:6px 0;outline:none}.hidden{display:none!important}#signupOtpModal,#otpModal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px}#signupOtpModal.open,#otpModal.open{display:flex!important}.google-btn{background:white;color:#111;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px}.divider{display:flex;align-items:center;gap:10px;margin:14px 0;opacity:.5;font-size:11px}.divider::before,.divider::after{content:'';flex:1;height:1px;background:#334155}</style>
 </head><body>
 
 <div id="loginScreen" class="login-screen"><div class="login-box">
-<div style="text-align:center"><span style="font-weight:900;font-size:28px;background:linear-gradient(90deg,#38bdf8,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">IITM</span> <span style="font-weight:600;font-size:21px;color:#e2e8f0">SOLUTIONS</span><br><small style="font-size:9px;letter-spacing:3px;color:#94a3b8">BY GAURAV GUPTA</small></div>
+<div style="text-align:center"><span style="font-weight:900;font-size:30px;background:linear-gradient(90deg,#38bdf8,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">IITM</span> <span style="font-weight:700;font-size:22px">SOLUTIONS</span><br><small style="letter-spacing:3px;opacity:.6;font-size:9px">BY GAURAV GUPTA</small></div>
 
-<div id="loginForm" style="margin-top:20px">
+<div id="loginForm" style="margin-top:22px">
 <input id="loginEmail" placeholder="📧 Email">
 <input id="loginPass" type="password" placeholder="🔒 Password">
-<button onclick="login()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;padding:15px;border-radius:14px;border:none;font-weight:800;margin-top:12px">Login →</button>
+<button onclick="login()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;padding:14px;border-radius:14px;border:none;font-weight:800;margin-top:10px">Login →</button>
+
+<div class="divider">OR</div>
+
+<button onclick="googleLogin()" class="btn google-btn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Continue with Google</button>
+
 <p style="margin-top:16px;text-align:center"><span onclick="openOTP()" style="color:#ef4444;cursor:pointer;font-weight:800;background:rgba(239,68,68,.12);padding:8px 16px;border-radius:20px;border:1px solid rgba(239,68,68,.2);font-size:12px">🔑 Forgot Password? OTP Reset</span></p>
-<p style="margin-top:12px;font-size:12px;text-align:center;opacity:.7">New? <span onclick="toggleAuth()" style="color:#38bdf8;cursor:pointer">Create Account</span></p>
+<p style="margin-top:14px;font-size:12px;text-align:center;opacity:.7">New? <span onclick="toggleAuth()" style="color:#38bdf8;cursor:pointer">Create Account</span></p>
 </div>
 
-<div id="signupForm" class="hidden" style="margin-top:20px">
-<input id="regName" placeholder="👤 Full Name">
-<input id="regEmail" placeholder="📧 Email">
-<input id="regPass" type="password" placeholder="🔒 Password (min 6)">
-<select id="regGender"><option value="">👤 Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
-<div class="dob-row"><select id="regDay"><option>Day</option></select><select id="regMonth"><option value="">Month</option><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select><select id="regYear"><option>Year</option></select></div>
-<select id="regAge"><option>Age</option></select>
-<button onclick="register()" style="width:100%;background:linear-gradient(90deg,#22c55e,#16a34a);color:white;padding:15px;border-radius:14px;border:none;font-weight:800;margin-top:12px">Create Account - Verify Email ✨</button>
-<p style="margin-top:12px;font-size:12px;text-align:center;opacity:.7">Have account? <span onclick="toggleAuth()" style="color:#38bdf8;cursor:pointer">Login</span></p>
+<div id="signupForm" class="hidden" style="margin-top:22px">
+<input id="regName" placeholder="👤 Full Name"><input id="regEmail" placeholder="📧 Email"><input id="regPass" type="password" placeholder="🔒 Password">
+<button onclick="register()" style="width:100%;background:linear-gradient(90deg,#22c55e,#16a34a);color:white;padding:14px;border-radius:14px;border:none;font-weight:800;margin-top:10px">Create Account - Verify Email ✨</button>
+<div class="divider">OR</div>
+<button onclick="googleLogin()" class="btn google-btn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Continue with Google</button>
+<p style="margin-top:14px;font-size:12px;text-align:center;opacity:.7">Have account? <span onclick="toggleAuth()" style="color:#38bdf8;cursor:pointer">Login</span></p>
 </div>
 <p id="authStatus" style="font-size:11px;margin-top:14px;text-align:center;word-break:break-all"></p>
 </div></div>
 
-<div id="mainApp" class="hidden"><div class="header"><div><span style="font-weight:900;font-size:22px;color:#38bdf8">IITM SOLUTIONS</span></div><button onclick="logout()" style="background:#1e293b;color:white;padding:8px 14px;border-radius:20px;border:none">Logout</button></div><div class="main"><div class="card"><div class="timer" id="time">00:00:00</div><div style="text-align:center"><button onclick="toggleStartStop()" class="btn" style="background:#22c55e;color:white">Start/Stop</button> <button onclick="rs()" class="btn" style="background:#1e293b;color:white">Reset</button></div></div></div></div>
+<div id="mainApp" class="hidden" style="padding:20px;text-align:center"><h1>IITM SOLUTIONS Dashboard</h1><button onclick="logout()" style="margin-top:20px;background:#1e293b;color:white;padding:10px 20px;border-radius:20px;border:none">Logout</button></div>
 
 <!-- SIGNUP OTP MODAL -->
-<div id="signupOtpModal"><div style="background:#0f172a;border:1px solid #334155;border-radius:22px;padding:24px;max-width:380px;width:100%"><div style="display:flex;justify-content:space-between"><h3>📧 Verify Email - IITM SOLUTIONS</h3><button onclick="closeSignupOTP()" style="background:#1e293b;color:white;border:none;padding:6px 10px;border-radius:20px">✕</button></div><p style="font-size:11px;opacity:.6;margin-top:8px">OTP sent to <b id="signupOtpEmailText" style="color:#38bdf8"></b></p><input id="signupOtpInput" placeholder="🔢 6-digit OTP" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:22px;font-weight:800;margin-top:14px"><button onclick="verifySignupOTP()" style="width:100%;background:linear-gradient(90deg,#22c55e,#16a34a);color:white;padding:13px;border-radius:12px;border:none;font-weight:800;margin-top:10px">Verify & Create Account ✅</button><button onclick="resendSignupOTP()" style="width:100%;background:#1e293b;color:#38bdf8;padding:10px;border-radius:10px;border:none;margin-top:8px;font-size:11px">Resend OTP 🔄</button><p id="signupOtpStatus" style="font-size:11px;text-align:center;margin-top:12px"></p></div></div>
+<div id="signupOtpModal"><div style="background:#0f172a;border:1px solid #334155;border-radius:22px;padding:24px;max-width:380px;width:100%"><div style="display:flex;justify-content:space-between"><h3>📧 Verify - IITM SOLUTIONS</h3><button onclick="closeSignupOTP()" style="background:#1e293b;color:white;border:none;padding:6px 10px;border-radius:20px">✕</button></div><p style="font-size:11px;margin-top:8px">OTP to <b id="signupOtpEmailText" style="color:#38bdf8"></b></p><input id="signupOtpInput" placeholder="🔢 6-digit" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:22px;font-weight:800;margin-top:14px"><button onclick="verifySignupOTP()" style="width:100%;background:#22c55e;color:white;padding:13px;border-radius:12px;border:none;font-weight:800;margin-top:10px">Verify & Create ✅</button><button onclick="resendSignupOTP()" style="width:100%;background:#1e293b;color:#38bdf8;padding:10px;border-radius:10px;border:none;margin-top:8px">Resend 🔄</button><p id="signupOtpStatus" style="font-size:11px;text-align:center;margin-top:12px"></p></div></div>
 
 <!-- RESET MODAL -->
-<div id="otpModal"><div style="background:#0f172a;border:1px solid #334155;border-radius:22px;padding:24px;max-width:380px;width:100%"><div style="display:flex;justify-content:space-between"><h3>🔑 OTP Reset - IITM SOLUTIONS</h3><button onclick="closeOTP()" style="background:#1e293b;color:white;border:none;padding:6px 10px;border-radius:20px">✕</button></div><div id="otpStep1" style="margin-top:16px"><input id="resetEmail" placeholder="📧 Email"><button onclick="sendOTP()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;padding:13px;border-radius:12px;border:none;font-weight:800;margin-top:10px">Send OTP 📩</button></div><div id="otpStep2" class="hidden" style="margin-top:16px"><input id="otpInput" placeholder="🔢 6-digit OTP" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:22px;font-weight:800"><input id="newPassInput" type="password" placeholder="🔒 New Password (min 6)"><button onclick="verifyAndReset()" style="width:100%;background:linear-gradient(90deg,#22c55e,#16a34a);color:white;padding:13px;border-radius:12px;border:none;font-weight:800;margin-top:10px">Verify & Reset ✅</button></div><p id="otpStatus" style="font-size:11px;text-align:center;margin-top:12px"></p></div></div>
+<div id="otpModal"><div style="background:#0f172a;border:1px solid #334155;border-radius:22px;padding:24px;max-width:380px;width:100%"><div style="display:flex;justify-content:space-between"><h3>🔑 OTP Reset</h3><button onclick="closeOTP()" style="background:#1e293b;color:white;border:none;padding:6px 10px;border-radius:20px">✕</button></div><div id="otpStep1" style="margin-top:16px"><input id="resetEmail" placeholder="📧 Email"><button onclick="sendOTP()" style="width:100%;background:linear-gradient(90deg,#38bdf8,#8b5cf6);color:white;padding:13px;border-radius:12px;border:none;font-weight:800;margin-top:10px">Send OTP 📩</button></div><div id="otpStep2" class="hidden" style="margin-top:16px"><input id="otpInput" placeholder="🔢 OTP" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:22px;font-weight:800"><input id="newPassInput" type="password" placeholder="🔒 New Password"><button onclick="verifyAndReset()" style="width:100%;background:#22c55e;color:white;padding:13px;border-radius:12px;border:none;font-weight:800;margin-top:10px">Reset ✅</button></div><p id="otpStatus" style="font-size:11px;text-align:center;margin-top:12px"></p></div></div>
 
 <script>
 const firebaseConfig={apiKey:"AIzaSyDSt8H43XQZFUF7MRuIqDq8Cdk4ZClwEDc",authDomain:"iitm-solutions.firebaseapp.com",databaseURL:"https://iitm-solutions-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"iitm-solutions",storageBucket:"iitm-solutions.firebasestorage.app",messagingSenderId:"411649171402",appId:"1:411649171402:web:e5278ba01a518080b0b933"};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();const auth=firebase.auth();
 emailjs.init({publicKey:"0g35NzGfXah-1DMhS"});
-
-// FINAL IDS - NO SUN APP
-const SERVICE_ID="service_q3nz8on";
-const TEMPLATE_RESET="template_otvm3vh";
-const TEMPLATE_SIGNUP="template_k0jcsmi";
-
-let currentUser=null,sec=parseInt(localStorage.getItem('sec')||0),iv=null,pendingSignupData=null,startTimestamp=0;
-
-(function(){let d=document.getElementById('regDay'),y=document.getElementById('regYear'),a=document.getElementById('regAge');
-d.innerHTML='<option value="">Day</option>';for(let i=1;i<=31;i++){let o=document.createElement('option');o.value=i;o.text=i;d.appendChild(o);}
-y.innerHTML='<option value="">Year</option>';for(let i=2008;i>=1975;i--){let o=document.createElement('option');o.value=i;o.text=i;y.appendChild(o);}
-a.innerHTML='<option value="">🎂 Age</option>';for(let i=15;i<=60;i++){let o=document.createElement('option');o.value=i;o.text=i+' years';a.appendChild(o);}
-})();
+const SERVICE_ID="service_q3nz8on",TEMPLATE_RESET="template_otvm3vh",TEMPLATE_SIGNUP="template_k0jcsmi";
+let pendingSignupData=null;
 
 function toggleAuth(){document.getElementById('loginForm').classList.toggle('hidden');document.getElementById('signupForm').classList.toggle('hidden');}
 
-async function register(){
-  let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPass').value;
-  let g=document.getElementById('regGender').value,d=document.getElementById('regDay').value,m=document.getElementById('regMonth').value,y=document.getElementById('regYear').value,a=document.getElementById('regAge').value;
-  if(!n||!e||p.length<6||!g||!d||!m||!y||!a){document.getElementById('authStatus').innerText='❌ All fields required';return;}
-  let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');
-  if(s.exists()){document.getElementById('authStatus').innerText='❌ Email already exists';return;}
-  pendingSignupData={name:n,email:e,pass:p,gender:g,day:d,month:m,year:y,age:a};
-  await sendSignupOTP(e);
+async function googleLogin(){
+ document.getElementById('authStatus').innerText='⏳ Google login...';
+ let provider=new firebase.auth.GoogleAuthProvider();
+ try{
+   let result=await auth.signInWithPopup(provider);
+   let user=result.user;
+   let snap=await db.ref('users').orderByChild('email').equalTo(user.email.toLowerCase()).once('value');
+   if(!snap.exists()){
+     let u=db.ref('users').push();
+     await u.set({name:user.displayName,email:user.email.toLowerCase(),pass:btoa('google_login'),photo:user.photoURL,created:Date.now(),emailVerified:true,loginType:'google'});
+   }
+   localStorage.setItem('iitm_user',JSON.stringify({name:user.displayName,email:user.email}));
+   location.reload();
+ }catch(e){document.getElementById('authStatus').innerText='❌ Google failed: '+e.message;}
 }
 
+async function register(){
+ let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPass').value;
+ if(!n||!e||p.length<6){document.getElementById('authStatus').innerText='❌ Fill all';return;}
+ let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');
+ if(s.exists()){document.getElementById('authStatus').innerText='❌ Email exists';return;}
+ pendingSignupData={name:n,email:e,pass:p};
+ await sendSignupOTP(e);
+}
 async function sendSignupOTP(email){
-  if(!email) email=pendingSignupData?.email;
-  let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');
-  let otp=Math.floor(100000+Math.random()*900000).toString();
-  let modal=document.getElementById('signupOtpModal'); modal.classList.add('open'); modal.style.display='flex';
-  document.getElementById('signupOtpEmailText').innerText=email;
-  document.getElementById('signupOtpStatus').innerText='⏳ Sending OTP...';
-  document.getElementById('authStatus').innerText='⏳ Sending OTP to '+email+'...';
-  try{await db.ref('signup_otps/'+safe).set({email:email,otp:otp,expiry:Date.now()+300000,time:Date.now()});}catch(e){}
-  try{
-    await emailjs.send(SERVICE_ID,TEMPLATE_SIGNUP,{
-      to_email:email, email:email,
-      to_name:pendingSignupData.name,
-      otp:otp,
-      from_name:'IITM SOLUTIONS',
-      message:`Welcome to IITM SOLUTIONS! Your verification OTP is ${otp}. Valid for 5 minutes.`,
-      reply_to:'gaurav.kumar.mail1109@gmail.com'
-    });
-    document.getElementById('authStatus').innerText='✅ OTP sent to '+email+' - check inbox & spam';
-    document.getElementById('signupOtpStatus').innerText='✅ OTP sent! Check email (spam also)';
-    document.getElementById('signupOtpStatus').style.color='#22c55e';
-  }catch(err){
-    document.getElementById('authStatus').innerHTML=`⚠️ Email fail but OTP: <b style="color:#22c55e;font-size:20px">${otp}</b>`;
-    document.getElementById('signupOtpStatus').innerHTML=`Email fail, testing OTP:<br><b style="color:#22c55e;font-size:28px;letter-spacing:6px">${otp}</b>`;
-  }
+ if(!email) email=pendingSignupData?.email;
+ let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');
+ let otp=Math.floor(100000+Math.random()*900000).toString();
+ let modal=document.getElementById('signupOtpModal');modal.classList.add('open');modal.style.display='flex';
+ document.getElementById('signupOtpEmailText').innerText=email;
+ document.getElementById('signupOtpStatus').innerText='⏳ Sending...';
+ try{await db.ref('signup_otps/'+safe).set({email:email,otp:otp,expiry:Date.now()+300000});}catch(e){}
+ try{
+  await emailjs.send(SERVICE_ID,TEMPLATE_SIGNUP,{to_email:email,email:email,to_name:pendingSignupData.name,otp:otp,from_name:'IITM SOLUTIONS',message:`Your IITM SOLUTIONS verification OTP is ${otp}. Valid 5 min.`});
+  document.getElementById('signupOtpStatus').innerText='✅ OTP sent! Check inbox & spam';
+  document.getElementById('signupOtpStatus').style.color='#22c55e';
+ }catch(err){document.getElementById('signupOtpStatus').innerHTML=`Testing OTP: <b style="color:#22c55e;font-size:26px;letter-spacing:6px">${otp}</b>`;}
 }
 function closeSignupOTP(){let m=document.getElementById('signupOtpModal');m.classList.remove('open');m.style.display='none';}
 async function resendSignupOTP(){if(pendingSignupData) await sendSignupOTP(pendingSignupData.email);}
 async function verifySignupOTP(){
-  let email=pendingSignupData?.email,oi=document.getElementById('signupOtpInput').value.trim(),st=document.getElementById('signupOtpStatus');
-  if(oi.length!=6){st.innerText='❌ 6-digit dalo';return;}
-  let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');
-  let snap=await db.ref('signup_otps/'+safe).once('value');
-  if(!snap.exists()){st.innerText='❌ Not found';return;}
-  let d=snap.val(); if(Date.now()>d.expiry){st.innerText='❌ Expired, resend karo';return;}
-  if(d.otp!==oi){st.innerText='❌ Wrong OTP';return;}
-  st.innerText='✅ Verified! Creating...'; st.style.color='#22c55e';
-  let u=db.ref('users').push();
-  await u.set({name:pendingSignupData.name,email:pendingSignupData.email,pass:btoa(pendingSignupData.pass),gender:pendingSignupData.gender,day:pendingSignupData.day,month:pendingSignupData.month,year:pendingSignupData.year,age:pendingSignupData.age,dob:pendingSignupData.day+'/'+pendingSignupData.month+'/'+pendingSignupData.year,created:Date.now(),emailVerified:true});
-  await db.ref('signup_otps/'+safe).remove();
-  document.getElementById('authStatus').innerText='✅ Account Created! Login karo';
-  closeSignupOTP(); toggleAuth(); pendingSignupData=null;
+ let email=pendingSignupData?.email,oi=document.getElementById('signupOtpInput').value.trim(),st=document.getElementById('signupOtpStatus');
+ if(oi.length!=6){st.innerText='❌ 6 digit';return;}
+ let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');
+ let snap=await db.ref('signup_otps/'+safe).once('value');
+ if(!snap.exists()){st.innerText='❌ Not found';return;}
+ let d=snap.val();if(Date.now()>d.expiry){st.innerText='❌ Expired';return;}if(d.otp!==oi){st.innerText='❌ Wrong';return;}
+ let u=db.ref('users').push();
+ await u.set({name:pendingSignupData.name,email:pendingSignupData.email,pass:btoa(pendingSignupData.pass),created:Date.now(),emailVerified:true});
+ await db.ref('signup_otps/'+safe).remove();
+ document.getElementById('authStatus').innerText='✅ Created! Login now';closeSignupOTP();toggleAuth();
 }
-
-async function login(){let e=document.getElementById('loginEmail').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;if(!e||!p){document.getElementById('authStatus').innerText='❌ Fill';return;}if(e==='admin@iitm.com'&&p==='admin123'){localStorage.setItem('iitm_user',JSON.stringify({name:'Gaurav Gupta',email:e}));showApp();return;}try{let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(!s.exists()){document.getElementById('authStatus').innerText='❌ Not found';return;}let f=null;s.forEach(c=>{let d=c.val();d._key=c.key;if(atob(d.pass)===p)f=d;});if(!f){document.getElementById('authStatus').innerText='❌ Wrong pass';return;}localStorage.setItem('iitm_user',JSON.stringify(f));showApp();}catch(err){document.getElementById('authStatus').innerText='❌ Error';}}
-function showApp(){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');upd();}
+async function login(){let e=document.getElementById('loginEmail').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;if(!e||!p){document.getElementById('authStatus').innerText='❌ Fill';return;}let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(!s.exists()){document.getElementById('authStatus').innerText='❌ Not found';return;}let f=null;s.forEach(c=>{let d=c.val();if(atob(d.pass)===p||d.pass===btoa(p))f=d;});if(!f){document.getElementById('authStatus').innerText='❌ Wrong pass';return;}localStorage.setItem('iitm_user',JSON.stringify(f));location.reload();}
 function logout(){localStorage.clear();location.reload();}
-function upd(){let h=String(Math.floor(sec/3600)).padStart(2,'0'),m=String(Math.floor(sec%3600/60)).padStart(2,'0'),s=String(sec%60).padStart(2,'0');document.getElementById('time').innerText=h+':'+m+':'+s;localStorage.setItem('sec',sec);}
-function toggleStartStop(){if(iv){clearInterval(iv);iv=null;sec=Math.floor((Date.now()-startTimestamp)/1000);upd();document.getElementById('time').style.opacity='1';}else{startTimestamp=Date.now()-sec*1000;iv=setInterval(()=>{sec=Math.floor((Date.now()-startTimestamp)/1000);upd();},1000);}}
-function rs(){clearInterval(iv);iv=null;sec=0;upd();}
 function openOTP(){let m=document.getElementById('otpModal');m.classList.add('open');m.style.display='flex';}
 function closeOTP(){let m=document.getElementById('otpModal');m.classList.remove('open');m.style.display='none';document.getElementById('otpStep1').classList.remove('hidden');document.getElementById('otpStep2').classList.add('hidden');}
-async function sendOTP(){let email=document.getElementById('resetEmail').value.trim().toLowerCase();if(!email){document.getElementById('otpStatus').innerText='❌ Email';return;}let otp=Math.floor(100000+Math.random()*900000).toString();let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');try{await db.ref('password_resets/'+safe).set({email:email,otp:otp,expiry:Date.now()+300000});}catch(e){}document.getElementById('otpStep1').classList.add('hidden');document.getElementById('otpStep2').classList.remove('hidden');try{await emailjs.send(SERVICE_ID,TEMPLATE_RESET,{to_email:email,email:email,to_name:email.split('@')[0],otp:otp,from_name:'IITM SOLUTIONS',message:`Your IITM SOLUTIONS password reset OTP is ${otp}. Valid 5 min.`});document.getElementById('otpStatus').innerText='✅ OTP sent to '+email;}catch(err){document.getElementById('otpStatus').innerHTML=`⚠️ OTP: <b style="color:#22c55e">${otp}</b>`;}}
-async function verifyAndReset(){let email=document.getElementById('resetEmail').value.trim().toLowerCase();let oi=document.getElementById('otpInput').value.trim();let np=document.getElementById('newPassInput').value.trim();if(np.length<6){document.getElementById('otpStatus').innerText='❌ Min 6';return;}let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');let snap=await db.ref('password_resets/'+safe).once('value');if(!snap.exists()){document.getElementById('otpStatus').innerText='❌ Not found';return;}let d=snap.val();if(Date.now()>d.expiry){document.getElementById('otpStatus').innerText='❌ Expired';return;}if(d.otp!==oi){document.getElementById('otpStatus').innerText='❌ Wrong';return;}let us=await db.ref('users').orderByChild('email').equalTo(email).once('value');let pr=[];us.forEach(c=>{pr.push(db.ref('users/'+c.key).update({pass:btoa(np)}));});await Promise.all(pr);await db.ref('password_resets/'+safe).remove();document.getElementById('otpStatus').innerText='✅ Reset! Login karo';setTimeout(()=>{closeOTP();},1500);}
-window.onload=()=>{let u=localStorage.getItem('iitm_user');if(u){showApp();} upd();}
+async function sendOTP(){let email=document.getElementById('resetEmail').value.trim().toLowerCase();if(!email){document.getElementById('otpStatus').innerText='❌ Email';return;}let otp=Math.floor(100000+Math.random()*900000).toString();let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');try{await db.ref('password_resets/'+safe).set({email:email,otp:otp,expiry:Date.now()+300000});}catch(e){}document.getElementById('otpStep1').classList.add('hidden');document.getElementById('otpStep2').classList.remove('hidden');try{await emailjs.send(SERVICE_ID,TEMPLATE_RESET,{to_email:email,email:email,to_name:email.split('@')[0],otp:otp,from_name:'IITM SOLUTIONS',message:`Your IITM SOLUTIONS reset OTP is ${otp}`});document.getElementById('otpStatus').innerText='✅ OTP sent';}catch(err){document.getElementById('otpStatus').innerHTML=`OTP: <b style="color:#22c55e">${otp}</b>`;}}
+async function verifyAndReset(){let email=document.getElementById('resetEmail').value.trim().toLowerCase();let oi=document.getElementById('otpInput').value.trim();let np=document.getElementById('newPassInput').value.trim();if(np.length<6){document.getElementById('otpStatus').innerText='❌ Min 6';return;}let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');let snap=await db.ref('password_resets/'+safe).once('value');if(!snap.exists()){document.getElementById('otpStatus').innerText='❌ Not found';return;}let d=snap.val();if(Date.now()>d.expiry||d.otp!==oi){document.getElementById('otpStatus').innerText='❌ Wrong/Expired';return;}let us=await db.ref('users').orderByChild('email').equalTo(email).once('value');let pr=[];us.forEach(c=>{pr.push(db.ref('users/'+c.key).update({pass:btoa(np)}));});await Promise.all(pr);await db.ref('password_resets/'+safe).remove();document.getElementById('otpStatus').innerText='✅ Reset! Login karo';setTimeout(()=>closeOTP(),1500);}
+window.onload=()=>{let u=localStorage.getItem('iitm_user');if(u){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');}}
 </script>
 </body></html>
