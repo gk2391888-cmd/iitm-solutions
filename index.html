@@ -53,7 +53,7 @@ input{width:100%;padding:13px;margin:6px 0;background:#080d1d;border:1px solid #
 
 <!-- SIGNUP OTP THEN REGISTER MODAL -->
 <div id="signupOtpModal"><div style="background:#0f172a;border:1px solid #334155;border-radius:20px;padding:22px;max-width:360px;width:100%">
-<h3>Verify Email - IITM SOLUTIONS</h3>
+<div style="display:flex;justify-content:space-between;align-items:center"><h3>Verify Email</h3><button onclick="closeSignupModal()" style="background:#1e293b;color:white;border:none;padding:6px 12px;border-radius:20px;width:auto">✕</button></div>
 <p style="font-size:11px;margin-top:8px">OTP sent to <b id="signupOtpEmailText" style="color:#38bdf8"></b></p>
 <input id="signupOtpInput" placeholder="6-digit OTP" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:22px;font-weight:800;margin-top:14px">
 <button onclick="verifySignupOTP()" class="btn" style="background:#22c55e;color:white;margin-top:12px">Verify OTP & Register ✅</button>
@@ -74,13 +74,13 @@ const firebaseConfig={apiKey:"AIzaSyDSt8H43XQZFUF7MRuIqDq8Cdk4ZClwEDc",authDomai
 firebase.initializeApp(firebaseConfig);const db=firebase.database();const auth=firebase.auth();
 emailjs.init({publicKey:"0g35NzGfXah-1DMhS"});
 
-// --- FINAL IDS ---
 const SERVICE_ID="service_q3nz8on";
-const TEMPLATE_SIGNUP="template_k0jcsmi"; // Signup OTP
-const TEMPLATE_RESET="template_otvm3vh"; // Reset OTP
+const TEMPLATE_SIGNUP="template_k0jcsmi";
+const TEMPLATE_RESET="template_otvm3vh";
 let pendingSignupData=null;
 
-function toggleAuth(){document.getElementById('loginForm').classList.toggle('hidden');document.getElementById('signupForm').classList.toggle('hidden');}
+function toggleAuth(){document.getElementById('loginForm').classList.toggle('hidden');document.getElementById('signupForm').classList.toggle('hidden');document.getElementById('authStatus').innerText='';}
+function closeSignupModal(){document.getElementById('signupOtpModal').classList.remove('open');document.getElementById('signupOtpModal').style.display='none';}
 
 async function googleLogin(){
  let provider=new firebase.auth.GoogleAuthProvider();
@@ -88,13 +88,12 @@ async function googleLogin(){
   let res=await auth.signInWithPopup(provider);
   let u=res.user;
   let snap=await db.ref('users').orderByChild('email').equalTo(u.email.toLowerCase()).once('value');
-  if(!snap.exists()){let r=db.ref('users').push();await r.set({name:u.displayName,email:u.email.toLowerCase(),created:Date.now(),emailVerified:true});}
+  if(!snap.exists()){let r=db.ref('users').push();await r.set({name:u.displayName,email:u.email.toLowerCase(),created:Date.now(),emailVerified:true,loginType:'google'});}
   localStorage.setItem('iitm_user',JSON.stringify({name:u.displayName,email:u.email}));
   location.reload();
- }catch(e){document.getElementById('authStatus').innerText=e.message;}
+ }catch(e){document.getElementById('authStatus').innerText='❌ '+e.message;}
 }
 
-// 1. SIGNUP -> OTP
 async function register(){
  let n=document.getElementById('regName').value.trim(),e=document.getElementById('regEmail').value.trim().toLowerCase(),p=document.getElementById('regPass').value;
  if(!n||!e||p.length<6){document.getElementById('authStatus').innerText='❌ All fields + min 6 pass';return;}
@@ -105,29 +104,31 @@ async function register(){
 }
 
 async function sendSignupOTP(email){
- if(!email) email=pendingSignupData.email;
+ if(!email) email=pendingSignupData?.email;
+ if(!email) return;
  let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');
  let otp=Math.floor(100000+Math.random()*900000).toString();
  let modal=document.getElementById('signupOtpModal');modal.classList.add('open');modal.style.display='flex';
  document.getElementById('signupOtpEmailText').innerText=email;
  document.getElementById('signupOtpStatus').innerText='⏳ Sending OTP to '+email;
- document.getElementById('authStatus').innerText='⏳ OTP sending to '+email;
+ document.getElementById('authStatus').innerText='⏳ OTP sending...';
  try{await db.ref('signup_otps/'+safe).set({email:email,otp:otp,expiry:Date.now()+300000});}catch(e){}
  try{
   await emailjs.send(SERVICE_ID,TEMPLATE_SIGNUP,{to_email:email,email:email,to_name:pendingSignupData.name,otp:otp,from_name:'IITM SOLUTIONS',message:`Your IITM SOLUTIONS OTP is ${otp}. Valid 5 min.`});
   document.getElementById('signupOtpStatus').innerText='✅ OTP sent! Check inbox & spam';
   document.getElementById('signupOtpStatus').style.color='#22c55e';
  }catch(err){
+  console.log(err);
   document.getElementById('signupOtpStatus').innerHTML=`Email fail but OTP: <b style="color:#22c55e;font-size:24px">${otp}</b><br><small>ye daal ke register karo</small>`;
  }
 }
 
 async function resendSignupOTP(){if(pendingSignupData) await sendSignupOTP(pendingSignupData.email);}
 
-// 2. VERIFY OTP -> THEN REGISTER
 async function verifySignupOTP(){
+ if(!pendingSignupData){document.getElementById('signupOtpStatus').innerText='❌ Session expired, again signup karo';return;}
  let email=pendingSignupData.email,oi=document.getElementById('signupOtpInput').value.trim(),st=document.getElementById('signupOtpStatus');
- if(oi.length!=6){st.innerText='❌ 6 digit OTP';return;}
+ if(oi.length!=6){st.innerText='❌ 6 digit OTP daalo';return;}
  let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');
  let snap=await db.ref('signup_otps/'+safe).once('value');
  if(!snap.exists()){st.innerText='❌ OTP not found';return;}
@@ -137,17 +138,23 @@ async function verifySignupOTP(){
  await u.set({name:pendingSignupData.name,email:pendingSignupData.email,pass:btoa(pendingSignupData.pass),created:Date.now(),emailVerified:true});
  await db.ref('signup_otps/'+safe).remove();
  document.getElementById('authStatus').innerText='✅ Account Created! Login karo';
- document.getElementById('signupOtpModal').classList.remove('open');document.getElementById('signupOtpModal').style.display='none';
- toggleAuth();pendingSignupData=null;
+ closeSignupModal();toggleAuth();pendingSignupData=null;document.getElementById('signupOtpInput').value='';
 }
 
-async function login(){let e=document.getElementById('loginEmail').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');if(!s.exists()){document.getElementById('authStatus').innerText='❌ Not found';return;}let f=null;s.forEach(c=>{let d=c.val();if(atob(d.pass)===p)f=d;});if(!f){document.getElementById('authStatus').innerText='❌ Wrong pass';return;}localStorage.setItem('iitm_user',JSON.stringify(f));location.reload();}
+async function login(){
+ let e=document.getElementById('loginEmail').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;
+ if(!e||!p){document.getElementById('authStatus').innerText='❌ Fill';return;}
+ let s=await db.ref('users').orderByChild('email').equalTo(e).once('value');
+ if(!s.exists()){document.getElementById('authStatus').innerText='❌ Not found';return;}
+ let found=false; s.forEach(c=>{let d=c.val(); try{ if(d.pass && atob(d.pass)===p) found=d; }catch(e){} });
+ if(!found){document.getElementById('authStatus').innerText='❌ Wrong pass';return;}
+ localStorage.setItem('iitm_user',JSON.stringify(found));location.reload();
+}
 function logout(){localStorage.clear();location.reload();}
 function openOTP(){let m=document.getElementById('otpModal');m.classList.add('open');m.style.display='flex';}
 function closeOTP(){let m=document.getElementById('otpModal');m.classList.remove('open');m.style.display='none';document.getElementById('otpStep1').classList.remove('hidden');document.getElementById('otpStep2').classList.add('hidden');}
-async function sendOTP(){let email=document.getElementById('resetEmail').value.trim().toLowerCase();let otp=Math.floor(100000+Math.random()*900000).toString();let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');try{await db.ref('password_resets/'+safe).set({email:email,otp:otp,expiry:Date.now()+300000});}catch(e){}document.getElementById('otpStep1').classList.add('hidden');document.getElementById('otpStep2').classList.remove('hidden');try{await emailjs.send(SERVICE_ID,TEMPLATE_RESET,{to_email:email,email:email,to_name:email,otp:otp,from_name:'IITM SOLUTIONS',message:`Reset OTP ${otp}`});document.getElementById('otpStatus').innerText='✅ OTP sent';}catch{ document.getElementById('otpStatus').innerHTML=`OTP: <b style="color:#22c55e">${otp}</b>`;}}
+async function sendOTP(){let email=document.getElementById('resetEmail').value.trim().toLowerCase();if(!email)return;let otp=Math.floor(100000+Math.random()*900000).toString();let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');try{await db.ref('password_resets/'+safe).set({email:email,otp:otp,expiry:Date.now()+300000});}catch(e){}document.getElementById('otpStep1').classList.add('hidden');document.getElementById('otpStep2').classList.remove('hidden');try{await emailjs.send(SERVICE_ID,TEMPLATE_RESET,{to_email:email,email:email,to_name:email,otp:otp,from_name:'IITM SOLUTIONS',message:`Reset OTP ${otp}`});document.getElementById('otpStatus').innerText='✅ OTP sent';}catch{ document.getElementById('otpStatus').innerHTML=`OTP: <b style="color:#22c55e">${otp}</b>`;}}
 async function verifyAndReset(){let email=document.getElementById('resetEmail').value.trim().toLowerCase(),oi=document.getElementById('otpInput').value.trim(),np=document.getElementById('newPassInput').value.trim();let safe=email.replace(/\./g,'_').replace(/@/g,'_at_');let snap=await db.ref('password_resets/'+safe).once('value');if(!snap.exists())return;let d=snap.val();if(d.otp!==oi||Date.now()>d.expiry){document.getElementById('otpStatus').innerText='❌ Wrong/Expired';return;}let us=await db.ref('users').orderByChild('email').equalTo(email).once('value');let pr=[];us.forEach(c=>{pr.push(db.ref('users/'+c.key).update({pass:btoa(np)}));});await Promise.all(pr);await db.ref('password_resets/'+safe).remove();document.getElementById('otpStatus').innerText='✅ Done! Login';setTimeout(()=>closeOTP(),1200);}
-
 window.onload=()=>{let u=localStorage.getItem('iitm_user');if(u){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');}}
 </script>
 </body>
